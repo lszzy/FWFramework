@@ -366,13 +366,11 @@ extension TestRequestController: ViewControllerProtocol {
                     self.app.showAlert(title: "网络状态", message: message)
                 } else if index == 2 {
                     self.app.showPrompt(title: nil, message: "DNS解析") { [weak self] textField in
-                        guard let self else { return }
-                        textField.text = testHostName
+                        textField.text = self?.testHostName
                     } confirmBlock: { [weak self] hostName in
-                        guard let self else { return }
-                        testHostName = hostName
+                        self?.testHostName = hostName
                         let dnsIPs = UIDevice.app.resolveDNS(for: hostName)
-                        app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
+                        self?.app.showAlert(title: "DNS解析结果", message: dnsIPs.isNotEmpty ? dnsIPs!.joined(separator: "\n") : "解析失败")
                     }
                 } else if index == 3 {
                     FileManager.app.removeItem(atPath: self.testPath)

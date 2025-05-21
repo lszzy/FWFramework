@@ -565,3 +565,37 @@ public struct NavigatorOptions: OptionSet, Sendable {
         UIWindow.fw.main?.fw.close(animated: animated, options: options, completion: completion) ?? false
     }
 }
+
+// MARK: - Concurrency+Navigator
+@MainActor extension Navigator {
+    /// 协程方式使用最顶部的显示控制器弹出控制器，建议present导航栏控制器(可用来push)
+    public static func present(_ viewController: UIViewController, animated: Bool = true) async {
+        await withCheckedContinuation { continuation in
+            present(viewController, animated: animated) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 协程方式使用最顶部的视图控制器打开控制器，自动判断push|present
+    public static func open(_ viewController: UIViewController, animated: Bool = true, options: NavigatorOptions = []) async {
+        await withCheckedContinuation { continuation in
+            open(viewController, animated: animated, options: options) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 协程方式关闭最顶部的视图控制器，自动判断pop|dismiss
+    @discardableResult
+    public static func close(animated: Bool = true, options: NavigatorOptions = []) async -> Bool {
+        await withCheckedContinuation { continuation in
+            let result = close(animated: animated, options: options) {
+                continuation.resume(returning: true)
+            }
+            if !result {
+                continuation.resume(returning: false)
+            }
+        }
+    }
+}

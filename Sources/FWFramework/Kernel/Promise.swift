@@ -363,7 +363,7 @@ extension Promise {
     }
 
     /// 异步获取结果值，可声明类型
-    public func value<T>() async throws -> T where T: Sendable {
+    public func value<T>(as type: T.Type = T.self) async throws -> T where T: Sendable {
         guard let value = try await (value) as? T else {
             throw Promise.failedError
         }

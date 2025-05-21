@@ -35,6 +35,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
         ["打开Url，:id/:id", "onOpenItem"],
         ["打开Url，:id.html", "onOpenHtml"],
         ["打开Url，支持回调", "onOpenCallback"],
+        ["打开Url，协程回调", "onOpenAsync"],
         ["解析Url，获取Object", "onOpenObject"],
         ["过滤Url", "onOpenFilter"],
         ["不支持的Url", "onOpenFailed"],
@@ -220,6 +221,13 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func onOpenCallback() {
         Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") { result in
             UIWindow.app.showMessage(text: result as? String)
+        }
+    }
+
+    func onOpenAsync() {
+        Task {
+            let result = await Router.openURL("\(TestRouter.wildcardTestUrl)?id=2") as? String
+            UIWindow.app.showMessage(text: result ?? "自动回调nil")
         }
     }
 

@@ -21,6 +21,13 @@ public macro MappedValueMacro() = #externalMacro(module: "FWMacroMacros", type: 
 @attached(memberAttribute)
 public macro PropertyWrapperMacro(_ name: StaticString...) = #externalMacro(module: "FWMacroMacros", type: "PropertyWrapperMacro")
 
+/// 继承SmartCodable宏，仅支持class
+///
+/// 使用方法：
+/// 1. 标记class为属性包装器宏，使用方式：@SmartSubclass
+@attached(member, names: named(init(from:)), named(encode(to:)), named(CodingKeys), named(init))
+public macro SmartSubclass() = #externalMacro(module: "FWMacroMacros", type: "SmartSubclassMacro")
+
 // MARK: - Autoloader+Macros
 #if FWPluginMacros
 @objc extension Autoloader {

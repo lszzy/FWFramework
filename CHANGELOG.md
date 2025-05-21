@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.0] - 2025-05-21
+
+### Changed
+* File log supports limiting the maximum file size, and adds a flush method
+* Router adds an openURL coroutine method, and Context adds a complete method
+* Synchronize SmartCodable to the latest version 5.0.10, support SmartSubclass macros, etc.
+
 ## [7.0.3] - 2025-05-08
 
 ### Fixed

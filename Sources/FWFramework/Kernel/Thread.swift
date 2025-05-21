@@ -24,12 +24,12 @@ extension Wrapper where Base: DispatchQueue {
         MainActor.runSyncIf(execute: block, otherwise: otherwise)
     }
 
-    /// 主现成安全异步执行deinit句柄
+    /// 主线程安全异步执行deinit句柄
     public static func mainDeinit(execute block: @escaping @MainActor @Sendable () -> Void) {
         MainActor.runDeinit(execute: block)
     }
 
-    /// 主现成安全异步执行deinit句柄，可携带参数(非释放对象)
+    /// 主线程安全异步执行deinit句柄，可携带参数(非释放对象)
     public static func mainDeinit<T>(object: T, execute block: @escaping @MainActor @Sendable (T) -> Void) where T: Sendable {
         MainActor.runDeinit(object: object, execute: block)
     }

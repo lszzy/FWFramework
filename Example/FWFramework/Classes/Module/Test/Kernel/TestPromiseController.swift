@@ -246,7 +246,7 @@ extension TestPromiseController {
         }
         Task {
             do {
-                let result: Int = try await Promise.any(promises).value()
+                let result = try await Promise.any(promises).value(as: Int.self)
 
                 DispatchQueue.app.mainAsync {
                     Self.isLoading = false
@@ -269,7 +269,7 @@ extension TestPromiseController {
         }
         Task {
             do {
-                let result: Int = try await Promise.race(promises.shuffled()).value()
+                let result = try await Promise.race(promises.shuffled()).value(as: Int.self)
 
                 DispatchQueue.app.mainAsync {
                     Self.isLoading = false

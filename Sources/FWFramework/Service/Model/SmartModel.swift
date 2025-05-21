@@ -209,7 +209,7 @@ extension SmartDecodable {
             return nil
         }
 
-        return try? _data._deserializeDict(type: Self.self, options: options)
+        return _data._deserializeDict(type: Self.self, options: options)
     }
 
     /// Deserializes into a model
@@ -233,7 +233,7 @@ extension SmartDecodable {
             return nil
         }
 
-        return try? _data._deserializeDict(type: Self.self, options: options)
+        return _data._deserializeDict(type: Self.self, options: options)
     }
 }
 
@@ -295,7 +295,7 @@ extension Array where Element: SmartDecodable {
             return nil
         }
 
-        return try? _data._deserializeArray(type: Self.self, options: options)
+        return _data._deserializeArray(type: Self.self, options: options)
     }
 
     /// Deserializes into an array of models
@@ -319,7 +319,7 @@ extension Array where Element: SmartDecodable {
             return nil
         }
 
-        return try? _data._deserializeArray(type: Self.self, options: options)
+        return _data._deserializeArray(type: Self.self, options: options)
     }
 }
 
@@ -348,7 +348,7 @@ extension Data {
         return _decoder
     }
 
-    fileprivate func _deserializeDict<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) throws -> T? where T: SmartDecodable {
+    fileprivate func _deserializeDict<T>(type: T.Type, options: Set<SmartDecodingOption>? = nil) -> T? where T: SmartDecodable {
         do {
             let _decoder = createDecoder(type: type, options: options)
             var obj = try _decoder.decode(type, from: self)
@@ -359,7 +359,7 @@ extension Data {
         }
     }
 
-    fileprivate func _deserializeArray<T>(type: [T].Type, options: Set<SmartDecodingOption>? = nil) throws -> [T]? where T: SmartDecodable {
+    fileprivate func _deserializeArray<T>(type: [T].Type, options: Set<SmartDecodingOption>? = nil) -> [T]? where T: SmartDecodable {
         do {
             let _decoder = createDecoder(type: type, options: options)
             let decodeValue = try _decoder.decode(type, from: self)
@@ -808,8 +808,8 @@ public enum SmartSentinel {
     /// Set debugging mode, default is none.
     /// Note: When not debugging, set to none to reduce overhead.
     public static var debugMode: Level {
-        get { _mode }
-        set { _mode = newValue }
+        get { FrameworkConfiguration.smartModelMode }
+        set { FrameworkConfiguration.smartModelMode = newValue }
     }
 
     /// 设置回调方法，传递解析完成时的日志记录
@@ -818,26 +818,30 @@ public enum SmartSentinel {
     }
 
     /// Set up different levels of padding
-    public static var space: String = "   "
+    public static let space: String = "   "
     /// Set the markup for the model
-    public static var keyContainerSign: String = "╆━ "
+    public static let keyContainerSign: String = "╆━ "
 
-    public static var unKeyContainerSign: String = "╆━ "
+    public static let unKeyContainerSign: String = "╆━ "
 
     /// Sets the tag for the property
-    public static var attributeSign: String = "┆┄ "
+    public static let attributeSign: String = "┆┄ "
 
     /// 是否满足日志记录的条件
     fileprivate static var isValid: Bool {
         debugMode != .none
     }
 
-    private static var _mode = Level.none
-
-    private static var cache = LogCache()
+    private static var cache: LogCache {
+        get { FrameworkConfiguration.smartModelCache }
+        set { FrameworkConfiguration.smartModelCache = newValue }
+    }
 
     /// 回调闭包，用于在解析完成时传递日志
-    private static var logsHandler: ((String) -> Void)?
+    private static var logsHandler: ((String) -> Void)? {
+        get { FrameworkConfiguration.smartModelHandler }
+        set { FrameworkConfiguration.smartModelHandler = newValue }
+    }
 }
 
 extension SmartSentinel {
@@ -890,7 +894,7 @@ extension SmartSentinel {
         guard SmartSentinel.isValid else { return }
 
         if let format = cache.formatLogs(parsingMark: parsingMark) {
-            var message = ""
+            var message: String = ""
             message += getHeader()
             message += name + " 👈🏻 👀\n"
             message += format
@@ -933,7 +937,7 @@ extension SmartSentinel {
 }
 
 extension SmartSentinel {
-    public enum Level: Int {
+    public enum Level: Int, Sendable {
         /// 不记录日志
         case none
         /// 详细的日志
@@ -1686,11 +1690,7 @@ extension SmartHexColor {
             a = component(hexValue, shift: 0, mask: 0xFF)
         }
 
-        #if os(macOS)
-        return NSColor(calibratedRed: r, green: g, blue: b, alpha: a)
-        #else
         return UIColor(red: r, green: g, blue: b, alpha: a)
-        #endif
     }
 
     /// 移除前缀并转小写
@@ -1828,14 +1828,9 @@ extension SmartHexColor {
 
 extension UIColor {
     fileprivate var rgbaComponents: (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat)? {
-        #if os(macOS)
-        guard let converted = usingColorSpace(.deviceRGB) else { return nil }
-        return (converted.redComponent, converted.greenComponent, converted.blueComponent, converted.alphaComponent)
-        #else
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         guard getRed(&r, green: &g, blue: &b, alpha: &a) else { return nil }
         return (r, g, b, a)
-        #endif
     }
 }
 
@@ -1844,7 +1839,6 @@ import Combine
 import SwiftUI
 
 @propertyWrapper
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 public struct SmartPublished<Value: Codable>: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -1931,7 +1925,6 @@ public struct SmartPublished<Value: Codable>: Codable {
     }
 }
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension SmartPublished: PostDecodingHookable {
     /// Handles post-mapping lifecycle events for wrapped values
     func wrappedValueDidFinishMapping() -> SmartPublished<Value>? {
@@ -1943,7 +1936,6 @@ extension SmartPublished: PostDecodingHookable {
     }
 }
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 extension SmartPublished: PropertyWrapperInitializable {
     /// Creates an instance from any value if possible
     public static func createInstance(with value: Any) -> SmartPublished? {
@@ -1996,7 +1988,7 @@ public struct SmartAny<T>: Codable, PropertyWrapperInitializable {
         } else {
             // 类型检查
             if let _type = T.self as? Decodable.Type {
-                if let decoded = try? _type.init(from: decoder) as? T {
+                if let decoded = try _type.init(from: decoder) as? T {
                     self = .init(wrappedValue: decoded)
                     return
                 }
@@ -2132,11 +2124,25 @@ extension SmartAnyImpl {
 
 extension SmartAnyImpl: Codable {
     public init(from decoder: Decoder) throws {
-        guard let decoder = decoder as? JSONDecoderImpl,
-              let container = try? decoder.singleValueContainer() as? JSONDecoderImpl.SingleValueContainer else {
-            throw DecodingError.typeMismatch(SmartAnyImpl.self, DecodingError.Context(
-                codingPath: decoder.codingPath, debugDescription: "Expected \(Self.self) value，but an exception occurred！Please report this issue（请上报该问题）"
-            ))
+        guard let decoder = decoder as? JSONDecoderImpl else {
+            throw DecodingError.typeMismatch(
+                SmartAnyImpl.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected \(Self.self) value, but decoder type mismatch"
+                )
+            )
+        }
+
+        guard let containerAny = try? decoder.singleValueContainer(),
+              let container = containerAny as? JSONDecoderImpl.SingleValueContainer else {
+            throw DecodingError.typeMismatch(
+                SmartAnyImpl.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected \(Self.self) value, but container type mismatch"
+                )
+            )
         }
 
         if container.decodeNil() {
@@ -2212,10 +2218,16 @@ extension SmartAnyImpl {
         case let v as NSNumber: return .number(v)
         case let v as String: return .string(v)
         case let v as [String: Any]: return .dict(v.mapValues { convertToSmartAny($0) })
+        case let v as SmartCodable:
+            if let dict = v.toDictionary() {
+                return .dict(dict.mapValues { convertToSmartAny($0) })
+            }
         case let v as [Any]: return .array(v.map { convertToSmartAny($0) })
         case is NSNull: return .null(NSNull())
-        default: return .null(NSNull())
+        default: break
         }
+
+        return .null(NSNull())
     }
 }
 
@@ -2378,6 +2390,43 @@ extension JSONDecoderImpl.SingleValueContainer {
             return nil
         }
         return decoded
+    }
+}
+
+// MARK: - SmartCoding
+/// Global coding/decoding configuration namespace for SmartCodable
+public enum SmartCoding {
+    /// Number conversion strategy during decoding (default: .strict)
+    ///
+    /// - Description: Controls how to handle precision loss when converting JSON numbers (e.g., floating-point) to target types (e.g., integer)
+    /// - Examples:
+    ///   - Converting JSON's 3.14 to Int:
+    ///     - .strict:   Returns nil (no precision loss allowed)
+    ///     - .truncate: Returns 3 (direct truncation)
+    ///     - .rounded:  Returns 3 (rounds to nearest)
+    ///
+    /// - Note: This only affects decoding process
+    public static var numberConversionStrategy: NumberConversionStrategy {
+        get { FrameworkConfiguration.smartModelStrategy }
+        set { FrameworkConfiguration.smartModelStrategy = newValue }
+    }
+
+    /// Numeric type conversion strategy
+    public enum NumberConversionStrategy {
+        /// Strict mode: Must match exactly, otherwise returns nil (default)
+        ///
+        /// - Decoding example: Double(3.14) → Int? returns nil
+        case strict
+
+        /// Directly truncates decimal portion (e.g., 3.99 → 3)
+        ///
+        /// - Decoding example: Double(3.99) → Int returns 3
+        case truncate
+
+        /// Rounds to nearest integer (e.g., 3.5 → 4, 3.4 → 3)
+        ///
+        /// - Decoding example: Double(3.6) → Int returns 4
+        case rounded
     }
 }
 
@@ -2833,9 +2882,9 @@ extension JSONValue {
                 }
                 bytes.append(._closebracket)
             case let .object(dict):
-                if #available(macOS 10.13, *), options.contains(.sortedKeys) {
+                if options.contains(.sortedKeys) {
                     let sorted = dict.sorted { $0.key.compare($1.key, options: [.caseInsensitive, .diacriticInsensitive, .forcedOrdering, .numeric, .widthInsensitive]) == .orderedAscending }
-                    self.writeObject(sorted, into: &bytes)
+                    writeObject(sorted, into: &bytes)
                 } else {
                     writeObject(dict, into: &bytes)
                 }
@@ -2894,9 +2943,9 @@ extension JSONValue {
                 addInset(to: &bytes, depth: depth)
                 bytes.append(._closebracket)
             case let .object(dict):
-                if #available(macOS 10.13, *), options.contains(.sortedKeys) {
+                if options.contains(.sortedKeys) {
                     let sorted = dict.sorted { $0.key.compare($1.key, options: [.caseInsensitive, .diacriticInsensitive, .forcedOrdering, .numeric, .widthInsensitive]) == .orderedAscending }
-                    self.writePrettyObject(sorted, into: &bytes, depth: depth)
+                    writePrettyObject(sorted, into: &bytes, depth: depth)
                 } else {
                     writePrettyObject(dict, into: &bytes, depth: depth)
                 }
@@ -2984,7 +3033,7 @@ extension JSONValue {
                     startCopyIndex = nextIndex
 
                 case UInt8(ascii: "/"):
-                    if #available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *), options.contains(.withoutEscapingSlashes) == false {
+                    if options.contains(.withoutEscapingSlashes) == false {
                         bytes.append(contentsOf: stringBytes[startCopyIndex..<nextIndex])
                         bytes.append(contentsOf: [._backslash, UInt8(ascii: "/")])
                         nextIndex = stringBytes.index(after: nextIndex)
@@ -3754,7 +3803,7 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
 
 extension CodingUserInfoKey {
     /// This parsing tag is used to summarize logs.
-    static var parsingMark = CodingUserInfoKey(rawValue: "Stamrt.parsingMark")
+    static let parsingMark = CodingUserInfoKey(rawValue: "Stamrt.parsingMark")
 }
 
 extension JSONDecoder {
@@ -3869,8 +3918,9 @@ enum KeysMapper {
         switch jsonValue {
         case let .string(stringValue):
             // Handle string values that might contain JSON
-            let value = parseJSON(from: stringValue, as: type)
-            return JSONValue.make(value)
+            if let value = parseJSON(from: stringValue, as: type) {
+                return JSONValue.make(value)
+            }
 
         case let .object(dictValue):
             // Convert dictionary keys according to mapping rules
@@ -3885,7 +3935,7 @@ enum KeysMapper {
     }
 
     /// Parses a string into JSON object and applies key mapping
-    private static func parseJSON(from string: String, as type: SmartDecodable.Type) -> Any {
+    private static func parseJSON(from string: String, as type: SmartDecodable.Type) -> Any? {
         guard let jsonObject = string.toJSONObject() else { return string }
         if let dict = jsonObject as? [String: Any] {
             // Apply key mapping to dictionary
@@ -3896,10 +3946,8 @@ enum KeysMapper {
     }
 
     /// Applies key mapping rules to a dictionary
-    private static func mapDictionary(dict: [String: Any], using type: SmartDecodable.Type) -> [String: Any] {
-        guard let mappings = type.mappingForKey(), !mappings.isEmpty else {
-            return dict
-        }
+    private static func mapDictionary(dict: [String: Any], using type: SmartDecodable.Type) -> [String: Any]? {
+        guard let mappings = type.mappingForKey(), !mappings.isEmpty else { return nil }
 
         var newDict = dict
         for mapping in mappings {
@@ -3917,13 +3965,13 @@ enum KeysMapper {
             // break effect: Prefer the first non-null field
             for oldKey in mapping.from {
                 // Mapping exists at current level
-                if let value = newDict[oldKey] as? JSONValue, value != .null {
+                if let value = dict[oldKey] as? JSONValue, value != .null {
                     newDict[newKey] = value
                     break
                 }
 
                 // Mapping requires cross-level path handling
-                if let pathValue = newDict.getValue(forKeyPath: oldKey) {
+                if let pathValue = dict.getValue(forKeyPath: oldKey) {
                     newDict.updateValue(pathValue, forKey: newKey)
                     break
                 }
@@ -4651,20 +4699,18 @@ extension JSONDecoderImpl.KeyedContainer {
             return nil
         }
 
+        /// @SmartFlat的处理
         if let type = type as? FlatType.Type {
             if type.isArray {
-                if let decoded = try? T(from: superDecoder(forKey: key)) {
-                    return didFinishMapping(decoded)
-                }
+                return try? T(from: superDecoder(forKey: key))
             } else {
-                if let decoded = try? T(from: impl) {
-                    return didFinishMapping(decoded)
-                }
+                return try? T(from: impl)
             }
-            return nil
         }
 
-        guard let newDecoder = try? decoderForKeyCompatibleForJson(key, type: type) else { return _compatibleDecode(forKey: key) }
+        guard let newDecoder = try? decoderForKeyCompatibleForJson(key, type: type) else {
+            return _compatibleDecode(forKey: key)
+        }
 
         if let decoded = try? newDecoder.unwrap(as: type) {
             return didFinishMapping(decoded)
@@ -5393,16 +5439,11 @@ extension JSONDecoderImpl {
                 return Date(timeIntervalSince1970: double / 1000.0)
 
             case .iso8601:
-                if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
-                    let string = try container.decode(String.self)
-                    guard let date = _iso8601Formatter.date(from: string) else {
-                        throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: self.codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
-                    }
-
-                    return date
-                } else {
-                    fatalError("ISO8601DateFormatter is unavailable on this platform.")
+                let string = try container.decode(String.self)
+                guard let date = FrameworkConfiguration.smartModelFormatter.date(from: string) else {
+                    throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
                 }
+                return date
 
             case let .formatted(formatter):
                 let string = try container.decode(String.self)
@@ -5576,13 +5617,6 @@ extension Decodable {
         return try Self(from: decoder)
     }
 }
-
-@available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *)
-var _iso8601Formatter: ISO8601DateFormatter = {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = .withInternetDateTime
-    return formatter
-}()
 
 enum Patcher<T> {
     static func defaultForType() throws -> T {
@@ -5782,19 +5816,36 @@ private func _fixedWidthInteger<T: FixedWidthInteger>(from value: JSONValue) -> 
     case let .string(string):
         if let integer = T(string) {
             return integer
-        } else if let float = Double(string), float.isFinite, float >= Double(T.min) && float <= Double(T.max), let integer = T(exactly: float) {
-            return integer
+        } else if let float = Double(string) {
+            return _convertFloatToInteger(float)
         }
     case let .number(number):
         if let integer = T(number) {
             return integer
-        } else if let float = Double(number), float.isFinite, float >= Double(T.min) && float <= Double(T.max), let integer = T(exactly: float) {
-            return integer
+        } else if let float = Double(number) {
+            return _convertFloatToInteger(float)
         }
     default:
         break
     }
     return nil
+}
+
+/// 统一的浮点数转整数方法（包含范围检查和转换策略）
+private func _convertFloatToInteger<T: FixedWidthInteger>(_ float: Double) -> T? {
+    // 前置检查
+    guard float.isFinite,
+          float >= Double(T.min),
+          float <= Double(T.max) else {
+        return nil
+    }
+
+    // 应用转换策略
+    switch SmartCoding.numberConversionStrategy {
+    case .strict: return T(exactly: float)
+    case .truncate: return T(float)
+    case .rounded: return T(float.rounded())
+    }
 }
 
 // MARK: - JSONEncoder
@@ -6278,7 +6329,7 @@ struct JSONKeyedEncodingContainer<K: CodingKey>: KeyedEncodingContainerProtocol,
         if let jsonValue = impl.cache.tranform(from: value, with: convertedKey) {
             object.set(jsonValue, for: convertedKey.stringValue)
         } else {
-            if let encoded = try? wrapEncodable(value, for: convertedKey) {
+            if let encoded = try wrapEncodable(value, for: convertedKey) {
                 object.set(encoded, for: convertedKey.stringValue)
             }
         }
@@ -6752,11 +6803,7 @@ extension _SpecialTreatmentEncoder {
             return .number((date.timeIntervalSince1970 * 1000).description)
 
         case .iso8601:
-            if #available(macOS 10.12, iOS 10.0, watchOS 3.0, tvOS 10.0, *) {
-                return .string(_iso8601Formatter.string(from: date))
-            } else {
-                fatalError("ISO8601DateFormatter is unavailable on this platform.")
-            }
+            return .string(FrameworkConfiguration.smartModelFormatter.string(from: date))
 
         case let .formatted(formatter):
             return .string(formatter.string(from: date))
@@ -6843,4 +6890,17 @@ extension _SpecialTreatmentEncoder {
             return newKey
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+SmartModel
+extension FrameworkConfiguration {
+    fileprivate static var smartModelMode = SmartSentinel.Level.none
+    fileprivate static var smartModelCache = LogCache()
+    fileprivate static var smartModelHandler: ((String) -> Void)?
+    fileprivate static var smartModelStrategy = SmartCoding.NumberConversionStrategy.strict
+    fileprivate static let smartModelFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withInternetDateTime
+        return formatter
+    }()
 }
