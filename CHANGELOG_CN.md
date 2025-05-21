@@ -1,5 +1,12 @@
 # 更新日志
 
+## [7.1.0] - 2025-05-21
+
+### Changed
+* 文件日志支持限制最大文件大小，新增flush方法
+* Router新增openURL协程方法、Context新增complete方法
+* 同步SmartCodable到最新5.0.10版本、支持SmartSubclass宏等
+
 ## [7.0.3] - 2025-05-08
 
 ### Fixed
