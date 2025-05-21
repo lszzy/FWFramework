@@ -57,11 +57,32 @@ public class Router: NSObject, @unchecked Sendable {
         /// 路由是否以openURL方式打开，区别于objectForURL
         public fileprivate(set) var isOpening: Bool = false
 
+        /// 路由是否已处理完成，complete调用时自动设置
+        public private(set) var isCompleted: Bool = false
+
         /// 创建路由参数对象
         public init(url: String, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) {
             self.url = url
             self.userInfo = userInfo ?? [:]
             self.completion = completion
+        }
+
+        /// 完成路由并回调结果
+        @MainActor public func complete(_ result: Any? = nil) {
+            isCompleted = true
+            completion?(result)
+        }
+
+        deinit {
+            if let routerCompleted = userInfo[Router.Parameter.routerCompletedKey] as? Bool,
+               routerCompleted, isOpening, !isCompleted {
+                isCompleted = true
+                if let completion {
+                    DispatchQueue.fw.mainDeinit {
+                        completion(nil)
+                    }
+                }
+            }
         }
     }
 
@@ -78,6 +99,8 @@ public class Router: NSObject, @unchecked Sendable {
         public static let routerOptionsKey = "routerOptions"
         /// 路由动画选项Key，兼容字典传参，仅open生效
         public static let routerAnimatedKey = "routerAnimated"
+        /// 路由完成选项Key，兼容字典传参，仅open生效
+        public static let routerCompletedKey = "routerCompleted"
         /// 路由信息句柄Key，兼容字典传参，仅open生效
         public static let routerHandlerKey = "routerHandler"
 
@@ -87,6 +110,8 @@ public class Router: NSObject, @unchecked Sendable {
         open var routerOptions: NavigatorOptions?
         /// 路由动画选项，仅open生效
         open var routerAnimated: Bool?
+        /// 路由完成选项，仅open生效
+        open var routerCompleted: Bool?
         /// 路由信息句柄，仅open生效
         open var routerHandler: (@convention(block) @MainActor @Sendable (Context, UIViewController) -> Void)?
 
@@ -98,6 +123,7 @@ public class Router: NSObject, @unchecked Sendable {
                 self.routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
             }
             self.routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
+            self.routerCompleted = dictionaryValue[Self.routerCompletedKey].bool
             self.routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) @MainActor @Sendable (Context, UIViewController) -> Void
         }
 
@@ -106,6 +132,7 @@ public class Router: NSObject, @unchecked Sendable {
             dictionary[Self.routerSourceKey] = routerSource
             dictionary[Self.routerOptionsKey] = routerOptions
             dictionary[Self.routerAnimatedKey] = routerAnimated
+            dictionary[Self.routerCompletedKey] = routerCompleted
             dictionary[Self.routerHandlerKey] = routerHandler
             return dictionary
         }
@@ -290,7 +317,7 @@ public class Router: NSObject, @unchecked Sendable {
     ///   - completion: URL 处理完成后的 callback，完成的判定跟具体的业务相关
     @discardableResult
     @MainActor public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil, completion: Completion? = nil) -> Any? {
-        return openURL(url, userInfo: userInfo, isOpening: true, completion: completion)
+        openURL(url, userInfo: userInfo, isOpening: true, completion: completion)
     }
 
     /// 快速调用Handler参数中的回调句柄，指定回调结果
@@ -298,7 +325,7 @@ public class Router: NSObject, @unchecked Sendable {
     ///   - context: Handler中的模型参数
     ///   - result: URL处理完成后的回调结果
     @MainActor public class func completeURL(_ context: Context, result: Any?) {
-        context.completion?(result)
+        context.complete(result)
     }
 
     /// 查找谁对某个 URL 感兴趣，如果有的话，返回一个 object；如果没有，返回nil
@@ -307,7 +334,7 @@ public class Router: NSObject, @unchecked Sendable {
     ///   - userInfo: 附加信息
     /// - Returns: URL返回的对象
     @MainActor public class func object(forURL url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) -> Any? {
-        return openURL(url, userInfo: userInfo, isOpening: false, completion: nil)
+        openURL(url, userInfo: userInfo, isOpening: false, completion: nil)
     }
 
     /// 调用此方法来拼接 pattern 和 parameters
@@ -498,7 +525,7 @@ public class Router: NSObject, @unchecked Sendable {
         }
         return subRoutes
     }
-    
+
     @MainActor private class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]?, isOpening: Bool, completion: Completion?) -> Any? {
         let rewriteURL = rewriteURL(url)
         guard !rewriteURL.isEmpty else { return nil }
@@ -809,12 +836,14 @@ extension Router {
 
 // MARK: - Concurrency+Router
 @MainActor extension Router {
-    /// 协程方式打开指定 URL，带上附加信息。注意业务必须调用 completeURL 指定回调结果，否则会造成 continuation 内存泄漏
+    /// 协程方式打开指定 URL，带上附加信息。业务侧需调用 completeURL 指定回调结果；如果未调用Context释放时会自动回调nil
     @discardableResult
-    public class func openURL(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> Any? {
+    public class func openURL<T>(_ url: StringParameter?, userInfo: [AnyHashable: Any]? = nil) async -> T? where T: Sendable {
         await withCheckedContinuation { continuation in
+            var userInfo = userInfo ?? [:]
+            userInfo[Router.Parameter.routerCompletedKey] = true
             openURL(url, userInfo: userInfo) { result in
-                continuation.resume(returning: result)
+                continuation.resume(returning: result as? T)
             }
         }
     }

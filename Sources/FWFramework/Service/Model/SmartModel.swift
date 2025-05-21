@@ -808,8 +808,8 @@ public enum SmartSentinel {
     /// Set debugging mode, default is none.
     /// Note: When not debugging, set to none to reduce overhead.
     public static var debugMode: Level {
-        get { _mode }
-        set { _mode = newValue }
+        get { FrameworkConfiguration.smartModelMode }
+        set { FrameworkConfiguration.smartModelMode = newValue }
     }
 
     /// 设置回调方法，传递解析完成时的日志记录
@@ -832,12 +832,16 @@ public enum SmartSentinel {
         debugMode != .none
     }
 
-    private static var _mode = Level.none
-
-    private static var cache = LogCache()
+    private static var cache: LogCache {
+        get { FrameworkConfiguration.smartModelCache }
+        set { FrameworkConfiguration.smartModelCache = newValue }
+    }
 
     /// 回调闭包，用于在解析完成时传递日志
-    private static var logsHandler: ((String) -> Void)?
+    private static var logsHandler: ((String) -> Void)? {
+        get { FrameworkConfiguration.smartModelHandler }
+        set { FrameworkConfiguration.smartModelHandler = newValue }
+    }
 }
 
 extension SmartSentinel {
@@ -2403,11 +2407,9 @@ public enum SmartCoding {
     ///
     /// - Note: This only affects decoding process
     public static var numberConversionStrategy: NumberConversionStrategy {
-        get { _numberConversionStrategy }
-        set { _numberConversionStrategy = newValue }
+        get { FrameworkConfiguration.smartModelStrategy }
+        set { FrameworkConfiguration.smartModelStrategy = newValue }
     }
-
-    private static var _numberConversionStrategy = NumberConversionStrategy.strict
 
     /// Numeric type conversion strategy
     public enum NumberConversionStrategy {
@@ -5438,7 +5440,7 @@ extension JSONDecoderImpl {
 
             case .iso8601:
                 let string = try container.decode(String.self)
-                guard let date = _iso8601Formatter.date(from: string) else {
+                guard let date = FrameworkConfiguration.smartModelFormatter.date(from: string) else {
                     throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
                 }
                 return date
@@ -5615,12 +5617,6 @@ extension Decodable {
         return try Self(from: decoder)
     }
 }
-
-let _iso8601Formatter: ISO8601DateFormatter = {
-    let formatter = ISO8601DateFormatter()
-    formatter.formatOptions = .withInternetDateTime
-    return formatter
-}()
 
 enum Patcher<T> {
     static func defaultForType() throws -> T {
@@ -6807,7 +6803,7 @@ extension _SpecialTreatmentEncoder {
             return .number((date.timeIntervalSince1970 * 1000).description)
 
         case .iso8601:
-            return .string(_iso8601Formatter.string(from: date))
+            return .string(FrameworkConfiguration.smartModelFormatter.string(from: date))
 
         case let .formatted(formatter):
             return .string(formatter.string(from: date))
@@ -6894,4 +6890,17 @@ extension _SpecialTreatmentEncoder {
             return newKey
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+SmartModel
+extension FrameworkConfiguration {
+    fileprivate static var smartModelMode = SmartSentinel.Level.none
+    fileprivate static var smartModelCache = LogCache()
+    fileprivate static var smartModelHandler: ((String) -> Void)?
+    fileprivate static var smartModelStrategy = SmartCoding.NumberConversionStrategy.strict
+    fileprivate static let smartModelFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withInternetDateTime
+        return formatter
+    }()
 }
