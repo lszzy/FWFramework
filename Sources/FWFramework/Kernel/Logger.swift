@@ -383,7 +383,7 @@ public class Logger: NSObject {
 
 // MARK: - LogMessage
 /// 日志消息结构体
-public class LogMessage {
+public class LogMessage: @unchecked Sendable {
     /// 日志消息
     public var message: String = ""
     /// 日志时间戳
