@@ -894,7 +894,7 @@ extension SmartSentinel {
         guard SmartSentinel.isValid else { return }
 
         if let format = cache.formatLogs(parsingMark: parsingMark) {
-            var message: String = ""
+            var message = ""
             message += getHeader()
             message += name + " 👈🏻 👀\n"
             message += format
