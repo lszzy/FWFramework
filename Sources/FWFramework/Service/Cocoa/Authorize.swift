@@ -136,15 +136,8 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         super.init()
         self.isAlways = isAlways
     }
-
-    public static func authorizeStatus(for manager: CLLocationManager, isAlways: Bool = false) -> AuthorizeStatus {
-        let status: CLAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            status = manager.authorizationStatus
-        } else {
-            status = CLLocationManager.authorizationStatus()
-        }
-
+    
+    private func authorizeStatus(for status: CLAuthorizationStatus, isAlways: Bool = false) -> AuthorizeStatus {
         switch status {
         case .restricted:
             return .restricted
@@ -164,20 +157,16 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     }
 
     public func authorizeStatus() -> AuthorizeStatus {
-        AuthorizeLocation.authorizeStatus(for: locationManager, isAlways: isAlways)
+        let status: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = locationManager.authorizationStatus
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+        return authorizeStatus(for: status, isAlways: isAlways)
     }
 
     public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
-        let authorizeStatus = authorizeStatus()
-        if authorizeStatus != .notDetermined {
-            if completion != nil {
-                DispatchQueue.fw.mainAsync {
-                    completion?(authorizeStatus, nil)
-                }
-            }
-            return
-        }
-
         completionBlock = completion
         if isAlways {
             locationManager.requestAlwaysAuthorization()
@@ -186,8 +175,9 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         }
     }
 
+    @available(iOS 14.0, *)
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let authorizeStatus = authorizeStatus()
+        let authorizeStatus = authorizeStatus(for: manager.authorizationStatus, isAlways: isAlways)
         if authorizeStatus != .notDetermined, completionBlock != nil {
             DispatchQueue.fw.mainAsync {
                 self.completionBlock?(authorizeStatus, nil)
@@ -197,7 +187,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     }
 
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        let authorizeStatus = authorizeStatus()
+        let authorizeStatus = authorizeStatus(for: status, isAlways: isAlways)
         if authorizeStatus != .notDetermined, completionBlock != nil {
             DispatchQueue.fw.mainAsync {
                 self.completionBlock?(authorizeStatus, nil)

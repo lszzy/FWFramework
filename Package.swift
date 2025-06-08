@@ -43,6 +43,18 @@ let package = Package(
             targets: ["FWPluginBiometry"]
         ),
         .library(
+            name: "FWPluginBluetooth",
+            targets: ["FWPluginBluetooth"]
+        ),
+        .library(
+            name: "FWPluginMotion",
+            targets: ["FWPluginMotion"]
+        ),
+        .library(
+            name: "FWPluginSpeech",
+            targets: ["FWPluginSpeech"]
+        ),
+        .library(
             name: "FWPluginMacros",
             targets: ["FWPluginMacros"]
         ),
@@ -141,6 +153,33 @@ let package = Package(
             name: "FWPluginBiometry",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Authorize/Biometry",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginBluetooth",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Bluetooth",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginMotion",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Motion",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginSpeech",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Speech",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

@@ -95,6 +95,21 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
+    ss.subspec 'Bluetooth' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Authorize/Bluetooth/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
+    ss.subspec 'Motion' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Authorize/Motion/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
+    ss.subspec 'Speech' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Authorize/Speech/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'

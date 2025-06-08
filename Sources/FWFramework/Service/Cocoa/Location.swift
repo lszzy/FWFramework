@@ -178,8 +178,11 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     /// 定位改变block方式回调，可通过error判断是否定位成功
     open var locationChanged: (@Sendable (LocationManager) -> Void)?
 
-    /// 自定义定位开始和结束处理句柄，可用于额外参数配置等
-    open var customBlock: (@Sendable (_ locationManager: CLLocationManager, _ isStart: Bool) -> Void)?
+    /// 自定义定位开始处理句柄，可用于额外参数配置等
+    open var customStartBlock: (@Sendable (CLLocationManager) -> Void)?
+    
+    /// 自定义定位结束处理句柄，可用于额外参数配置等
+    open var customStopBlock: (@Sendable (CLLocationManager) -> Void)?
 
     private var isCompleted: Bool = false
 
@@ -197,7 +200,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
         if backgroundLocation {
             locationManager.allowsBackgroundLocationUpdates = true
         }
-        customBlock?(locationManager, true)
+        customStartBlock?(locationManager)
 
         locationManager.startUpdatingLocation()
         if headingEnabled {
@@ -217,7 +220,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
         if backgroundLocation {
             locationManager.allowsBackgroundLocationUpdates = false
         }
-        customBlock?(locationManager, false)
+        customStopBlock?(locationManager)
 
         if monitoringEnabled {
             locationManager.stopMonitoringSignificantLocationChanges()
