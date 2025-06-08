@@ -121,6 +121,9 @@ public enum SmartDecodingOption: Hashable {
     /// The mapping strategy for keys during parsing
     case key(JSONDecoder.SmartKeyDecodingStrategy)
 
+    /// 附加用于日志系统的上下文信息，例如网络请求的 URL、参数、调用位置等。
+    case logContext(header: String, footer: String)
+
     /// Handles the hash value, ignoring the impact of associated values.
     public func hash(into hasher: inout Hasher) {
         switch self {
@@ -132,6 +135,8 @@ public enum SmartDecodingOption: Hashable {
             hasher.combine(2)
         case .key:
             hasher.combine(3)
+        case .logContext:
+            hasher.combine(4)
         }
     }
 
@@ -144,6 +149,8 @@ public enum SmartDecodingOption: Hashable {
         case (.float, .float):
             return true
         case (.key, .key):
+            return true
+        case (.logContext, .logContext):
             return true
         default:
             return false
@@ -341,6 +348,17 @@ extension Data {
 
                 case let .key(strategy):
                     _decoder.smartKeyDecodingStrategy = strategy
+
+                case let .logContext(header, footer):
+                    var userInfo = _decoder.userInfo
+                    if let headerKey = CodingUserInfoKey.logContextHeader {
+                        userInfo.updateValue(header, forKey: headerKey)
+                    }
+
+                    if let footerKey = CodingUserInfoKey.logContextFooter {
+                        userInfo.updateValue(footer, forKey: footerKey)
+                    }
+                    _decoder.userInfo = userInfo
                 }
             }
         }
@@ -814,7 +832,9 @@ public enum SmartSentinel {
 
     /// 设置回调方法，传递解析完成时的日志记录
     public static func onLogGenerated(handler: @escaping (String) -> Void) {
-        logsHandler = handler
+        handlerQueue.sync {
+            logsHandler = handler
+        }
     }
 
     /// Set up different levels of padding
@@ -842,6 +862,9 @@ public enum SmartSentinel {
         get { FrameworkConfiguration.smartModelHandler }
         set { FrameworkConfiguration.smartModelHandler = newValue }
     }
+
+    /// 用于同步访问 logsHandler 的队列Add commentMore actions
+    private static let handlerQueue = DispatchQueue(label: "com.smartcodable.handler", qos: .utility)
 }
 
 extension SmartSentinel {
@@ -890,18 +913,34 @@ extension SmartSentinel {
         }
     }
 
-    static func monitorLogs(in name: String, parsingMark: String) {
+    static func monitorLogs(in name: String, parsingMark: String, impl: JSONDecoderImpl) {
         guard SmartSentinel.isValid else { return }
 
+        var header: String?
+        if let key = CodingUserInfoKey.logContextHeader {
+            header = impl.userInfo[key] as? String
+        }
+
+        var footer: String?
+        if let key = CodingUserInfoKey.logContextFooter {
+            footer = impl.userInfo[key] as? String
+        }
+
         if let format = cache.formatLogs(parsingMark: parsingMark) {
-            var message = ""
-            message += getHeader()
-            message += name + " 👈🏻 👀\n"
-            message += format
-            message += getFooter()
+            let message = getHeader(context: header)
+                + name
+                + " 👈🏻 👀\n"
+                + format
+                + getFooter(context: footer)
             print(message)
 
-            logsHandler?(message)
+            handlerQueue.sync {
+                if let handler = logsHandler {
+                    DispatchQueue.main.async {
+                        handler(message)
+                    }
+                }
+            }
         }
 
         cache.clearCache(parsingMark: parsingMark)
@@ -909,20 +948,23 @@ extension SmartSentinel {
 }
 
 extension SmartSentinel {
-    static func monitorAndPrint(level: SmartSentinel.Level = .alert, debugDescription: String, error: Error? = nil, in type: Any.Type?) {
+    static func monitorAndPrint(level: SmartSentinel.Level = .alert, debugDescription: String, error: Error? = nil, in inType: Any.Type?) {
         logIfNeeded(level: level) {
             let decodingError = (error as? DecodingError) ?? DecodingError.dataCorrupted(DecodingError.Context(codingPath: [], debugDescription: debugDescription, underlyingError: error))
             if let logItem = LogItem.make(with: decodingError) {
-                var message = ""
-                message += getHeader()
-                if let type {
-                    message += "\(type) 👈🏻 👀\n"
-                }
-                message += logItem.formartMessage + "\n"
-                message += getFooter()
+                let message = getHeader()
+                    + (inType != nil ? "\(inType!) 👈🏻 👀\n" : "")
+                    + logItem.formartMessage + "\n"
+                    + getFooter()
                 print(message)
 
-                logsHandler?(message)
+                handlerQueue.sync {
+                    if let handler = logsHandler {
+                        DispatchQueue.main.async {
+                            handler(message)
+                        }
+                    }
+                }
             }
         }
     }
@@ -946,12 +988,25 @@ extension SmartSentinel {
         case alert
     }
 
-    static func getHeader() -> String {
-        "\n================================  [Smart Sentinel]  ================================\n"
+    static func getHeader(context: String? = nil) -> String {
+        let line = "\n================================  [Smart Sentinel]  ================================\n"
+
+        if let c = context, !c.isEmpty {
+            return line + c + "\n\n"
+
+        } else {
+            return line
+        }
     }
 
-    static func getFooter() -> String {
-        "====================================================================================\n"
+    static func getFooter(context: String? = nil) -> String {
+        let line = "====================================================================================\n"
+
+        if let c = context, !c.isEmpty {
+            return "\n" + c + "\n" + line
+        } else {
+            return line
+        }
     }
 
     private static func logIfNeeded(level: SmartSentinel.Level, callback: () -> Void) {
@@ -3792,7 +3847,7 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
             let json = try parser.parse()
             let impl = JSONDecoderImpl(userInfo: userInfo, from: json, codingPath: [], options: options)
             let value = try impl.unwrap(as: type)
-            SmartSentinel.monitorLogs(in: "\(type)", parsingMark: mark)
+            SmartSentinel.monitorLogs(in: "\(type)", parsingMark: mark, impl: impl)
             return value
         } catch {
             SmartSentinel.monitorAndPrint(debugDescription: "The given data was not valid JSON.", error: error, in: type)
@@ -3804,6 +3859,9 @@ open class SmartJSONDecoder: JSONDecoder, @unchecked Sendable {
 extension CodingUserInfoKey {
     /// This parsing tag is used to summarize logs.
     static let parsingMark = CodingUserInfoKey(rawValue: "Stamrt.parsingMark")
+
+    static let logContextHeader = CodingUserInfoKey(rawValue: "Stamrt.logContext.header")
+    static let logContextFooter = CodingUserInfoKey(rawValue: "Stamrt.logContext.footer")
 }
 
 extension JSONDecoder {

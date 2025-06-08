@@ -6,9 +6,9 @@
 //  Copyright © 2023 CocoaPods. All rights reserved.
 //
 
+import Alamofire
 import FWFramework
 import UIKit
-import Alamofire
 
 // 继承HTTPRequest及重载Builder示例
 class AppRequest: HTTPRequest, @unchecked Sendable {
@@ -252,7 +252,7 @@ class TestRequestController: UIViewController {
 
     @MMAPValue("testHostName")
     private var testHostName: String? = "www.wuyong.site"
-    
+
     private var sseRequest: DataStreamRequest?
 
     // MARK: - Subviews
@@ -311,7 +311,7 @@ class TestRequestController: UIViewController {
         button.app.addTouch(target: self, action: #selector(onDownload))
         return button
     }()
-    
+
     private lazy var sseButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("SSE Request", for: .normal)
@@ -325,7 +325,7 @@ class TestRequestController: UIViewController {
         button.app.addTouch(target: self, action: #selector(onObserve))
         return button
     }()
-    
+
     deinit {
         if sseRequest != nil {
             sseRequest?.cancel()
@@ -441,7 +441,7 @@ extension TestRequestController: ViewControllerProtocol {
         downloadButton.app.layoutChain
             .centerX()
             .top(toViewBottom: uploadButton, offset: 10)
-        
+
         sseButton.app.layoutChain
             .centerX()
             .top(toViewBottom: downloadButton, offset: 10)
@@ -691,23 +691,23 @@ extension TestRequestController {
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
         }
     }
-    
+
     @objc private func onSSE() {
         if sseRequest != nil {
             sseRequest?.cancel()
             sseRequest = nil
-            
+
             sseButton.setTitle("SSE Request", for: .normal)
             return
         }
-        
+
         let endpoint = URL(string: "http://127.0.0.1:8000/")!
         sseRequest = AlamofireImpl.shared.session.eventSourceRequest(endpoint, lastEventID: "0")
         sseRequest?.responseEventSource { [weak self] eventSource in
             switch eventSource.event {
-            case .message(let message):
+            case let .message(message):
                 self?.sseButton.setTitle(message.data?.app.substring(to: 19), for: .normal)
-            case .complete(let completion):
+            case let .complete(completion):
                 self?.sseButton.setTitle(completion.error == nil ? "SSE Completed" : "SSE Failed", for: .normal)
             }
         }
