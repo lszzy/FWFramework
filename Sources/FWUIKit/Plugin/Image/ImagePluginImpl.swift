@@ -12,7 +12,7 @@ import UIKit
 
 // MARK: - ImagePluginImpl
 /// 默认图片插件
-open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
+open class ImagePluginImpl: NSObject, ImagePlugin, ImageCoderPlugin, @unchecked Sendable {
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
@@ -45,26 +45,6 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
         UIImageView()
-    }
-
-    open func imageDecode(
-        _ data: Data,
-        scale: CGFloat,
-        options: [ImageCoderOptions: Any]? = nil
-    ) -> UIImage? {
-        ImageCoder.shared.decodedImage(data: data, scale: scale, options: options)
-    }
-
-    open func imageEncode(
-        _ image: UIImage,
-        options: [ImageCoderOptions: Any]? = nil
-    ) -> Data? {
-        let imageFormat = image.fw.imageFormat
-        let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
-        if imageData != nil || imageFormat == .undefined {
-            return imageData
-        }
-        return ImageCoder.shared.encodedData(image: image, format: .undefined, options: options)
     }
 
     open func imageURL(for view: UIView) -> URL? {
@@ -218,5 +198,26 @@ open class ImagePluginImpl: NSObject, ImagePlugin, @unchecked Sendable {
         if let receipt = receipt as? ImageDownloadReceipt {
             ImageDownloader.shared.cancelTask(for: receipt)
         }
+    }
+    
+    // MARK: - ImageCoderPlugin
+    open func imageDecode(
+        _ data: Data,
+        scale: CGFloat,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> UIImage? {
+        ImageCoder.shared.decodedImage(data: data, scale: scale, options: options)
+    }
+
+    open func imageEncode(
+        _ image: UIImage,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> Data? {
+        let imageFormat = image.fw.imageFormat
+        let imageData = ImageCoder.shared.encodedData(image: image, format: imageFormat, options: options)
+        if imageData != nil || imageFormat == .undefined {
+            return imageData
+        }
+        return ImageCoder.shared.encodedData(image: image, format: .undefined, options: options)
     }
 }

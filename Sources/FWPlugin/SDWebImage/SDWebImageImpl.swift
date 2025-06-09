@@ -14,7 +14,7 @@ import UIKit
 
 // MARK: - SDWebImageImpl
 /// SDWebImage图片插件，启用SDWebImage子模块后生效
-open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
+open class SDWebImageImpl: NSObject, ImagePlugin, ImageCoderPlugin, @unchecked Sendable {
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
@@ -38,47 +38,6 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
     // MARK: - ImagePlugin
     open func animatedImageView() -> UIImageView {
         SDAnimatedImageView()
-    }
-
-    open func imageDecode(
-        _ data: Data,
-        scale: CGFloat,
-        options: [ImageCoderOptions: Any]? = nil
-    ) -> UIImage? {
-        var scaleFactor = scale
-        if let scaleOption = options?[.scaleFactor] as? NSNumber {
-            scaleFactor = scaleOption.doubleValue
-        }
-        var coderOptions: [SDImageCoderOption: Any] = [:]
-        coderOptions[.decodeScaleFactor] = max(scaleFactor, 1)
-        coderOptions[.decodeFirstFrameOnly] = false
-        if let options {
-            for (key, value) in options {
-                coderOptions[.init(rawValue: key.rawValue)] = value
-            }
-        }
-        return SDImageCodersManager.shared.decodedImage(with: data, options: coderOptions)
-    }
-
-    open func imageEncode(
-        _ image: UIImage,
-        options: [ImageCoderOptions: Any]? = nil
-    ) -> Data? {
-        var coderOptions: [SDImageCoderOption: Any] = [:]
-        coderOptions[.encodeCompressionQuality] = 1
-        coderOptions[.encodeFirstFrameOnly] = false
-        if let options {
-            for (key, value) in options {
-                coderOptions[.init(rawValue: key.rawValue)] = value
-            }
-        }
-
-        let imageFormat = image.sd_imageFormat
-        let imageData = SDImageCodersManager.shared.encodedData(with: image, format: imageFormat, options: coderOptions)
-        if imageData != nil || imageFormat == .undefined {
-            return imageData
-        }
-        return SDImageCodersManager.shared.encodedData(with: image, format: .undefined, options: coderOptions)
     }
 
     open func imageURL(for view: UIView) -> URL? {
@@ -234,6 +193,48 @@ open class SDWebImageImpl: NSObject, ImagePlugin, @unchecked Sendable {
             receipt.cancel()
         }
     }
+    
+    // MARK: - ImageCoderPlugin
+    open func imageDecode(
+        _ data: Data,
+        scale: CGFloat,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> UIImage? {
+        var scaleFactor = scale
+        if let scaleOption = options?[.scaleFactor] as? NSNumber {
+            scaleFactor = scaleOption.doubleValue
+        }
+        var coderOptions: [SDImageCoderOption: Any] = [:]
+        coderOptions[.decodeScaleFactor] = max(scaleFactor, 1)
+        coderOptions[.decodeFirstFrameOnly] = false
+        if let options {
+            for (key, value) in options {
+                coderOptions[.init(rawValue: key.rawValue)] = value
+            }
+        }
+        return SDImageCodersManager.shared.decodedImage(with: data, options: coderOptions)
+    }
+
+    open func imageEncode(
+        _ image: UIImage,
+        options: [ImageCoderOptions: Any]? = nil
+    ) -> Data? {
+        var coderOptions: [SDImageCoderOption: Any] = [:]
+        coderOptions[.encodeCompressionQuality] = 1
+        coderOptions[.encodeFirstFrameOnly] = false
+        if let options {
+            for (key, value) in options {
+                coderOptions[.init(rawValue: key.rawValue)] = value
+            }
+        }
+
+        let imageFormat = image.sd_imageFormat
+        let imageData = SDImageCodersManager.shared.encodedData(with: image, format: imageFormat, options: coderOptions)
+        if imageData != nil || imageFormat == .undefined {
+            return imageData
+        }
+        return SDImageCodersManager.shared.encodedData(with: image, format: .undefined, options: coderOptions)
+    }
 }
 
 // MARK: - SDWebImagePluginIndicator
@@ -340,5 +341,6 @@ extension SDWebImageProgressPluginIndicator: SDWebImageIndicator {}
 @objc extension Autoloader {
     static func loadPlugin_SDWebImage() {
         PluginManager.presetPlugin(ImagePlugin.self, object: SDWebImageImpl.self)
+        PluginManager.presetPlugin(ImageCoderPlugin.self, object: SDWebImageImpl.self)
     }
 }
