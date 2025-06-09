@@ -7,6 +7,9 @@
 
 import Alamofire
 import Foundation
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// [AlamofireEventSource](https://github.com/dclelland/AlamofireEventSource)
 extension Session {
@@ -28,7 +31,7 @@ extension Session {
 }
 
 extension DataStreamRequest {
-    public struct EventSource {
+    public struct EventSource: Sendable {
         public let event: EventSourceEvent
         public let token: CancellationToken
 
@@ -37,7 +40,7 @@ extension DataStreamRequest {
         }
     }
 
-    public enum EventSourceEvent {
+    public enum EventSourceEvent: Sendable {
         case message(EventSourceMessage)
         case complete(Completion)
     }
@@ -45,8 +48,20 @@ extension DataStreamRequest {
     @discardableResult
     public func responseEventSource(
         using serializer: EventSourceSerializer = EventSourceSerializer(),
-        on queue: DispatchQueue = .main,
-        handler: @escaping (EventSource) -> Void
+        handler: @escaping @MainActor @Sendable (EventSource) -> Void
+    ) -> DataStreamRequest {
+        responseEventSource(using: serializer, on: .main) { eventSource in
+            DispatchQueue.fw.mainAsync {
+                handler(eventSource)
+            }
+        }
+    }
+    
+    @discardableResult
+    public func responseEventSource(
+        using serializer: EventSourceSerializer = EventSourceSerializer(),
+        on queue: DispatchQueue,
+        handler: @escaping @Sendable (EventSource) -> Void
     ) -> DataStreamRequest {
         responseStream(using: serializer, on: queue) { stream in
             switch stream.event {
@@ -62,7 +77,7 @@ extension DataStreamRequest {
 }
 
 extension DataStreamRequest {
-    public struct DecodableEventSource<T: Decodable> {
+    public struct DecodableEventSource<T: Decodable>: Sendable {
         public let event: DecodableEventSourceEvent<T>
         public let token: CancellationToken
 
@@ -71,7 +86,7 @@ extension DataStreamRequest {
         }
     }
 
-    public enum DecodableEventSourceEvent<T: Decodable> {
+    public enum DecodableEventSourceEvent<T: Decodable>: Sendable {
         case message(DecodableEventSourceMessage<T>)
         case complete(Completion)
     }
@@ -79,8 +94,20 @@ extension DataStreamRequest {
     @discardableResult
     public func responseDecodableEventSource<T: Decodable>(
         using serializer: DecodableEventSourceSerializer<T> = DecodableEventSourceSerializer(),
-        on queue: DispatchQueue = .main,
-        handler: @escaping (DecodableEventSource<T>) -> Void
+        handler: @escaping @MainActor @Sendable (DecodableEventSource<T>) -> Void
+    ) -> DataStreamRequest {
+        responseDecodableEventSource(using: serializer, on: .main) { eventSource in
+            DispatchQueue.fw.mainAsync {
+                handler(eventSource)
+            }
+        }
+    }
+    
+    @discardableResult
+    public func responseDecodableEventSource<T: Decodable>(
+        using serializer: DecodableEventSourceSerializer<T> = DecodableEventSourceSerializer(),
+        on queue: DispatchQueue,
+        handler: @escaping @Sendable (DecodableEventSource<T>) -> Void
     ) -> DataStreamRequest {
         responseStream(using: serializer, on: queue) { stream in
             switch stream.event {

@@ -5,7 +5,11 @@
 //  Created by wuyong on 2025/6/9.
 //
 
+import Foundation
 import ObjectMapper
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - MappableModel
 /// 通用Mappable模型，兼容AnyModel、AnyArchivable等协议
@@ -54,7 +58,7 @@ extension AnyModel where Self: MappableModel {
     }
 }
 
-// MARK: - AnyModel+Array
+// MARK: - MappableModel+Array
 extension Array where Element: MappableModel {
     /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {

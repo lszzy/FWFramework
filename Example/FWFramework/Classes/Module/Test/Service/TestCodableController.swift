@@ -561,13 +561,9 @@ struct TestMappableModel: MappableModel {
     var enum2: TestMappableModelEnum = .unknown
     var enum3: TestMappableModelEnum?
     
-    init() {
-        
-    }
+    init() {}
     
-    init?(map: Map) {
-        
-    }
+    init?(map: Map) {}
     
     mutating func mapping(map: Map) {
         id <- map["id"]
@@ -597,13 +593,9 @@ struct TestMappableModel: MappableModel {
 class TestMappableSuperModel: MappableModel {
     var id: Int = 0
     
-    required init() {
-        
-    }
+    required init() {}
     
-    required init?(map: Map) {
-        
-    }
+    required init?(map: Map) {}
     
     func mapping(map: Map) {
         id <- map["id"]
