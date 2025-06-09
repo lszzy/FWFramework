@@ -39,7 +39,7 @@ extension AnyArchivable where Self: MappableModel {
 extension AnyModel where Self: MappableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         if let dict = object as? [String: Any] {
             return .init(JSON: dict)
         }
@@ -62,7 +62,7 @@ extension AnyModel where Self: MappableModel {
 extension Array where Element: MappableModel {
     /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         if let array = object as? [[String: Any]] {
             return .init(JSONArray: array)
         }

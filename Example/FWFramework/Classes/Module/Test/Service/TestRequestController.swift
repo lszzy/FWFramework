@@ -29,13 +29,7 @@ class AppRequest: HTTPRequest, @unchecked Sendable {
 class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = TestModel
 
-    /*
-     // 兼容JSONModel协议
-     struct TestModel: JSONModel {
-         var name: String = ""
-     }*/
-
-    // 也兼容CodableModel协议
+    // 兼容CodableModel协议等
     struct TestModel: CodableModel {
         var name: String = ""
     }
@@ -110,7 +104,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
 class TestWeatherRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = [TestWeatherModel]
 
-    struct TestWeatherModel: JSONModel {
+    struct TestWeatherModel: SmartModel {
         var city: String = ""
         var temp: String = ""
     }

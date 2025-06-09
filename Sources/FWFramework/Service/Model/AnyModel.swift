@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - AnyModel
-/// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|JSONModel|SmartModel，可扩展
+/// 通用编码模型协议，默认兼容BasicTypelJSON|CodableMode|SmartModel，可扩展
 public protocol AnyModel: ObjectType {
     /// 从Object解码成可选Model，当object为字典和数组时支持具体路径
     static func decodeModel(from object: Any?, designatedPath: String?) -> Self?
@@ -21,7 +21,7 @@ public protocol AnyModel: ObjectType {
 extension AnyModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         return object as? Self
     }
 
@@ -33,6 +33,37 @@ extension AnyModel {
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
         self
+    }
+    
+    /// 获取内部对象，兼容字典、数组等
+    public static func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
+        var result: Any? = object
+        var abort = false
+        if let paths = designatedPath?.components(separatedBy: "."), paths.count > 0 {
+            var next = object
+            for seg in paths {
+                if seg.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) == "" || abort {
+                    continue
+                }
+                if let index = Int(seg), index >= 0 {
+                    if let array = next as? [Any], index < array.count {
+                        let _next = array[index]
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
+                } else {
+                    if let _next = (next as? [String: Any])?[seg] {
+                        result = _next
+                        next = _next
+                    } else {
+                        abort = true
+                    }
+                }
+            }
+        }
+        return abort ? nil : result
     }
 }
 
@@ -61,18 +92,12 @@ extension Dictionary: AnyModel {}
 extension AnyModel where Self: BasicType {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
-        if let object, let transformer = Self.self as? _Transformable.Type {
-            return transformer.transform(from: object) as? Self
-        }
+        let object = getInnerObject(inside: object, by: designatedPath)
         return object as? Self
     }
 
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
-        if let transformer = self as? _Transformable {
-            return transformer.plainValue()
-        }
         return self
     }
 }
@@ -84,7 +109,7 @@ extension JSON: AnyModel {}
 extension AnyModel where Self == JSON {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         return object != nil ? JSON(object) : nil
     }
 
@@ -99,7 +124,7 @@ extension AnyModel where Self == JSON {
 extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         if let array = object as? [Any] {
             return array.compactMap { Element.decodeModel(from: $0) }
         }

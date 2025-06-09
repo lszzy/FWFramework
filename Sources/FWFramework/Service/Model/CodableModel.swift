@@ -38,7 +38,7 @@ extension CodableModel where Self: AnyObject {
 extension AnyModel where Self: CodableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
+        let object = getInnerObject(inside: object, by: designatedPath)
         var data: Data? = object as? Data
         if data == nil, let object {
             if let string = object as? String {
@@ -68,7 +68,7 @@ extension AnyModel where Self: CodableModel {
 }
 
 // MARK: - KeyMappable
-/// 通用Key键名映射协议，兼容Codable、CodableModel、JSONModel，推荐使用
+/// 通用Key键名映射协议，兼容Codable、CodableModel，推荐使用
 ///
 /// [ExCodable](https://github.com/iwill/ExCodable)
 public protocol KeyMappable {}
