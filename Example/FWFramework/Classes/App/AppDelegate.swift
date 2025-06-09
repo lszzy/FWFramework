@@ -19,7 +19,7 @@ class AppDelegate: AppResponder {
 
     // MARK: - Override
     override func setupEnvironment() {
-        Mediator.delegateModeEnabled = true
+        Mediator.multicastDelegateEnabled = true
         ErrorManager.startCapture(captureException: true, captureSignal: true)
     }
 

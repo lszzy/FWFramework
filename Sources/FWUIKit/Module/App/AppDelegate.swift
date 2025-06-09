@@ -24,7 +24,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     /// 初始化应用环境，优先级1，willFinishLaunching子模块之前调用，子类重写
     open func setupEnvironment() {
         /*
-         Mediator.delegateModeEnabled = true
+         Mediator.multicastDelegateEnabled = true
          ErrorManager.startCapture()
           */
     }
@@ -85,7 +85,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         setupEnvironment()
 
         Mediator.setupAllModules()
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { _ = $0.application?(application, willFinishLaunchingWithOptions: launchOptions) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:willFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
@@ -99,7 +99,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         setupController()
         setupService(options: launchOptions)
 
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { _ = $0.application?(application, didFinishLaunchingWithOptions: launchOptions) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
@@ -110,7 +110,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func applicationWillResignActive(_ application: UIApplication) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.applicationWillResignActive?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillResignActive(_:)), arguments: [application])
@@ -118,7 +118,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func applicationDidEnterBackground(_ application: UIApplication) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.applicationDidEnterBackground?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationDidEnterBackground(_:)), arguments: [application])
@@ -126,7 +126,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func applicationWillEnterForeground(_ application: UIApplication) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.applicationWillEnterForeground?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), arguments: [application])
@@ -138,7 +138,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func applicationDidBecomeActive(_ application: UIApplication) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.applicationDidBecomeActive?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationDidBecomeActive(_:)), arguments: [application])
@@ -146,7 +146,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func applicationWillTerminate(_ application: UIApplication) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.applicationWillTerminate?(application) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillTerminate(_:)), arguments: [application])
@@ -155,7 +155,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
 
     // MARK: - Notification
     open func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.application?(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didRegisterForRemoteNotificationsWithDeviceToken:)), arguments: [application, deviceToken])
@@ -167,7 +167,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.application?(application, didFailToRegisterForRemoteNotificationsWithError: error) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFailToRegisterForRemoteNotificationsWithError:)), arguments: [application, error])
@@ -179,7 +179,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     }
 
     open func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { $0.application?(application, didReceiveRemoteNotification: userInfo, fetchCompletionHandler: completionHandler) }
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didReceiveRemoteNotification:fetchCompletionHandler:)), arguments: [application, userInfo, completionHandler])
@@ -194,7 +194,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     // MARK: - URL
     @discardableResult
     open func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             var result = false
             Mediator.checkAllModules { delegate in
                 let returnValue = delegate.application?(app, open: url, options: options)
@@ -215,7 +215,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
 
     @discardableResult
     open func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        if Mediator.delegateModeEnabled {
+        if Mediator.multicastDelegateEnabled {
             var result = false
             Mediator.checkAllModules { delegate in
                 let returnValue = delegate.application?(application, continue: userActivity, restorationHandler: restorationHandler)

@@ -81,14 +81,14 @@ extension ModuleProtocol where Self: NSObject {
 public class Mediator: @unchecked Sendable {
     /// 模块服务加载器，加载未注册模块时会尝试调用并注册，block返回值为register方法module参数
     public static let sharedLoader = Loader<Any, ModuleProtocol.Type>()
-    /// 是否启用Delegate模式，AppResponder.setupEnvironment调用时生效，默认false
-    public static var delegateModeEnabled: Bool {
-        get { shared.delegateModeEnabled }
-        set { shared.delegateModeEnabled = newValue }
+    /// 是否启用多代理，AppResponder.setupEnvironment调用时生效，默认false
+    public static var multicastDelegateEnabled: Bool {
+        get { shared.multicastDelegateEnabled }
+        set { shared.multicastDelegateEnabled = newValue }
     }
 
     private static let shared = Mediator()
-    private var delegateModeEnabled = false
+    private var multicastDelegateEnabled = false
     private var modulePool: [String: ModuleProtocol.Type] = [:]
     private var moduleInvokePool: [String: Bool] = [:]
 
