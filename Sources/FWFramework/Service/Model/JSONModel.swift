@@ -1658,6 +1658,62 @@ open class CustomDateFormatTransform: DateFormatterTransform {
     }
 }
 
+// MARK: - AnyModel+JSONModel
+extension AnyModel where Self: JSONModel {
+    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 默认实现从Model编码成Object
+    public func encodeObject() -> Any? {
+        toJSON()
+    }
+}
+
+extension AnyModel where Self: JSONModelCustomTransformable {
+    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
+            return transform(from: object)
+        }
+        return nil
+    }
+
+    /// 默认实现从Model编码成Object
+    public func encodeObject() -> Any? {
+        plainValue()
+    }
+}
+
+extension AnyModel where Self: JSONModelEnum {
+    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
+            return transform(from: object)
+        }
+        return nil
+    }
+
+    /// 默认实现从Model编码成Object
+    public func encodeObject() -> Any? {
+        plainValue()
+    }
+}
+
+// MARK: - Array+JSONModel
+extension Array where Element: JSONModel {
+    /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 从数组Model编码成Object
+    public func encodeObject() -> Any? {
+        toJSON()
+    }
+}
+
 // MARK: - KeyMappable
 extension KeyMappable where Self: _ExtendCustomModelType {
     public mutating func mappingValue(_ value: Any, forKey key: String) {

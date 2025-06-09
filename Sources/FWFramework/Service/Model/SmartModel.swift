@@ -28,6 +28,32 @@ public class SmartModelConfiguration: @unchecked Sendable {
     public var encodingOptions: Set<SmartEncodingOption>?
 }
 
+// MARK: - AnyModel+SmartModel
+extension AnyModel where Self: SmartModel {
+    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 默认实现从Model编码成Object
+    public func encodeObject() -> Any? {
+        toDictionary()
+    }
+}
+
+// MARK: - Array+SmartModel
+extension Array where Element: SmartModel {
+    /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
+    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
+        deserializeAny(from: object, designatedPath: designatedPath)
+    }
+
+    /// 从数组Model编码成Object
+    public func encodeObject() -> Any? {
+        toArray()
+    }
+}
+
 // MARK: - SmartModel+AnyArchivable
 extension AnyArchivable where Self: SmartModel {
     public static func archiveDecode(_ data: Data?) -> Self? {

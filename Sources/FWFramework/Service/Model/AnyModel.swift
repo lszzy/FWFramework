@@ -95,102 +95,7 @@ extension AnyModel where Self == JSON {
     }
 }
 
-// MARK: - AnyModel+CodableModel
-extension AnyModel where Self: CodableModel {
-    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        let object = NSObject.getInnerObject(inside: object, by: designatedPath)
-        var data: Data? = object as? Data
-        if data == nil, let object {
-            if let string = object as? String {
-                data = string.data(using: .utf8)
-            } else {
-                do {
-                    data = try Data.fw.jsonEncode(object)
-                } catch {
-                    InternalLogger.logError(error.localizedDescription)
-                }
-            }
-        }
-        guard let data else { return nil }
-
-        do {
-            return try data.decoded() as Self
-        } catch {
-            InternalLogger.logError(error.localizedDescription)
-            return nil
-        }
-    }
-
-    /// 默认实现从Model编码成Object
-    public func encodeObject() -> Any? {
-        do {
-            let data = try encoded() as Data
-            return try Data.fw.jsonDecode(data)
-        } catch {
-            InternalLogger.logError(error.localizedDescription)
-            return nil
-        }
-    }
-}
-
-// MARK: - AnyModel+JSONModel
-extension AnyModel where Self: JSONModel {
-    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        deserializeAny(from: object, designatedPath: designatedPath)
-    }
-
-    /// 默认实现从Model编码成Object
-    public func encodeObject() -> Any? {
-        toJSON()
-    }
-}
-
-extension AnyModel where Self: JSONModelCustomTransformable {
-    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
-            return transform(from: object)
-        }
-        return nil
-    }
-
-    /// 默认实现从Model编码成Object
-    public func encodeObject() -> Any? {
-        plainValue()
-    }
-}
-
-extension AnyModel where Self: JSONModelEnum {
-    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        if let object = NSObject.getInnerObject(inside: object, by: designatedPath) {
-            return transform(from: object)
-        }
-        return nil
-    }
-
-    /// 默认实现从Model编码成Object
-    public func encodeObject() -> Any? {
-        plainValue()
-    }
-}
-
-// MARK: - AnyModel+SmartModel
-extension AnyModel where Self: SmartModel {
-    /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        deserializeAny(from: object, designatedPath: designatedPath)
-    }
-
-    /// 默认实现从Model编码成Object
-    public func encodeObject() -> Any? {
-        toDictionary()
-    }
-}
-
-// MARK: - AnyModel+Array
+// MARK: - Array+AnyModel
 extension Array where Element: AnyModel {
     /// 从Object解码成可选Model数组，当object为字典和数组时支持具体路径
     public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
@@ -209,29 +114,5 @@ extension Array where Element: AnyModel {
     /// 从数组Model编码成Object
     public func encodeObject() -> Any? {
         compactMap { $0.encodeObject() }
-    }
-}
-
-extension Array where Element: JSONModel {
-    /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        deserializeAny(from: object, designatedPath: designatedPath)
-    }
-
-    /// 从数组Model编码成Object
-    public func encodeObject() -> Any? {
-        toJSON()
-    }
-}
-
-extension Array where Element: SmartModel {
-    /// 默认实现从Object解码成可选Model数组，当object为字典和数组时支持具体路径
-    public static func decodeModel(from object: Any?, designatedPath: String? = nil) -> Self? {
-        deserializeAny(from: object, designatedPath: designatedPath)
-    }
-
-    /// 从数组Model编码成Object
-    public func encodeObject() -> Any? {
-        toArray()
     }
 }
