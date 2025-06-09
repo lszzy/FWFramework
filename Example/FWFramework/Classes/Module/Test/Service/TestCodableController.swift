@@ -7,6 +7,7 @@
 //
 
 import FWFramework
+import ObjectMapper
 
 // MARK: - TestCodableModel
 struct TestCodableModel: CodableModel {
@@ -535,6 +536,103 @@ enum TestSmartModelEnum: String, Codable {
     case unknown = ""
 }
 
+// MARK: - TestMappableModel
+struct TestMappableModel: MappableModel {
+    var id: Int = 0
+    var name: String = ""
+    var age: Int?
+    var amount: Float = 0
+    var alias: String = ""
+    var except: String = ""
+    var camelName: String = ""
+    var any: Any?
+    var dict: [AnyHashable: Any]?
+    var array: [Any]?
+    var optional1: String = ""
+    var optional2: String = ""
+    var optional3: String? = "default"
+    var optional4: Int? = 4
+    var optional5: Int? = 0
+    var sub: TestMappableSubModel?
+    var sub2: TestMappableSubModel = .init()
+    var subs: [TestMappableSubModel] = []
+    var subdict: [String: TestMappableSubModel] = [:]
+    var enum1: TestMappableModelEnum = .unknown
+    var enum2: TestMappableModelEnum = .unknown
+    var enum3: TestMappableModelEnum?
+    
+    init() {
+        
+    }
+    
+    init?(map: Map) {
+        
+    }
+    
+    mutating func mapping(map: Map) {
+        id <- map["id"]
+        name <- map["name"]
+        age <- (map["age"], TransformOf<Int, String>(fromJSON: { Int($0 ?? "") }, toJSON: { String($0 ?? 0) }))
+        amount <- map["amount"]
+        alias <- map["alias_key"]
+        camelName <- map["camel_name"]
+        any <- map["any"]
+        dict <- map["dict"]
+        array <- map["array"]
+        optional1 <- map["optional1"]
+        optional2 <- map["optional2"]
+        optional3 <- map["optional3"]
+        optional4 <- map["optional4"]
+        optional5 <- map["optional5"]
+        sub <- map["sub"]
+        sub2 <- map["sub2"]
+        subs <- map["subs"]
+        subdict <- map["subdict"]
+        enum1 <- map["enum1"]
+        enum2 <- map["enum2"]
+        enum3 <- map["enum3"]
+    }
+}
+
+class TestMappableSuperModel: MappableModel {
+    var id: Int = 0
+    
+    required init() {
+        
+    }
+    
+    required init?(map: Map) {
+        
+    }
+    
+    func mapping(map: Map) {
+        id <- map["id"]
+    }
+}
+
+class TestMappableSubModel: TestMappableSuperModel {
+    var name: String?
+    
+    required init() {
+        super.init()
+    }
+    
+    required init?(map: Map) {
+        super.init(map: map)
+    }
+    
+    override func mapping(map: Map) {
+        super.mapping(map: map)
+        
+        name <- map["name"]
+    }
+}
+
+enum TestMappableModelEnum: String {
+    case test
+    case unknown = ""
+}
+
 // MARK: - TestObjectParameter
 class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
     @MappedValue var id: Int = 0
@@ -581,6 +679,7 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
             ["JSONModel+MappedValue", "onMappedValueJSONModel"],
             ["JSONModel+MappedValueMacro", "onMappedValueMacroJSONModel"],
             ["SmartModel", "onSmartModel"],
+            ["MappableModel", "onMappableModel"],
             ["ObjectParameter", "onObjectParameter"],
             ["Optional.isNil", "onOptionalNil"]
         ])
@@ -625,9 +724,13 @@ extension TestCodableController {
         ]
     }
 
-    func showResults(_ tests: [Bool]) {
+    func showResults(_ tests: [Bool], _ time: TimeInterval?) {
         count += 1
-        app.showMessage(text: tests.count == tests.filter { $0 }.count ? "✅ 测试通过 (\(count)-\(tests.count))" : "❌ 测试失败 (\(count)-\(tests.filter { !$0 }.count))")
+        var text = tests.count == tests.filter { $0 }.count ? "✅ 测试通过 (\(count)-\(tests.count))" : "❌ 测试失败 (\(count)-\(tests.filter { !$0 }.count))"
+        if let time {
+            text += "\n测试耗时：\(NSNumber(value: time).app.roundString(3))s"
+        }
+        app.showMessage(text: text)
     }
 
     @objc func onCodableModel() {
@@ -664,7 +767,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestCodableModel? = TestCodableModel.decodeModel(from: testCodableData())
+            model = TestCodableModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onCustomCodableModel() {
@@ -701,7 +811,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCustomCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestCustomCodableModel? = TestCustomCodableModel.decodeModel(from: testCodableData())
+            model = TestCustomCodableModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onMappedValueCodableModel() {
@@ -738,7 +855,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestMappedValueCodableModel? = TestMappedValueCodableModel.decodeModel(from: testCodableData())
+            model = TestMappedValueCodableModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onMappedValueMacroCodableModel() {
@@ -775,7 +899,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestMappedValueMacroCodableModel? = TestMappedValueMacroCodableModel.decodeModel(from: testCodableData())
+            model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onCustomJSONModel() {
@@ -812,7 +943,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCustomJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestCustomJSONModel? = TestCustomJSONModel.decodeModel(from: testCodableData())
+            model = TestCustomJSONModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onMappedValueJSONModel() {
@@ -849,7 +987,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestMappedValueJSONModel? = TestMappedValueJSONModel.decodeModel(from: testCodableData())
+            model = TestMappedValueJSONModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onMappedValueMacroJSONModel() {
@@ -886,7 +1031,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestMappedValueMacroJSONModel? = TestMappedValueMacroJSONModel.decodeModel(from: testCodableData())
+            model = TestMappedValueMacroJSONModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onSmartModel() {
@@ -924,7 +1076,59 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestSmartModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        SmartSentinel.debugMode = .none
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestSmartModel? = TestSmartModel.decodeModel(from: testCodableData())
+            model = TestSmartModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
+    }
+    
+    @objc func onMappableModel() {
+        func testModel(_ model: TestMappableModel?, encode: Bool = false) -> [Bool] {
+            let results: [Bool] = [
+                model != nil,
+                model?.id == 1,
+                model?.name == "name",
+                model?.age == 2,
+                model?.amount == 100.0,
+                model?.alias == "alias",
+                model?.except == "",
+                model?.camelName == "camelName",
+                String.app.safeString(model?.any) == "any",
+                model?.dict != nil,
+                (model?.array as? [Int])?.first == 1,
+                model?.optional1 == "",
+                model?.optional2 == "",
+                model?.optional3 == "default",
+                model?.optional4 == (encode ? 4 : nil),
+                model?.optional5 == 5,
+                model?.sub?.name == "sub",
+                model?.sub2 != nil,
+                model?.subs.first?.name == "subs",
+                model?.subdict["key"]?.name == "subdict",
+                model?.enum1 == .test,
+                model?.enum2 == .unknown,
+                model?.enum3 == nil
+            ]
+            return results
+        }
+
+        var model: TestMappableModel? = TestMappableModel.decodeModel(from: testCodableData())
+        var tests = testModel(model)
+        model = TestMappableModel.decodeModel(from: model?.encodeObject())
+        tests += testModel(model, encode: true)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model: TestMappableModel? = TestMappableModel.decodeModel(from: testCodableData())
+            model = TestMappableModel.decodeModel(from: model?.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onObjectParameter() {
@@ -948,7 +1152,14 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
         tests += testModel(model, encode: true)
-        showResults(tests)
+        
+        Benchmark.begin("codable")
+        for _ in 0..<1000 {
+            var model = TestObjectParameter(dictionaryValue: dict)
+            model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
+        }
+        let time = Benchmark.end("codable")
+        showResults(tests, time)
     }
 
     @objc func onOptionalNil() {
@@ -961,6 +1172,6 @@ extension TestCodableController {
         tests.append(!APP.isNil(name))
         tests.append(APP.isNil(age))
         tests.append(APP.isNil(value))
-        showResults(tests)
+        showResults(tests, nil)
     }
 }

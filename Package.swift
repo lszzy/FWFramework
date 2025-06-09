@@ -71,6 +71,10 @@ let package = Package(
             targets: ["FWPluginAlamofire"]
         ),
         .library(
+            name: "FWPluginObjectMapper",
+            targets: ["FWPluginObjectMapper"]
+        ),
+        .library(
             name: "FWPluginMMKV",
             targets: ["FWPluginMMKV"]
         ),
@@ -83,6 +87,7 @@ let package = Package(
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
         .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0"),
+        .package(url: "https://github.com/tristanhimmelman/ObjectMapper.git", from: "4.0.0"),
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0")
     ],
     targets: [
@@ -239,6 +244,18 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire")
             ],
             path: "Sources/FWPlugin/Alamofire",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginObjectMapper",
+            dependencies: [
+                "FWFramework",
+                .product(name: "ObjectMapper", package: "ObjectMapper")
+            ],
+            path: "Sources/FWPlugin/ObjectMapper",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

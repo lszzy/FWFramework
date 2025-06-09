@@ -121,6 +121,12 @@ Pod::Spec.new do |s|
       sss.dependency 'Alamofire'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
+    
+    ss.subspec 'ObjectMapper' do |sss|
+      sss.source_files = 'Sources/FWPlugin/ObjectMapper/**/*.swift'
+      sss.dependency 'ObjectMapper'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
       
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWPlugin/Lottie/**/*.swift'
