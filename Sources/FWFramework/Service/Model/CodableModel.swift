@@ -8,22 +8,7 @@
 import Foundation
 
 // MARK: - CodableModel
-/// 通用Codable模型协议，默认未实现KeyMappable，使用方式同Codable一致；
-/// CodableModel可实现KeyMappable，并选择以下模式使用，推荐方式
-///
-/// KeyMappable模式一：MappedValue模式
-/// 1. 支持Codable类型字段，使用方式：@MappedValue
-/// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
-/// 3. 支持Any类型字段，使用方式：@MappedValue
-/// 4. 未标记MappedValue的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
-///
-/// KeyMappable模式二：MappedValueMacro模式(需引入FWPluginMacros子模块)
-/// 1. 标记class或struct为自动映射存储属性宏，使用方式：@MappedValueMacro
-/// 2. 可自定义字段映射规则，使用方式：@MappedValue("name1", "name2")
-/// 3. 以下划线开头或结尾的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
-///
-/// KeyMappable模式三：自定义模式
-/// 1. 需完整实现Codable协议的encode和decode协议方法
+/// 通用Codable模型协议，使用方式同Codable一致
 public protocol CodableModel: Codable, AnyModel {}
 
 extension CodableModel where Self: AnyObject {
@@ -67,13 +52,27 @@ extension AnyModel where Self: CodableModel {
     }
 }
 
-// MARK: - KeyMappable
-/// 通用Key键名映射协议，兼容Codable、CodableModel，推荐使用
+// MARK: - MappedCodableModel
+/// 模型可实现MappedCodableModel键名映射协议，并选择以下模式使用，推荐方式
+///
+/// 模式一：MappedValue模式
+/// 1. 支持Codable类型字段，使用方式：@MappedValue
+/// 2. 支持多字段映射，使用方式：@MappedValue("name1", "name2")
+/// 3. 支持Any类型字段，使用方式：@MappedValue
+/// 4. 未标记MappedValue的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
+///
+/// 模式二：MappedValueMacro模式(需引入FWPluginMacros子模块)
+/// 1. 标记class或struct为自动映射存储属性宏，使用方式：@MappedValueMacro
+/// 2. 可自定义字段映射规则，使用方式：@MappedValue("name1", "name2")
+/// 3. 以下划线开头或结尾的字段将自动忽略，也可代码忽略：@MappedValue(ignored: true)
+///
+/// 模式三：自定义模式
+/// 1. 需完整实现Codable协议的encode和decode协议方法
 ///
 /// [ExCodable](https://github.com/iwill/ExCodable)
-public protocol KeyMappable {}
+public protocol MappedCodableModel: CodableModel {}
 
-extension KeyMappable where Self: Codable & ObjectType {
+extension MappedCodableModel {
     public func encode(to encoder: Encoder) throws {
         try encodeMirror(to: encoder)
     }

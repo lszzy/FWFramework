@@ -206,7 +206,7 @@ enum TestCustomCodableEnum: String, Codable {
 }
 
 // MARK: - TestMappedValueCodableModel
-struct TestMappedValueCodableModel: CodableModel, KeyMappable {
+struct TestMappedValueCodableModel: MappedCodableModel {
     @MappedValue var id: Int = 0
     @MappedValue var name: String = ""
     @MappedValue var age: Int?
@@ -233,7 +233,7 @@ struct TestMappedValueCodableModel: CodableModel, KeyMappable {
     @MappedValue var enum3: TestMappedValueCodableModelEnum?
 }
 
-struct TestMappedValueCodableSubModel: CodableModel, KeyMappable {
+struct TestMappedValueCodableSubModel: MappedCodableModel {
     @MappedValue var id: Int = 0
     @MappedValue var name: String?
 }
@@ -245,7 +245,7 @@ enum TestMappedValueCodableModelEnum: String, Codable {
 
 // MARK: - TestMappedValueMacroCodableModel
 @MappedValueMacro
-struct TestMappedValueMacroCodableModel: CodableModel, KeyMappable {
+struct TestMappedValueMacroCodableModel: MappedCodableModel {
     var id: Int = 0
     var name: String = ""
     var age: Int?
@@ -274,7 +274,7 @@ struct TestMappedValueMacroCodableModel: CodableModel, KeyMappable {
 }
 
 @MappedValueMacro
-struct TestMappedValueMacroCodableSubModel: CodableModel, KeyMappable {
+struct TestMappedValueMacroCodableSubModel: MappedCodableModel {
     var id: Int = 0
     var name: String?
 }
@@ -479,8 +479,8 @@ class TestCodableController: UIViewController, TableViewControllerProtocol {
         tableData.append(contentsOf: [
             ["CodableModel", "onCodableModel"],
             ["CodableModel+Custom", "onCustomCodableModel"],
-            ["CodableModel+MappedValue", "onMappedValueCodableModel"],
-            ["CodableModel+MappedValueMacro", "onMappedValueMacroCodableModel"],
+            ["MappedCodableModel", "onMappedValueCodableModel"],
+            ["MappedCodableModel+Macro", "onMappedValueMacroCodableModel"],
             ["SmartModel", "onSmartModel"],
             ["MappableModel", "onMappableModel"],
             ["ObjectParameter", "onObjectParameter"],
