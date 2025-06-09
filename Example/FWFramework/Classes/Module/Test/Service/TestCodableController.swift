@@ -626,12 +626,26 @@ enum TestMappableModelEnum: String {
 }
 
 // MARK: - TestObjectParameter
-class TestObjectParameter: ObjectParameter, JSONModel, KeyMappable {
-    @MappedValue var id: Int = 0
-    @MappedValue var name: String = ""
-    @MappedValue var block: BlockVoid?
+class TestObjectParameter: ObjectParameter {
+    var id: Int = 0
+    var name: String = ""
+    var block: BlockVoid?
 
     required init() {}
+    
+    required init(dictionaryValue: [AnyHashable: Any]) {
+        self.id = dictionaryValue["id"].safeInt
+        self.name = dictionaryValue["name"].safeString
+        self.block = dictionaryValue["block"] as? BlockVoid
+    }
+
+    public var dictionaryValue: [AnyHashable: Any] {
+        var dictionary: [AnyHashable: Any] = [:]
+        dictionary["id"] = id
+        dictionary["name"] = name
+        dictionary["block"] = block
+        return dictionary
+    }
 }
 
 // MARK: - TestCodableController
@@ -1142,13 +1156,13 @@ extension TestCodableController {
 
         var model = TestObjectParameter(dictionaryValue: dict)
         var tests = testModel(model)
-        model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
+        model = TestObjectParameter(dictionaryValue: model.dictionaryValue)
         tests += testModel(model, encode: true)
         
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model = TestObjectParameter(dictionaryValue: dict)
-            model = TestObjectParameter.decodeSafeModel(from: model.encodeObject())
+            model = TestObjectParameter(dictionaryValue: model.dictionaryValue)
         }
         let time = Benchmark.end("codable")
         showResults(tests, time)
