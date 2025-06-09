@@ -13,7 +13,7 @@ import MMKV
 // MARK: - CacheType+MMKV
 extension CacheType {
     /// MMKV缓存
-    public static let mmkv: CacheType = .init(6)
+    public static let mmkv: CacheType = .init("mmkv")
 }
 
 // MARK: - CacheMMKV
