@@ -67,6 +67,14 @@ extension AnyModel {
     }
 }
 
+extension AnyModel where Self: AnyObject {
+    /// 获取对象的内存hash字符串
+    public var hashString: String {
+        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
+        return String(describing: opaquePointer)
+    }
+}
+
 // MARK: - AnyModel+BasicType
 extension Int: AnyModel {}
 extension Int8: AnyModel {}

@@ -11,14 +11,6 @@ import Foundation
 /// 通用Codable模型协议，使用方式同Codable一致
 public protocol CodableModel: Codable, AnyModel {}
 
-extension CodableModel where Self: AnyObject {
-    /// 获取对象的内存hash字符串
-    public var hashString: String {
-        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
-        return String(describing: opaquePointer)
-    }
-}
-
 // MARK: - AnyModel+CodableModel
 extension AnyModel where Self: CodableModel {
     /// 默认实现从Object解码成可选Model，当object为字典和数组时支持具体路径

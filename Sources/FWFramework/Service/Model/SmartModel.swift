@@ -12,14 +12,6 @@ import UIKit
 /// 智能解析Codable模型，兼容AnyModel、AnyArchivable等协议，推荐使用
 public protocol SmartModel: SmartCodable, AnyModel {}
 
-extension SmartModel where Self: AnyObject {
-    /// 获取对象的内存hash字符串
-    public var hashString: String {
-        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
-        return String(describing: opaquePointer)
-    }
-}
-
 // MARK: - SmartModelConfiguration
 public class SmartModelConfiguration: @unchecked Sendable {
     public static let shared = SmartModelConfiguration()

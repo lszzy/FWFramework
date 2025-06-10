@@ -15,14 +15,6 @@ import ObjectMapper
 /// 通用Mappable模型，兼容AnyModel、AnyArchivable等协议
 public protocol MappableModel: Mappable, AnyModel {}
 
-extension MappableModel where Self: AnyObject {
-    /// 获取对象的内存hash字符串
-    public var hashString: String {
-        let opaquePointer = Unmanaged.passUnretained(self).toOpaque()
-        return String(describing: opaquePointer)
-    }
-}
-
 // MARK: - MappableModel+AnyArchivable
 extension AnyArchivable where Self: MappableModel {
     public static func archiveDecode(_ data: Data?) -> Self? {
