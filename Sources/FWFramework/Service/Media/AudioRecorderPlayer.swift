@@ -12,17 +12,31 @@ import AVFoundation
 ///
 /// [react-native-audio-recorder-player](https://github.com/hyochan/react-native-audio-recorder-player)
 class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
-    var recordBackListener: (([String : Any]) -> Void)?
-    var playBackListener: (([String : Any]) -> Void)?
+    public struct RecordBackType: Sendable {
+        public var isRecording: Bool
+        public var currentPosition: TimeInterval
+        public var currentMetering: Float
+    }
     
-    var subscriptionDuration: Double = 0.5
-    var audioFileURL: URL?
+    public struct PlayBackType: Sendable {
+        public var isMuted: Bool?
+        public var currentPosition: TimeInterval
+        public var duration: TimeInterval
+        public var isFinished: Bool
+    }
+    
+    // MARK: - Accessor
+    public var recordBackListener: ((RecordBackType) -> Void)?
+    public var playBackListener: ((PlayBackType) -> Void)?
+    
+    private var subscriptionDuration: Double = 0.5
+    private var audioFileURL: URL?
 
     // Recorder
-    var audioRecorder: AVAudioRecorder!
-    var audioSession: AVAudioSession!
-    var recordTimer: Timer?
-    var _meteringEnabled: Bool = false
+    private var audioRecorder: AVAudioRecorder!
+    private var audioSession: AVAudioSession!
+    private var recordTimer: Timer?
+    private var _meteringEnabled: Bool = false
 
     // Player
     var pausedPlayTime: CMTime?
@@ -30,6 +44,11 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     var audioPlayerItem: AVPlayerItem!
     var audioPlayer: AVPlayer!
     var timeObserverToken: Any?
+    
+    private var _isRecording = false
+    private var _isPlaying = false
+    private var _hasPaused = false
+    private var _hasPausedRecord = false
 
     override init() {
         super.init()
@@ -39,7 +58,27 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-
+    
+    // MARK: - Public
+    /// 格式化时长，格式"00:00"或"00:00:00"
+    public func formatDuration(_ duration: TimeInterval, hasMilliseconds: Bool = true) -> String {
+        if hasMilliseconds {
+            var milliseconds = Int64(duration * 1000)
+            var seconds = milliseconds / 1000
+            let minutes = seconds / 60
+            seconds = seconds % 60
+            milliseconds = (milliseconds % 1000) / 10
+            return String(format: "%02d:%02d:%02d", minutes, seconds, milliseconds)
+        } else {
+            var seconds = Int64(duration)
+            var minutes = seconds / 60
+            seconds = seconds % 60
+            minutes = minutes % 60
+            return String(format: "%02ld:%02ld", minutes, seconds)
+        }
+    }
+    
+    // MARK: - Private
     func setAudioFileURL(path: String) {
         if (path == "DEFAULT") {
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -58,18 +97,12 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     func updateRecorderProgress(timer: Timer) -> Void {
         if (audioRecorder != nil) {
             var currentMetering: Float = 0
-
             if (_meteringEnabled) {
                 audioRecorder.updateMeters()
                 currentMetering = audioRecorder.averagePower(forChannel: 0)
             }
 
-            let status = [
-                "isRecording": audioRecorder.isRecording,
-                "currentPosition": audioRecorder.currentTime * 1000,
-                "currentMetering": currentMetering,
-            ] as [String : Any];
-
+            let status = RecordBackType(isRecording: audioRecorder.isRecording, currentPosition: audioRecorder.currentTime, currentMetering: currentMetering)
             recordBackListener?(status)
         }
     }
@@ -314,12 +347,14 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time,
                                                                 queue: .main) {_ in
             if (self.audioPlayer != nil) {
-                self.playBackListener?([
-                    "isMuted": self.audioPlayer.isMuted,
-                    "currentPosition": self.audioPlayerItem.currentTime().seconds * 1000,
-                    "duration": self.audioPlayerItem.asset.duration.seconds * 1000,
-                    "isFinished": false,
-                ])
+                self.playBackListener?(
+                    PlayBackType(
+                        isMuted: self.audioPlayer.isMuted,
+                        currentPosition: self.audioPlayerItem.currentTime().seconds,
+                        duration: self.audioPlayerItem.asset.duration.seconds,
+                        isFinished: false
+                    )
+                )
             }
         }
     }
@@ -369,13 +404,15 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     
     @objc func playerDidFinishPlaying(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
-            let duration = playerItem.duration.seconds * 1000
-            self.playBackListener?([
-                "isMuted": self.audioPlayer?.isMuted as Any,
-                "currentPosition": duration,
-                "duration": duration,
-                "isFinished": true,
-            ])
+            let duration = playerItem.duration.seconds
+            self.playBackListener?(
+                PlayBackType(
+                    isMuted: self.audioPlayer?.isMuted,
+                    currentPosition: duration,
+                    duration: duration,
+                    isFinished: true
+                )
+            )
         }
     }
 
@@ -425,14 +462,14 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func seekToPlayer(time: Double) async throws {
+    func seekToPlayer(seconds: Double) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             if (self.audioPlayer == nil) {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
             }
             
-            audioPlayer.seek(to: CMTime(seconds: time / 1000, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
             continuation.resume()
         }
     }
