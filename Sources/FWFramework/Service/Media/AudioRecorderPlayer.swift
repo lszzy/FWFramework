@@ -25,14 +25,19 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         public var isFinished: Bool
     }
     
-    // MARK: - Accessor
-    public var recordBackListener: ((RecordBackType) -> Void)?
-    public var playBackListener: ((PlayBackType) -> Void)?
+    public struct AudioSet: Sendable {
+    }
     
-    private var subscriptionDuration: Double = 0.5
-    private var audioFileURL: URL?
-
+    // MARK: - Accessor
+    /// 录制回调监听
+    public var recordBackListener: ((RecordBackType) -> Void)?
+    /// 播放回调监听
+    public var playBackListener: ((PlayBackType) -> Void)?
+    /// 音量监听频率
+    public var subscriptionDuration: Double = 0.5
+    
     // Recorder
+    private var audioFileURL: URL?
     private var audioRecorder: AVAudioRecorder!
     private var audioSession: AVAudioSession!
     private var recordTimer: Timer?
@@ -60,6 +65,206 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
     
     // MARK: - Public
+    /// 开始录制
+    public func startRecorder(
+        uri: String? = nil,
+        audioSets: AudioSet? = nil,
+        meteringEnabled: Bool? = nil
+    ) async throws -> String? {
+        guard !_isRecording else { return nil }
+        
+        _isRecording = true
+        do {
+            return try await startRecorder(path: uri ?? "DEFAULT", audioSets: audioSets, meteringEnabled: meteringEnabled ?? false)
+        } catch {
+            _isRecording = false
+            throw error
+        }
+    }
+    
+    /// 暂停录制
+    public func pauseRecorder() async throws {
+        guard !_hasPausedRecord else { return }
+        
+        _hasPausedRecord = true
+        return try await withCheckedThrowingContinuation { continuation in
+            recordTimer?.invalidate()
+            recordTimer = nil;
+            
+            DispatchQueue.main.async {
+                if (self.audioRecorder == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is not recording"]))
+                    return
+                }
+
+                self.audioRecorder.pause()
+                continuation.resume()
+            }
+        }
+    }
+    
+    /// 继续录制
+    public func resumeRecorder() async throws {
+        guard _hasPausedRecord else { return }
+        
+        _hasPausedRecord = false
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.main.async {
+                if (self.audioRecorder == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is nil"]))
+                    return
+                }
+
+                self.audioRecorder.record()
+
+                if (self.recordTimer == nil) {
+                    self.startRecorderTimer()
+                }
+                continuation.resume()
+            }
+        }
+    }
+    
+    /// 停止录制
+    @discardableResult
+    public func stopRecorder() async throws -> String? {
+        guard _isRecording else { return nil }
+        
+        _isRecording = false
+        _hasPausedRecord = false
+        return try await withCheckedThrowingContinuation { continuation in
+            if (recordTimer != nil) {
+                recordTimer!.invalidate()
+                recordTimer = nil
+            }
+
+            DispatchQueue.main.async {
+                if (self.audioRecorder == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to stop recorder. It is already nil."]))
+                    return
+                }
+
+                self.audioRecorder.stop()
+
+                continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
+            }
+        }
+    }
+    
+    /// 开始播放
+    public func startPlayer(
+        uri: String? = nil,
+        httpHeaders: [String: String]? = nil
+    ) async throws -> String? {
+        guard !_isPlaying || _hasPaused else { return nil }
+        
+        _isPlaying = true
+        _hasPaused = false
+        return try await startPlayer(path: uri ?? "DEFAULT", httpHeaders: httpHeaders ?? [:])
+    }
+    
+    /// 暂停播放
+    public func pausePlayer() async throws {
+        guard _isPlaying, !_hasPaused else { return }
+        
+        _hasPaused = true
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.fw.mainAsync {
+                if (self.audioPlayer == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is not playing"]))
+                    return
+                }
+                
+                self.audioPlayer.pause()
+                continuation.resume()
+            }
+        }
+    }
+    
+    /// 继续播放
+    public func resumePlayer() async throws {
+        guard _isPlaying, _hasPaused else { return }
+        
+        _hasPaused = false
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.fw.mainAsync {
+                if (self.audioPlayer == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
+                    return
+                }
+                
+                self.audioPlayer.play()
+                continuation.resume()
+            }
+        }
+    }
+    
+    /// 停止播放
+    @discardableResult
+    public func stopPlayer() async throws -> String? {
+        guard _isPlaying else { return nil }
+        
+        _isPlaying = false
+        _hasPaused = false
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.fw.mainAsync {
+                if (self.audioPlayer == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player has already stopped."]))
+                    return
+                }
+                
+                self.audioPlayer.pause()
+                self.removePeriodicTimeObserver()
+                self.audioPlayer = nil;
+
+                continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
+            }
+        }
+    }
+    
+    /// 跳转播放
+    public func seekToPlayer(_ seconds: Double) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            if (self.audioPlayer == nil) {
+                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
+                return
+            }
+            
+            audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
+            continuation.resume()
+        }
+    }
+    
+    /// 设置音量
+    public func setVolume(_ volume: Float) async throws {
+        guard volume >= 0 && volume <= 1 else { return }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            if (self.audioPlayer == nil) {
+                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
+                return
+            }
+            
+            self.audioPlayer.volume = volume
+            continuation.resume()
+        }
+    }
+    
+    /// 设置播放速度
+    public func setPlaybackSpeed(_ playbackSpeed: Float) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.fw.mainAsync {
+                if (self.audioPlayer == nil) {
+                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
+                    return
+                }
+                
+                self.audioPlayer.rate = playbackSpeed
+                continuation.resume()
+            }
+        }
+    }
+    
     /// 格式化时长，格式"00:00"或"00:00:00"
     public func formatDuration(_ duration: TimeInterval, hasMilliseconds: Bool = true) -> String {
         if hasMilliseconds {
@@ -119,45 +324,6 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         self.recordTimer = timer
     }
 
-    func pauseRecorder() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            recordTimer?.invalidate()
-            recordTimer = nil;
-            
-            DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is not recording"]))
-                    return
-                }
-
-                self.audioRecorder.pause()
-                continuation.resume()
-            }
-        }
-    }
-
-    func resumeRecorder() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is nil"]))
-                    return
-                }
-
-                self.audioRecorder.record()
-
-                if (self.recordTimer == nil) {
-                    self.startRecorderTimer()
-                }
-                continuation.resume()
-            }
-        }
-    }
-
-    func setSubscriptionDuration(duration: Double) -> Void {
-        subscriptionDuration = duration
-    }
-
     @objc func handleAudioSessionInterruption(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
             let interruptionType = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else {
@@ -183,10 +349,11 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     /**********               Player               **********/
 
     @discardableResult
-    func startRecorder(path: String, audioSets: [String: Any], meteringEnabled: Bool) async throws -> String {
+    func startRecorder(path: String, audioSets: AudioSet?, meteringEnabled: Bool) async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
             _meteringEnabled = meteringEnabled;
 
+            let audioSets: [String: Any] = [:]
             let encoding = audioSets["AVFormatIDKeyIOS"] as? String
             let mode = audioSets["AVModeIOS"] as? String
             let avLPCMBitDepth = audioSets["AVLinearPCMBitDepthKeyIOS"] as? Int
@@ -308,27 +475,6 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    @discardableResult
-    func stopRecorder() async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            if (recordTimer != nil) {
-                recordTimer!.invalidate()
-                recordTimer = nil
-            }
-
-            DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to stop recorder. It is already nil."]))
-                    return
-                }
-
-                self.audioRecorder.stop()
-
-                continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
-            }
-        }
-    }
-
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
             print("Failed to stop recorder")
@@ -347,7 +493,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time,
                                                                 queue: .main) {_ in
             if (self.audioPlayer != nil) {
-                self.playBackListener?(
+                self.playerCallback(
                     PlayBackType(
                         isMuted: self.audioPlayer.isMuted,
                         currentPosition: self.audioPlayerItem.currentTime().seconds,
@@ -405,7 +551,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     @objc func playerDidFinishPlaying(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             let duration = playerItem.duration.seconds
-            self.playBackListener?(
+            self.playerCallback(
                 PlayBackType(
                     isMuted: self.audioPlayer?.isMuted,
                     currentPosition: duration,
@@ -415,87 +561,13 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             )
         }
     }
-
-    @discardableResult
-    func stopPlayer() async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player has already stopped."]))
-                    return
-                }
-                
-                self.audioPlayer.pause()
-                self.removePeriodicTimeObserver()
-                self.audioPlayer = nil;
-
-                continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
-            }
-        }
-    }
-
-    func pausePlayer() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is not playing"]))
-                    return
-                }
-                
-                self.audioPlayer.pause()
-                continuation.resume()
-            }
-        }
-    }
-
-    func resumePlayer() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
-                    return
-                }
-                
-                self.audioPlayer.play()
-                continuation.resume()
-            }
-        }
-    }
-
-    func seekToPlayer(seconds: Double) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            if (self.audioPlayer == nil) {
-                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
-                return
-            }
-            
-            audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
-            continuation.resume()
-        }
-    }
-
-    func setVolume(volume: Float) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            if (self.audioPlayer == nil) {
-                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
-                return
-            }
-            
-            self.audioPlayer.volume = volume
-            continuation.resume()
-        }
-    }
-
-    func setPlaybackSpeed(playbackSpeed: Float) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
-                    return
-                }
-                
-                self.audioPlayer.rate = playbackSpeed
-                continuation.resume()
+    
+    func playerCallback(_ event: PlayBackType) {
+        playBackListener?(event)
+        
+        if event.isFinished {
+            Task {
+                try? await stopPlayer()
             }
         }
     }
