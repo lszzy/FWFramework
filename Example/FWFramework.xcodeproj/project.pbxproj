@@ -23,6 +23,7 @@
 		2F30926E2BF5B60200F64898 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F30926D2BF5B60200F64898 /* UserModel.swift */; };
 		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
 		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
+		2F3849312DFB466B00546F5E /* TestSwiftUIRecorderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */; };
 		2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
@@ -114,6 +115,7 @@
 		2F30926D2BF5B60200F64898 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
 		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
+		2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftUIRecorderController.swift; sourceTree = "<group>"; };
 		2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEncodeController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 				2F6A412A28B62711003719E7 /* TestSwiftController.swift */,
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
 				2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */,
+				2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
 				2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */,
 				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
@@ -767,6 +770,7 @@
 				2FCDB50028E571820079A56C /* TestSegmentController.swift in Sources */,
 				2F6A417728B7319A003719E7 /* TestPromiseController.swift in Sources */,
 				2FB11EFF28E2E39E00DCB965 /* TestLayoutController.swift in Sources */,
+				2F3849312DFB466B00546F5E /* TestSwiftUIRecorderController.swift in Sources */,
 				2F6A412F28B66919003719E7 /* TestAuthorizeController.swift in Sources */,
 				2F6A415D28B71E12003719E7 /* TestCameraController.swift in Sources */,
 				2F6A414928B70BEC003719E7 /* TestAudioController.swift in Sources */,
