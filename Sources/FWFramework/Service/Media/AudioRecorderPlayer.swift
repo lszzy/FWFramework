@@ -11,13 +11,15 @@ import Foundation
 /// 音频录制播放器
 ///
 /// [react-native-audio-recorder-player](https://github.com/hyochan/react-native-audio-recorder-player)
-class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
+open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Sendable {
+    /// 录制回调对象
     public struct RecordBackType: Sendable {
         public var isRecording: Bool
         public var currentPosition: TimeInterval
         public var currentMetering: Float
     }
 
+    /// 播放回调对象
     public struct PlayBackType: Sendable {
         public var isMuted: Bool?
         public var currentPosition: TimeInterval
@@ -25,6 +27,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         public var isFinished: Bool
     }
 
+    /// 音频设置
     public struct AudioSet: Sendable {
         public var sampleRate: Int?
         public var formatID: AudioFormatID?
@@ -57,12 +60,12 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     private var audioPlayer: AVPlayer!
     private var timeObserverToken: Any?
 
-    private var _isRecording = false
-    private var _isPlaying = false
-    private var _hasPaused = false
-    private var _hasPausedRecord = false
+    private var isRecording = false
+    private var isPlaying = false
+    private var hasPaused = false
+    private var hasPausedRecord = false
 
-    override init() {
+    public override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(handleAudioSessionInterruption(_:)), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
     }
@@ -73,27 +76,27 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
 
     // MARK: - Public
     /// 开始录制
-    public func startRecorder(
+    open func startRecorder(
         uri: String? = nil,
         audioSet: AudioSet? = nil,
         meteringEnabled: Bool? = nil
     ) async throws -> String? {
-        guard !_isRecording else { return nil }
+        guard !isRecording else { return nil }
 
-        _isRecording = true
+        isRecording = true
         do {
             return try await startRecorder(path: uri ?? "DEFAULT", audioSet: audioSet, meteringEnabled: meteringEnabled ?? false)
         } catch {
-            _isRecording = false
+            isRecording = false
             throw error
         }
     }
 
     /// 暂停录制
-    public func pauseRecorder() async throws {
-        guard !_hasPausedRecord else { return }
+    open func pauseRecorder() async throws {
+        guard !hasPausedRecord else { return }
 
-        _hasPausedRecord = true
+        hasPausedRecord = true
         return try await withCheckedThrowingContinuation { continuation in
             recordTimer?.invalidate()
             recordTimer = nil
@@ -111,10 +114,10 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 继续录制
-    public func resumeRecorder() async throws {
-        guard _hasPausedRecord else { return }
+    open func resumeRecorder() async throws {
+        guard hasPausedRecord else { return }
 
-        _hasPausedRecord = false
+        hasPausedRecord = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
                 if self.audioRecorder == nil {
@@ -134,11 +137,11 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
 
     /// 停止录制
     @discardableResult
-    public func stopRecorder() async throws -> String? {
-        guard _isRecording else { return nil }
+    open func stopRecorder() async throws -> String? {
+        guard isRecording else { return nil }
 
-        _isRecording = false
-        _hasPausedRecord = false
+        isRecording = false
+        hasPausedRecord = false
         return try await withCheckedThrowingContinuation { continuation in
             if recordTimer != nil {
                 recordTimer!.invalidate()
@@ -159,22 +162,22 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 开始播放
-    public func startPlayer(
+    open func startPlayer(
         uri: String? = nil,
         httpHeaders: [String: String]? = nil
     ) async throws -> String? {
-        guard !_isPlaying || _hasPaused else { return nil }
+        guard !isPlaying || hasPaused else { return nil }
 
-        _isPlaying = true
-        _hasPaused = false
+        isPlaying = true
+        hasPaused = false
         return try await startPlayer(path: uri ?? "DEFAULT", httpHeaders: httpHeaders ?? [:])
     }
 
     /// 暂停播放
-    public func pausePlayer() async throws {
-        guard _isPlaying, !_hasPaused else { return }
+    open func pausePlayer() async throws {
+        guard isPlaying, !hasPaused else { return }
 
-        _hasPaused = true
+        hasPaused = true
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -189,10 +192,10 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 继续播放
-    public func resumePlayer() async throws {
-        guard _isPlaying, _hasPaused else { return }
+    open func resumePlayer() async throws {
+        guard isPlaying, hasPaused else { return }
 
-        _hasPaused = false
+        hasPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -208,11 +211,11 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
 
     /// 停止播放
     @discardableResult
-    public func stopPlayer() async throws -> String? {
-        guard _isPlaying else { return nil }
+    open func stopPlayer() async throws -> String? {
+        guard isPlaying else { return nil }
 
-        _isPlaying = false
-        _hasPaused = false
+        isPlaying = false
+        hasPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -230,7 +233,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 跳转播放
-    public func seekToPlayer(_ seconds: Double) async throws {
+    open func seekToPlayer(_ seconds: Double) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
@@ -243,7 +246,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 设置音量
-    public func setVolume(_ volume: Float) async throws {
+    open func setVolume(_ volume: Float) async throws {
         guard volume >= 0 && volume <= 1 else { return }
 
         return try await withCheckedThrowingContinuation { continuation in
@@ -258,7 +261,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 设置播放速度
-    public func setPlaybackSpeed(_ playbackSpeed: Float) async throws {
+    open func setPlaybackSpeed(_ playbackSpeed: Float) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -273,7 +276,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     /// 格式化时长，格式"00:00"或"00:00:00"
-    public func formatDuration(_ duration: TimeInterval, hasMilliseconds: Bool = true) -> String {
+    open func formatDuration(_ duration: TimeInterval, hasMilliseconds: Bool = true) -> String {
         if hasMilliseconds {
             var milliseconds = Int64(duration * 1000)
             var seconds = milliseconds / 1000
@@ -289,9 +292,18 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             return String(format: "%02ld:%02ld", minutes, seconds)
         }
     }
+    
+    // MARK: - AVAudioRecorderDelegate
+    open func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if !flag { print("Failed to stop recorder") }
+    }
 
-    // MARK: - Private
-    func setAudioFileURL(path: String) {
+    open func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
+        print(error ?? "")
+    }
+
+    // MARK: - Recorder
+    private func setAudioFileURL(path: String) {
         if path == "DEFAULT" {
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
             audioFileURL = cachesDirectory.appendingPathComponent("sound.m4a")
@@ -303,10 +315,8 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    /**********               Recorder               **********/
-
     @objc(updateRecorderProgress:)
-    func updateRecorderProgress(timer: Timer) {
+    private func updateRecorderProgress(timer: Timer) {
         if audioRecorder != nil {
             var currentMetering: Float = 0
             if isMeteringEnabled {
@@ -319,7 +329,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func startRecorderTimer() {
+    private func startRecorderTimer() {
         let timer = Timer(
             timeInterval: subscriptionDuration,
             target: self,
@@ -331,7 +341,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         recordTimer = timer
     }
 
-    @objc func handleAudioSessionInterruption(_ notification: Notification) {
+    @objc private func handleAudioSessionInterruption(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let interruptionType = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else {
             return
@@ -351,10 +361,8 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    /**********               Player               **********/
-
     @discardableResult
-    func startRecorder(path: String, audioSet: AudioSet?, meteringEnabled: Bool) async throws -> String {
+    private func startRecorder(path: String, audioSet: AudioSet?, meteringEnabled: Bool) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             isMeteringEnabled = meteringEnabled
 
@@ -421,18 +429,8 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if !flag {
-            print("Failed to stop recorder")
-        }
-    }
-
-    func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
-        print(error ?? "")
-    }
-
-    /**********               Player               **********/
-    func addPeriodicTimeObserver() {
+    // MARK: - Player
+    private func addPeriodicTimeObserver() {
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: subscriptionDuration, preferredTimescale: timeScale)
 
@@ -451,7 +449,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func removePeriodicTimeObserver() {
+    private func removePeriodicTimeObserver() {
         if let timeObserverToken {
             audioPlayer.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
@@ -459,7 +457,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     @discardableResult
-    func startPlayer(
+    private func startPlayer(
         path: String,
         httpHeaders: [String: String]
     ) async throws -> String {
@@ -493,7 +491,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    @objc func playerDidFinishPlaying(notification: Notification) {
+    @objc private func playerDidFinishPlaying(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             let duration = playerItem.duration.seconds
             playerCallback(
@@ -507,7 +505,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func playerCallback(_ event: PlayBackType) {
+    private func playerCallback(_ event: PlayBackType) {
         playBackListener?(event)
 
         if event.isFinished {
