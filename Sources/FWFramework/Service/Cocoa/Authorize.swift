@@ -136,7 +136,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         super.init()
         self.isAlways = isAlways
     }
-    
+
     private func authorizeStatus(for status: CLAuthorizationStatus, isAlways: Bool = false) -> AuthorizeStatus {
         switch status {
         case .restricted:

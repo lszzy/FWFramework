@@ -74,8 +74,8 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     open class func wgs84ToGcj02(_ coordinate: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
         let lon = coordinate.longitude
         let lat = coordinate.latitude
-        let a: Double = 6_378_245.0
-        let ee: Double = 0.00669342162296594323
+        let a = 6_378_245.0
+        let ee = 0.00669342162296594323
         var dLat = transformLat(x: lon - 105.0, y: lat - 35.0)
         var dLon = transformLon(x: lon - 105.0, y: lat - 35.0)
         let radLat = lat / 180.0 * .pi
@@ -93,8 +93,8 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     open class func gcj02ToWgs84(_ coordinate: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
         let lon = coordinate.longitude
         let lat = coordinate.latitude
-        let a: Double = 6_378_245.0
-        let ee: Double = 0.00669342162296594323
+        let a = 6_378_245.0
+        let ee = 0.00669342162296594323
         var dLat = transformLat(x: lon - 105.0, y: lat - 35.0)
         var dLon = transformLon(x: lon - 105.0, y: lat - 35.0)
         let radLat = lat / 180.0 * .pi
@@ -118,7 +118,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     }
 
     private class func transformLon(x: Double, y: Double) -> Double {
-        var lon: Double = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1
+        var lon = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1
             * sqrt(fabs(x))
         lon += (20.0 * sin(6.0 * x * .pi) + 20.0 * sin(2.0 * x * .pi)) * 2.0 / 3.0
         lon += (20.0 * sin(x * .pi) + 40.0 * sin(x / 3.0 * .pi)) * 2.0 / 3.0
@@ -140,7 +140,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
             }
         }
     }
-    
+
     /// 是否启用重要位置变化监听，默认NO。如果设备不支持，则不能启用
     open var monitoringEnabled: Bool = false {
         didSet {
@@ -180,7 +180,7 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
 
     /// 自定义定位开始处理句柄，可用于额外参数配置等
     open var customStartBlock: (@Sendable (CLLocationManager) -> Void)?
-    
+
     /// 自定义定位结束处理句柄，可用于额外参数配置等
     open var customStopBlock: (@Sendable (CLLocationManager) -> Void)?
 

@@ -193,7 +193,7 @@ open class SDWebImageImpl: NSObject, ImagePlugin, ImageCoderPlugin, @unchecked S
             receipt.cancel()
         }
     }
-    
+
     // MARK: - ImageCoderPlugin
     open func imageDecode(
         _ data: Data,

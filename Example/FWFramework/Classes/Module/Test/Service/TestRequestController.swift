@@ -6,9 +6,9 @@
 //  Copyright © 2023 CocoaPods. All rights reserved.
 //
 
+import Alamofire
 import FWFramework
 import UIKit
-import Alamofire
 
 // 继承HTTPRequest及重载Builder示例
 class AppRequest: HTTPRequest, @unchecked Sendable {

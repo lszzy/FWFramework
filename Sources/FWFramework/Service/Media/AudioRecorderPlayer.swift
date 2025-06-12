@@ -5,8 +5,8 @@
 //  Created by wuyong on 2025/6/11.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 /// 音频录制播放器
 ///
@@ -17,17 +17,27 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         public var currentPosition: TimeInterval
         public var currentMetering: Float
     }
-    
+
     public struct PlayBackType: Sendable {
         public var isMuted: Bool?
         public var currentPosition: TimeInterval
         public var duration: TimeInterval
         public var isFinished: Bool
     }
-    
+
     public struct AudioSet: Sendable {
+        public var sampleRate: Int?
+        public var formatID: AudioFormatID?
+        public var mode: AVAudioSession.Mode?
+        public var numberOfChannels: Int?
+        public var encoderAudioQuality: AVAudioQuality?
+        public var encoderBitRate: Int?
+        public var linearPCMBitDepth: Int?
+        public var linearPCMIsBigEndian: Bool?
+        public var linearPCMIsFloat: Bool?
+        public var linearPCMIsNonInterleaved: Bool?
     }
-    
+
     // MARK: - Accessor
     /// 录制回调监听
     public var recordBackListener: ((RecordBackType) -> Void)?
@@ -35,21 +45,18 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     public var playBackListener: ((PlayBackType) -> Void)?
     /// 音量监听频率
     public var subscriptionDuration: Double = 0.5
-    
-    // Recorder
+
     private var audioFileURL: URL?
     private var audioRecorder: AVAudioRecorder!
-    private var audioSession: AVAudioSession!
     private var recordTimer: Timer?
-    private var _meteringEnabled: Bool = false
+    private var isMeteringEnabled = false
 
-    // Player
-    var pausedPlayTime: CMTime?
-    var audioPlayerAsset: AVURLAsset!
-    var audioPlayerItem: AVPlayerItem!
-    var audioPlayer: AVPlayer!
-    var timeObserverToken: Any?
-    
+    private var pausedPlayTime: CMTime?
+    private var audioPlayerAsset: AVURLAsset!
+    private var audioPlayerItem: AVPlayerItem!
+    private var audioPlayer: AVPlayer!
+    private var timeObserverToken: Any?
+
     private var _isRecording = false
     private var _isPlaying = false
     private var _hasPaused = false
@@ -63,36 +70,36 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     // MARK: - Public
     /// 开始录制
     public func startRecorder(
         uri: String? = nil,
-        audioSets: AudioSet? = nil,
+        audioSet: AudioSet? = nil,
         meteringEnabled: Bool? = nil
     ) async throws -> String? {
         guard !_isRecording else { return nil }
-        
+
         _isRecording = true
         do {
-            return try await startRecorder(path: uri ?? "DEFAULT", audioSets: audioSets, meteringEnabled: meteringEnabled ?? false)
+            return try await startRecorder(path: uri ?? "DEFAULT", audioSet: audioSet, meteringEnabled: meteringEnabled ?? false)
         } catch {
             _isRecording = false
             throw error
         }
     }
-    
+
     /// 暂停录制
     public func pauseRecorder() async throws {
         guard !_hasPausedRecord else { return }
-        
+
         _hasPausedRecord = true
         return try await withCheckedThrowingContinuation { continuation in
             recordTimer?.invalidate()
-            recordTimer = nil;
-            
+            recordTimer = nil
+
             DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
+                if self.audioRecorder == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is not recording"]))
                     return
                 }
@@ -102,44 +109,44 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             }
         }
     }
-    
+
     /// 继续录制
     public func resumeRecorder() async throws {
         guard _hasPausedRecord else { return }
-        
+
         _hasPausedRecord = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
+                if self.audioRecorder == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recorder is nil"]))
                     return
                 }
 
                 self.audioRecorder.record()
 
-                if (self.recordTimer == nil) {
+                if self.recordTimer == nil {
                     self.startRecorderTimer()
                 }
                 continuation.resume()
             }
         }
     }
-    
+
     /// 停止录制
     @discardableResult
     public func stopRecorder() async throws -> String? {
         guard _isRecording else { return nil }
-        
+
         _isRecording = false
         _hasPausedRecord = false
         return try await withCheckedThrowingContinuation { continuation in
-            if (recordTimer != nil) {
+            if recordTimer != nil {
                 recordTimer!.invalidate()
                 recordTimer = nil
             }
 
             DispatchQueue.main.async {
-                if (self.audioRecorder == nil) {
+                if self.audioRecorder == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to stop recorder. It is already nil."]))
                     return
                 }
@@ -150,121 +157,121 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             }
         }
     }
-    
+
     /// 开始播放
     public func startPlayer(
         uri: String? = nil,
         httpHeaders: [String: String]? = nil
     ) async throws -> String? {
         guard !_isPlaying || _hasPaused else { return nil }
-        
+
         _isPlaying = true
         _hasPaused = false
         return try await startPlayer(path: uri ?? "DEFAULT", httpHeaders: httpHeaders ?? [:])
     }
-    
+
     /// 暂停播放
     public func pausePlayer() async throws {
         guard _isPlaying, !_hasPaused else { return }
-        
+
         _hasPaused = true
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
+                if self.audioPlayer == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is not playing"]))
                     return
                 }
-                
+
                 self.audioPlayer.pause()
                 continuation.resume()
             }
         }
     }
-    
+
     /// 继续播放
     public func resumePlayer() async throws {
         guard _isPlaying, _hasPaused else { return }
-        
+
         _hasPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
+                if self.audioPlayer == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                     return
                 }
-                
+
                 self.audioPlayer.play()
                 continuation.resume()
             }
         }
     }
-    
+
     /// 停止播放
     @discardableResult
     public func stopPlayer() async throws -> String? {
         guard _isPlaying else { return nil }
-        
+
         _isPlaying = false
         _hasPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
+                if self.audioPlayer == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player has already stopped."]))
                     return
                 }
-                
+
                 self.audioPlayer.pause()
                 self.removePeriodicTimeObserver()
-                self.audioPlayer = nil;
+                self.audioPlayer = nil
 
                 continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
             }
         }
     }
-    
+
     /// 跳转播放
     public func seekToPlayer(_ seconds: Double) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            if (self.audioPlayer == nil) {
+            if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
             }
-            
+
             audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
             continuation.resume()
         }
     }
-    
+
     /// 设置音量
     public func setVolume(_ volume: Float) async throws {
         guard volume >= 0 && volume <= 1 else { return }
-        
+
         return try await withCheckedThrowingContinuation { continuation in
-            if (self.audioPlayer == nil) {
+            if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
             }
-            
+
             self.audioPlayer.volume = volume
             continuation.resume()
         }
     }
-    
+
     /// 设置播放速度
     public func setPlaybackSpeed(_ playbackSpeed: Float) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
-                if (self.audioPlayer == nil) {
+                if self.audioPlayer == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                     return
                 }
-                
+
                 self.audioPlayer.rate = playbackSpeed
                 continuation.resume()
             }
         }
     }
-    
+
     /// 格式化时长，格式"00:00"或"00:00:00"
     public func formatDuration(_ duration: TimeInterval, hasMilliseconds: Bool = true) -> String {
         if hasMilliseconds {
@@ -282,13 +289,13 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             return String(format: "%02ld:%02ld", minutes, seconds)
         }
     }
-    
+
     // MARK: - Private
     func setAudioFileURL(path: String) {
-        if (path == "DEFAULT") {
+        if path == "DEFAULT" {
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
             audioFileURL = cachesDirectory.appendingPathComponent("sound.m4a")
-        } else if (path.hasPrefix("http://") || path.hasPrefix("https://") || path.hasPrefix("file://")) {
+        } else if path.hasPrefix("http://") || path.hasPrefix("https://") || path.hasPrefix("file://") {
             audioFileURL = URL(string: path)
         } else {
             let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -299,10 +306,10 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     /**********               Recorder               **********/
 
     @objc(updateRecorderProgress:)
-    func updateRecorderProgress(timer: Timer) -> Void {
-        if (audioRecorder != nil) {
+    func updateRecorderProgress(timer: Timer) {
+        if audioRecorder != nil {
             var currentMetering: Float = 0
-            if (_meteringEnabled) {
+            if isMeteringEnabled {
                 audioRecorder.updateMeters()
                 currentMetering = audioRecorder.averagePower(forChannel: 0)
             }
@@ -312,21 +319,21 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         }
     }
 
-    func startRecorderTimer() -> Void {
+    func startRecorderTimer() {
         let timer = Timer(
-            timeInterval: self.subscriptionDuration,
+            timeInterval: subscriptionDuration,
             target: self,
-            selector: #selector(self.updateRecorderProgress),
+            selector: #selector(updateRecorderProgress),
             userInfo: nil,
             repeats: true
         )
         RunLoop.main.add(timer, forMode: .default)
-        self.recordTimer = timer
+        recordTimer = timer
     }
 
     @objc func handleAudioSessionInterruption(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
-            let interruptionType = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else {
+              let interruptionType = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt else {
             return
         }
 
@@ -335,12 +342,10 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             Task {
                 try? await pauseRecorder()
             }
-            break
         case AVAudioSession.InterruptionType.ended.rawValue:
             Task {
                 try? await resumeRecorder()
             }
-            break
         default:
             break
         }
@@ -349,34 +354,12 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     /**********               Player               **********/
 
     @discardableResult
-    func startRecorder(path: String, audioSets: AudioSet?, meteringEnabled: Bool) async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            _meteringEnabled = meteringEnabled;
+    func startRecorder(path: String, audioSet: AudioSet?, meteringEnabled: Bool) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            isMeteringEnabled = meteringEnabled
 
-            let audioSets: [String: Any] = [:]
-            let encoding = audioSets["AVFormatIDKeyIOS"] as? String
-            let mode = audioSets["AVModeIOS"] as? String
-            let avLPCMBitDepth = audioSets["AVLinearPCMBitDepthKeyIOS"] as? Int
-            let avLPCMIsBigEndian = audioSets["AVLinearPCMIsBigEndianKeyIOS"] as? Bool
-            let avLPCMIsFloatKey = audioSets["AVLinearPCMIsFloatKeyIOS"] as? Bool
-            let avLPCMIsNonInterleaved = audioSets["AVLinearPCMIsNonInterleavedIOS"] as? Bool
-
-            var avMode: AVAudioSession.Mode = AVAudioSession.Mode.default
-            var sampleRate = audioSets["AVSampleRateKeyIOS"] as? Int
-            var numberOfChannel = audioSets["AVNumberOfChannelsKeyIOS"] as? Int
-            var audioQuality = audioSets["AVEncoderAudioQualityKeyIOS"] as? Int
-            var bitRate = audioSets["AVEncoderBitRateKeyIOS"] as? Int
-
-            if (sampleRate == nil) {
-                sampleRate = 44100;
-            }
-
-            guard let avFormat: AudioFormatID = avFormat(fromString: encoding) else {
-                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Audio format not available"]))
-                return
-            }
-
-            if (path == "DEFAULT") {
+            let avFormat = audioSet?.formatID ?? kAudioFormatAppleLossless
+            if path == "DEFAULT" {
                 let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
                 let fileExt = fileExtension(forAudioFormat: avFormat)
                 audioFileURL = cachesDirectory.appendingPathComponent("sound." + fileExt)
@@ -384,86 +367,49 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
                 setAudioFileURL(path: path)
             }
 
-            if (mode == "measurement") {
-                avMode = AVAudioSession.Mode.measurement
-            } else if (mode == "gamechat") {
-                avMode = AVAudioSession.Mode.gameChat
-            } else if (mode == "movieplayback") {
-                avMode = AVAudioSession.Mode.moviePlayback
-            } else if (mode == "spokenaudio") {
-                avMode = AVAudioSession.Mode.spokenAudio
-            } else if (mode == "videochat") {
-                avMode = AVAudioSession.Mode.videoChat
-            } else if (mode == "videorecording") {
-                avMode = AVAudioSession.Mode.videoRecording
-            } else if (mode == "voicechat") {
-                avMode = AVAudioSession.Mode.voiceChat
-            } else if (mode == "voiceprompt") {
-                avMode = AVAudioSession.Mode.voicePrompt
-            }
-
-
-            if (numberOfChannel == nil) {
-                numberOfChannel = 2
-            }
-
-            if (audioQuality == nil) {
-                audioQuality = AVAudioQuality.medium.rawValue
-            }
-
-            if (bitRate == nil) {
-                bitRate = 128000
-            }
-
-            func startRecording() {
-                let settings = [
-                    AVSampleRateKey: sampleRate!,
-                    AVFormatIDKey: avFormat,
-                    AVNumberOfChannelsKey: numberOfChannel!,
-                    AVEncoderAudioQualityKey: audioQuality!,
-                    AVLinearPCMBitDepthKey: avLPCMBitDepth ?? AVLinearPCMBitDepthKey.count,
-                    AVLinearPCMIsBigEndianKey: avLPCMIsBigEndian ?? true,
-                    AVLinearPCMIsFloatKey: avLPCMIsFloatKey ?? false,
-                    AVLinearPCMIsNonInterleaved: avLPCMIsNonInterleaved ?? false,
-                     AVEncoderBitRateKey: bitRate!
-                ] as [String : Any]
-
-                do {
-                    audioRecorder = try AVAudioRecorder(url: audioFileURL!, settings: settings)
-
-                    if (audioRecorder != nil) {
-                        audioRecorder.prepareToRecord()
-                        audioRecorder.delegate = self
-                        audioRecorder.isMeteringEnabled = _meteringEnabled
-                        let isRecordStarted = audioRecorder.record()
-
-                        if !isRecordStarted {
-                            continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error occured during initiating recorder"]))
-                            return
-                        }
-
-                        startRecorderTimer()
-
-                        continuation.resume(returning: audioFileURL?.absoluteString ?? "")
-                        return
-                    }
-
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error occured during initiating recorder"]))
-                } catch {
-                    continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: error.localizedDescription]))
-                }
-            }
-
-            audioSession = AVAudioSession.sharedInstance()
-
+            let audioSession = AVAudioSession.sharedInstance()
             do {
-                try audioSession.setCategory(.playAndRecord, mode: avMode, options: [AVAudioSession.CategoryOptions.defaultToSpeaker, AVAudioSession.CategoryOptions.allowBluetooth])
+                try audioSession.setCategory(.playAndRecord, mode: audioSet?.mode ?? .default, options: [AVAudioSession.CategoryOptions.defaultToSpeaker, AVAudioSession.CategoryOptions.allowBluetooth])
                 try audioSession.setActive(true)
 
                 audioSession.requestRecordPermission { granted in
                     DispatchQueue.main.async {
                         if granted {
-                            startRecording()
+                            let settings: [String: Any] = [
+                                AVSampleRateKey: audioSet?.sampleRate ?? 44_100,
+                                AVFormatIDKey: avFormat,
+                                AVNumberOfChannelsKey: audioSet?.numberOfChannels ?? 2,
+                                AVEncoderAudioQualityKey: (audioSet?.encoderAudioQuality ?? .medium).rawValue,
+                                AVLinearPCMBitDepthKey: audioSet?.linearPCMBitDepth ?? AVLinearPCMBitDepthKey.count,
+                                AVLinearPCMIsBigEndianKey: audioSet?.linearPCMIsBigEndian ?? true,
+                                AVLinearPCMIsFloatKey: audioSet?.linearPCMIsFloat ?? false,
+                                AVLinearPCMIsNonInterleaved: audioSet?.linearPCMIsNonInterleaved ?? false,
+                                AVEncoderBitRateKey: audioSet?.encoderBitRate ?? 128_000
+                            ]
+
+                            do {
+                                self.audioRecorder = try AVAudioRecorder(url: self.audioFileURL!, settings: settings)
+
+                                if self.audioRecorder != nil {
+                                    self.audioRecorder.prepareToRecord()
+                                    self.audioRecorder.delegate = self
+                                    self.audioRecorder.isMeteringEnabled = meteringEnabled
+                                    let isRecordStarted = self.audioRecorder.record()
+                                    if !isRecordStarted {
+                                        continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error occured during initiating recorder"]))
+                                        return
+                                    }
+
+                                    self.startRecorderTimer()
+
+                                    continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
+                                    return
+                                }
+
+                                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Error occured during initiating recorder"]))
+                            } catch {
+                                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: error.localizedDescription]))
+                            }
                         } else {
                             continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Record permission not granted"]))
                         }
@@ -480,7 +426,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             print("Failed to stop recorder")
         }
     }
-    
+
     func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
         print(error ?? "")
     }
@@ -491,8 +437,8 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         let time = CMTime(seconds: subscriptionDuration, preferredTimescale: timeScale)
 
         timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time,
-                                                                queue: .main) {_ in
-            if (self.audioPlayer != nil) {
+                                                                queue: .main) { _ in
+            if self.audioPlayer != nil {
                 self.playerCallback(
                     PlayBackType(
                         isMuted: self.audioPlayer.isMuted,
@@ -506,7 +452,7 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
     }
 
     func removePeriodicTimeObserver() {
-        if let timeObserverToken = timeObserverToken {
+        if let timeObserverToken {
             audioPlayer.removeTimeObserver(timeObserverToken)
             self.timeObserverToken = nil
         }
@@ -517,9 +463,8 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
         path: String,
         httpHeaders: [String: String]
     ) async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            audioSession = AVAudioSession.sharedInstance()
-
+        try await withCheckedThrowingContinuation { continuation in
+            let audioSession = AVAudioSession.sharedInstance()
             do {
                 try audioSession.setCategory(.playAndRecord, mode: .default, options: [AVAudioSession.CategoryOptions.defaultToSpeaker, AVAudioSession.CategoryOptions.allowBluetooth])
                 try audioSession.setActive(true)
@@ -529,10 +474,10 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             }
 
             setAudioFileURL(path: path)
-            audioPlayerAsset = AVURLAsset(url: audioFileURL!, options:["AVURLAssetHTTPHeaderFieldsKey": httpHeaders])
+            audioPlayerAsset = AVURLAsset(url: audioFileURL!, options: ["AVURLAssetHTTPHeaderFieldsKey": httpHeaders])
             audioPlayerItem = AVPlayerItem(asset: audioPlayerAsset!)
 
-            if (audioPlayer == nil) {
+            if audioPlayer == nil {
                 audioPlayer = AVPlayer(playerItem: audioPlayerItem)
             } else {
                 audioPlayer.replaceCurrentItem(with: audioPlayerItem)
@@ -542,18 +487,18 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: audioPlayer.currentItem)
             DispatchQueue.fw.mainAsync {
                 self.audioPlayer.play()
-                
+
                 continuation.resume(returning: self.audioFileURL?.absoluteString ?? "")
             }
         }
     }
-    
+
     @objc func playerDidFinishPlaying(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             let duration = playerItem.duration.seconds
-            self.playerCallback(
+            playerCallback(
                 PlayBackType(
-                    isMuted: self.audioPlayer?.isMuted,
+                    isMuted: audioPlayer?.isMuted,
                     currentPosition: duration,
                     duration: duration,
                     isFinished: true
@@ -561,54 +506,15 @@ class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate {
             )
         }
     }
-    
+
     func playerCallback(_ event: PlayBackType) {
         playBackListener?(event)
-        
+
         if event.isFinished {
             Task {
                 try? await stopPlayer()
             }
         }
-    }
-
-    private func avFormat(fromString encoding: String?) -> AudioFormatID? {
-        if (encoding == nil) {
-            return kAudioFormatAppleLossless
-        } else {
-            if (encoding == "lpcm") {
-                return kAudioFormatAppleIMA4
-            } else if (encoding == "ima4") {
-                return kAudioFormatAppleIMA4
-            } else if (encoding == "aac") {
-                return kAudioFormatMPEG4AAC
-            } else if (encoding == "MAC3") {
-                return kAudioFormatMACE3
-            } else if (encoding == "MAC6") {
-                return kAudioFormatMACE6
-            } else if (encoding == "ulaw") {
-                return kAudioFormatULaw
-            } else if (encoding == "alaw") {
-                return kAudioFormatALaw
-            } else if (encoding == "mp1") {
-                return kAudioFormatMPEGLayer1
-            } else if (encoding == "mp2") {
-                return kAudioFormatMPEGLayer2
-            } else if (encoding == "mp4") {
-                return kAudioFormatMPEG4AAC
-            } else if (encoding == "alac") {
-                return kAudioFormatAppleLossless
-            } else if (encoding == "amr") {
-                return kAudioFormatAMR
-            } else if (encoding == "flac") {
-                return kAudioFormatFLAC
-            } else if (encoding == "opus") {
-                return kAudioFormatOpus
-            } else if (encoding == "wav") {
-                return kAudioFormatLinearPCM
-            }
-        }
-        return nil;
     }
 
     private func fileExtension(forAudioFormat format: AudioFormatID) -> String {

@@ -34,7 +34,7 @@ extension AnyModel {
     public func encodeObject() -> Any? {
         self
     }
-    
+
     /// 获取内部对象，兼容字典、数组等
     public static func getInnerObject(inside object: Any?, by designatedPath: String?) -> Any? {
         var result: Any? = object
@@ -106,7 +106,7 @@ extension AnyModel where Self: BasicType {
 
     /// 默认实现从Model编码成Object
     public func encodeObject() -> Any? {
-        return self
+        self
     }
 }
 

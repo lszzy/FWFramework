@@ -360,11 +360,11 @@ struct TestMappableModel: MappableModel {
     var enum1: TestMappableModelEnum = .unknown
     var enum2: TestMappableModelEnum = .unknown
     var enum3: TestMappableModelEnum?
-    
+
     init() {}
-    
+
     init?(map: Map) {}
-    
+
     mutating func mapping(map: Map) {
         id <- map["id"]
         name <- map["name"]
@@ -392,11 +392,11 @@ struct TestMappableModel: MappableModel {
 
 class TestMappableSuperModel: MappableModel {
     var id: Int = 0
-    
+
     required init() {}
-    
+
     required init?(map: Map) {}
-    
+
     func mapping(map: Map) {
         id <- map["id"]
     }
@@ -404,18 +404,18 @@ class TestMappableSuperModel: MappableModel {
 
 class TestMappableSubModel: TestMappableSuperModel {
     var name: String?
-    
+
     required init() {
         super.init()
     }
-    
+
     required init?(map: Map) {
         super.init(map: map)
     }
-    
+
     override func mapping(map: Map) {
         super.mapping(map: map)
-        
+
         name <- map["name"]
     }
 }
@@ -432,7 +432,7 @@ class TestObjectParameter: ObjectParameter {
     var block: BlockVoid?
 
     required init() {}
-    
+
     required init(dictionaryValue: [AnyHashable: Any]) {
         self.id = dictionaryValue["id"].safeInt
         self.name = dictionaryValue["name"].safeString
@@ -570,7 +570,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model: TestCodableModel? = TestCodableModel.decodeModel(from: testCodableData())
@@ -614,7 +614,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestCustomCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model: TestCustomCodableModel? = TestCustomCodableModel.decodeModel(from: testCodableData())
@@ -658,7 +658,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model: TestMappedValueCodableModel? = TestMappedValueCodableModel.decodeModel(from: testCodableData())
@@ -702,7 +702,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappedValueMacroCodableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model: TestMappedValueMacroCodableModel? = TestMappedValueMacroCodableModel.decodeModel(from: testCodableData())
@@ -747,7 +747,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestSmartModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         SmartSentinel.debugMode = .none
         Benchmark.begin("codable")
         for _ in 0..<1000 {
@@ -757,7 +757,7 @@ extension TestCodableController {
         let time = Benchmark.end("codable")
         showResults(tests, time)
     }
-    
+
     @objc func onMappableModel() {
         func testModel(_ model: TestMappableModel?, encode: Bool = false) -> [Bool] {
             let results: [Bool] = [
@@ -792,7 +792,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestMappableModel.decodeModel(from: model?.encodeObject())
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model: TestMappableModel? = TestMappableModel.decodeModel(from: testCodableData())
@@ -823,7 +823,7 @@ extension TestCodableController {
         var tests = testModel(model)
         model = TestObjectParameter(dictionaryValue: model.dictionaryValue)
         tests += testModel(model, encode: true)
-        
+
         Benchmark.begin("codable")
         for _ in 0..<1000 {
             var model = TestObjectParameter(dictionaryValue: dict)

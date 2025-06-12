@@ -56,7 +56,7 @@ extension DataStreamRequest {
             }
         }
     }
-    
+
     @discardableResult
     public func responseEventSource(
         using serializer: EventSourceSerializer = EventSourceSerializer(),
@@ -102,7 +102,7 @@ extension DataStreamRequest {
             }
         }
     }
-    
+
     @discardableResult
     public func responseDecodableEventSource<T: Decodable>(
         using serializer: DecodableEventSourceSerializer<T> = DecodableEventSourceSerializer(),

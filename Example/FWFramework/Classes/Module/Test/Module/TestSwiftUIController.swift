@@ -160,7 +160,7 @@ struct TestSwiftUIContent: View {
                                 .clipped()
                                 .frame(width: 100, height: 100)
                         }
-                        
+
                         if #available(iOS 14.0, *) {
                             TestSwiftUIMotionEffectView()
                         }
@@ -421,21 +421,21 @@ struct TestSwiftUIToggleStyle: ToggleStyle {
 
 class TestSwiftUIMotionManager: ObservableObject {
     private let motionManager = CMMotionManager()
-    
+
     @Published var xRotation = 0.0
     @Published var yRotation = 0.0
-    
+
     init() {
         motionManager.deviceMotionUpdateInterval = 1 / 20.0
-        
-        motionManager.startDeviceMotionUpdates(to: .main, withHandler: { [weak self] data, error in
+
+        motionManager.startDeviceMotionUpdates(to: .main, withHandler: { [weak self] data, _ in
             guard let motion = data?.attitude else { return }
-            
+
             self?.xRotation = motion.roll
             self?.yRotation = motion.pitch
         })
     }
-    
+
     deinit {
         motionManager.stopDeviceMotionUpdates()
     }
@@ -444,16 +444,16 @@ class TestSwiftUIMotionManager: ObservableObject {
 @available(iOS 14.0, *)
 struct TestSwiftUIMotionEffectView: View {
     @StateObject private var motionManager = TestSwiftUIMotionManager()
-    
+
     var body: some View {
         ZStack {
             Circle()
                 .frame(width: 200, height: 200)
-            
+
             Image(systemName: "swift")
                 .font(.system(size: 100))
         }
-        .then({ view in
+        .then { view in
             if #available(iOS 16.0, *) {
                 return view.foregroundStyle(
                     .white.gradient.shadow(
@@ -468,7 +468,7 @@ struct TestSwiftUIMotionEffectView: View {
             } else {
                 return view.eraseToAnyView()
             }
-        })
+        }
         .rotation3DEffect(
             .degrees(motionManager.xRotation * 25),
             axis: (x: 0, y: 1, z: 0)

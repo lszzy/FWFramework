@@ -20,10 +20,10 @@ extension AuthorizeType {
 /// 蓝牙授权
 public class AuthorizeBluetooth: NSObject, AuthorizeProtocol, CBCentralManagerDelegate, @unchecked Sendable {
     public static let shared = AuthorizeBluetooth()
-    
+
     private var centralManager: CBCentralManager?
     private var completionBlock: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?
-    
+
     private func authorizeStatus(for status: CBManagerAuthorization) -> AuthorizeStatus {
         switch status {
         case .restricted:
@@ -36,7 +36,7 @@ public class AuthorizeBluetooth: NSObject, AuthorizeProtocol, CBCentralManagerDe
             return .notDetermined
         }
     }
-    
+
     // MARK: - AuthorizeProtocol
     public func authorizeStatus() -> AuthorizeStatus {
         let status: CBManagerAuthorization

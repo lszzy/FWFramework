@@ -35,7 +35,7 @@ extension AnyModel where Self: MappableModel {
         if let dict = object as? [String: Any] {
             return .init(JSON: dict)
         }
-        
+
         var string = object as? String
         if string == nil, let data = object as? Data {
             string = String(data: data, encoding: .utf8)
@@ -58,7 +58,7 @@ extension Array where Element: MappableModel {
         if let array = object as? [[String: Any]] {
             return .init(JSONArray: array)
         }
-        
+
         var string = object as? String
         if string == nil, let data = object as? Data {
             string = String(data: data, encoding: .utf8)
@@ -72,4 +72,3 @@ extension Array where Element: MappableModel {
         toJSON()
     }
 }
-

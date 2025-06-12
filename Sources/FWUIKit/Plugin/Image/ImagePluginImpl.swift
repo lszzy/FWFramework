@@ -199,7 +199,7 @@ open class ImagePluginImpl: NSObject, ImagePlugin, ImageCoderPlugin, @unchecked 
             ImageDownloader.shared.cancelTask(for: receipt)
         }
     }
-    
+
     // MARK: - ImageCoderPlugin
     open func imageDecode(
         _ data: Data,

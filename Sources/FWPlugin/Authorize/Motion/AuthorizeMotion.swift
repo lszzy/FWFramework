@@ -20,7 +20,7 @@ extension AuthorizeType {
 /// 运动授权
 public class AuthorizeMotion: NSObject, AuthorizeProtocol, @unchecked Sendable {
     public static let shared = AuthorizeMotion()
-    
+
     public lazy var activityManager: CMMotionActivityManager = {
         let result = CMMotionActivityManager()
         return result
