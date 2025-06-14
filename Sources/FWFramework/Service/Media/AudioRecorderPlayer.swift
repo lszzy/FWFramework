@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import Speech
 import Foundation
 
 /// 音频录制播放器
@@ -39,6 +40,8 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         public var linearPCMIsBigEndian: Bool?
         public var linearPCMIsFloat: Bool?
         public var linearPCMIsNonInterleaved: Bool?
+        
+        public init() {}
     }
 
     // MARK: - Accessor
@@ -59,9 +62,14 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     private var audioPlayerItem: AVPlayerItem!
     private var audioPlayer: AVPlayer!
     private var timeObserverToken: Any?
+    
+    private var speechRecognizer: SFSpeechRecognizer!
+    private var recognitionTask: SFSpeechRecognitionTask?
+    private var recognitionLocale: Locale?
 
     private var isRecording = false
     private var isPlaying = false
+    private var isRecognizing = false
     private var hasPaused = false
     private var hasPausedRecord = false
 
@@ -299,6 +307,26 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         }
     }
     
+    /// 开始语音识别，取消调用Task.cancel即可
+    open func startRecognizer(
+        uri: String? = nil,
+        locale: Locale? = nil,
+        customize: ((SFSpeechRecognizer) -> Void)? = nil,
+        requestCustomize: ((SFSpeechURLRecognitionRequest) -> Void)? = nil
+    ) async throws -> SFSpeechRecognitionResult? {
+        guard !isRecognizing else { return nil }
+
+        isRecognizing = true
+        do {
+            let sendableResult = try await startRecognizer(path: uri ?? "DEFAULT", locale: locale ?? .current, customize: customize, requestCustomize: requestCustomize)
+            isRecognizing = false
+            return sendableResult.value
+        } catch {
+            isRecognizing = false
+            throw error
+        }
+    }
+    
     // MARK: - AVAudioRecorderDelegate
     open func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag { print("Failed to stop recorder") }
@@ -440,17 +468,18 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: subscriptionDuration, preferredTimescale: timeScale)
 
-        timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time,
-                                                                queue: .main) { _ in
-            if self.audioPlayer != nil {
-                self.playerCallback(
-                    PlayBackType(
-                        isMuted: self.audioPlayer.isMuted,
-                        currentPosition: self.audioPlayerItem.currentTime().seconds,
-                        duration: self.audioPlayerItem.asset.duration.seconds,
-                        isFinished: false
+        timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time, queue: .main) { _ in
+            DispatchQueue.fw.mainAsync {
+                if self.audioPlayer != nil {
+                    self.playerCallback(
+                        PlayBackType(
+                            isMuted: self.audioPlayer.isMuted,
+                            currentPosition: self.audioPlayerItem.currentTime().seconds,
+                            duration: self.audioPlayerItem.asset.duration.seconds,
+                            isFinished: false
+                        )
                     )
-                )
+                }
             }
         }
     }
@@ -563,6 +592,67 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
             return "wav"
         default:
             return "audio"
+        }
+    }
+    
+    // MARK: - Recognizer
+    private func startRecognizer(
+        path: String,
+        locale: Locale,
+        customize: ((SFSpeechRecognizer) -> Void)?,
+        requestCustomize: ((SFSpeechURLRecognitionRequest) -> Void)?
+    ) async throws -> SendableValue<SFSpeechRecognitionResult> {
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { continuation in
+                SFSpeechRecognizer.requestAuthorization { status in
+                    guard status == .authorized else {
+                        continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recognize permission not granted"]))
+                        return
+                    }
+                    
+                    self.setAudioFileURL(path: path)
+                    guard let recordURL = self.audioFileURL,
+                          FileManager.default.fileExists(atPath: recordURL.path) else {
+                        continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "The audio file does not exist"]))
+                        return
+                    }
+                    
+                    if self.speechRecognizer == nil || locale != self.recognitionLocale {
+                        self.speechRecognizer = SFSpeechRecognizer(locale: locale)
+                        self.recognitionLocale = locale
+                    }
+                    guard self.speechRecognizer != nil, self.speechRecognizer.isAvailable else {
+                        continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "The speech recognizer is unavailable"]))
+                        return
+                    }
+                    customize?(self.speechRecognizer)
+                    
+                    let recognitionRequest = SFSpeechURLRecognitionRequest(url: recordURL)
+                    requestCustomize?(recognitionRequest)
+                    let sendableResumed = SendableValue(false)
+                    self.recognitionTask = self.speechRecognizer.recognitionTask(with: recognitionRequest, resultHandler: { [weak self] result, error in
+                        if let result, result.isFinal {
+                            self?.recognitionTask = nil
+                            if !sendableResumed.value {
+                                sendableResumed.value = true
+                                continuation.resume(returning: SendableValue(result))
+                            }
+                        } else if let error {
+                            self?.recognitionTask = nil
+                            if !sendableResumed.value {
+                                sendableResumed.value = true
+                                continuation.resume(throwing: error)
+                            }
+                        }
+                    })
+                }
+            }
+        } onCancel: {
+            if recognitionTask != nil {
+                recognitionTask?.cancel()
+                recognitionTask = nil
+            }
+            isRecognizing = false
         }
     }
 }
