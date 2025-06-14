@@ -28,7 +28,8 @@ class TestController: UIViewController {
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
-            ["VideoPlayer", "TestVideoController"]
+            ["VideoPlayer", "TestVideoController"],
+            ["AudioRecorder", "TestRecorderController"],
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],
@@ -74,7 +75,7 @@ class TestController: UIViewController {
             ["Statistical", "TestStatisticalController"],
             ["SkeletonView", "TestSkeletonController"],
             ["SwiftUI", "TestSwiftUIController"],
-            ["Recorder", "TestSwiftUIRecorderController"]
+            ["SwiftUIRecorder", "TestSwiftUIRecorderController"]
         ]]
     ]
 

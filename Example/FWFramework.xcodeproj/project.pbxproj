@@ -24,6 +24,7 @@
 		2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */; };
 		2F36CBB9298B833300444127 /* TestRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F36CBB8298B833300444127 /* TestRequestController.swift */; };
 		2F3849312DFB466B00546F5E /* TestSwiftUIRecorderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */; };
+		2F3849332DFCFD2000546F5E /* TestRecorderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3849322DFCFD2000546F5E /* TestRecorderController.swift */; };
 		2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */; };
 		2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */; };
 		2F49EE1C28FE595300F229BB /* TestPasscodeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */; };
@@ -116,6 +117,7 @@
 		2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTabbarViewController.swift; sourceTree = "<group>"; };
 		2F36CBB8298B833300444127 /* TestRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRequestController.swift; sourceTree = "<group>"; };
 		2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwiftUIRecorderController.swift; sourceTree = "<group>"; };
+		2F3849322DFCFD2000546F5E /* TestRecorderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRecorderController.swift; sourceTree = "<group>"; };
 		2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEncodeController.swift; sourceTree = "<group>"; };
 		2F49EE1928FD3F0F00F229BB /* TestBarrageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBarrageController.swift; sourceTree = "<group>"; };
 		2F49EE1B28FE595300F229BB /* TestPasscodeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasscodeController.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				2F6A414828B70BEC003719E7 /* TestAudioController.swift */,
+				2F3849322DFCFD2000546F5E /* TestRecorderController.swift */,
 				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
 				2FB9E30328C0A69B00C78850 /* TestCacheController.swift */,
 				2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */,
@@ -780,6 +783,7 @@
 				2FB9E30028C09D4D00C78850 /* TestWorkflowController.swift in Sources */,
 				2FB11F0928E5325C00DCB965 /* TestToolbarController.swift in Sources */,
 				2FB48E542B29E7E100F10AC6 /* TestConcurrencyController.swift in Sources */,
+				2F3849332DFCFD2000546F5E /* TestRecorderController.swift in Sources */,
 				2F49EE1A28FD3F0F00F229BB /* TestBarrageController.swift in Sources */,
 				2F336D4929D71E5200553F48 /* TestTabbarViewController.swift in Sources */,
 				2F06D15B28D451E8007E53EC /* TestPreviewController.swift in Sources */,

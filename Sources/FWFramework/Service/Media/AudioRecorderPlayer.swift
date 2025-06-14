@@ -76,6 +76,7 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
     // MARK: - Public
     /// 开始录制
+    @discardableResult
     open func startRecorder(
         uri: String? = nil,
         audioSet: AudioSet? = nil,
@@ -162,6 +163,7 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     }
 
     /// 开始播放
+    @discardableResult
     open func startPlayer(
         uri: String? = nil,
         httpHeaders: [String: String]? = nil
@@ -246,17 +248,21 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     }
 
     /// 设置音量
-    open func setVolume(_ volume: Float) async throws {
-        guard volume >= 0 && volume <= 1 else { return }
-
+    @discardableResult
+    open func setVolume(_ volume: Float) async throws -> Float {
         return try await withCheckedThrowingContinuation { continuation in
+            guard volume >= 0 && volume <= 1 else {
+                continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Value of volume should be between 0.0 to 1.0"]))
+                return
+            }
+            
             if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
             }
 
             self.audioPlayer.volume = volume
-            continuation.resume()
+            continuation.resume(returning: self.audioPlayer.volume)
         }
     }
 
