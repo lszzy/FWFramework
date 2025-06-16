@@ -24,8 +24,8 @@ class TestRecorderController: UIViewController {
     // MARK: - Accessor
     private var state = State()
     
-    private lazy var recorder: AudioRecorderPlayer = {
-        let result = AudioRecorderPlayer()
+    private lazy var recorder: AudioRecorder = {
+        let result = AudioRecorder()
         result.subscriptionDuration = 0.1
         return result
     }()
@@ -288,12 +288,12 @@ extension TestRecorderController {
     func onStartRecord() {
         Task {
             do {
-                var audioSet = AudioRecorderPlayer.AudioSet()
-                audioSet.encoderAudioQuality = .high
-                audioSet.numberOfChannels = 2
-                audioSet.formatID = kAudioFormatMPEG4AAC
+                var audioSettings = AudioRecorder.AudioSettings()
+                audioSettings.encoderAudioQuality = .high
+                audioSettings.numberOfChannels = 2
+                audioSettings.formatID = kAudioFormatMPEG4AAC
                 
-                let uri = try await recorder.startRecorder(audioSet: audioSet)
+                let uri = try await recorder.startRecorder(audioSettings: audioSettings)
                 recorder.recordBackListener = { [weak self] event in
                     guard let self else { return }
                     self.state.recordSecs = event.currentPosition
@@ -415,7 +415,9 @@ extension TestRecorderController {
             } catch {
                 state.recognizeText = ""
                 updateState()
-                self.app.showMessage(error: error)
+                if task != nil {
+                    self.app.showMessage(error: error)
+                }
             }
         }
     }

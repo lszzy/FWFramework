@@ -1,35 +1,38 @@
 //
-//  AudioRecorderPlayer.swift
-//  AudioRecorderPlayer
+//  AudioRecorder.swift
+//  AudioRecorder
 //
 //  Created by wuyong on 2025/6/11.
 //
 
 import AVFoundation
 import Speech
-import Foundation
 
 /// 音频录制播放器
 ///
 /// [react-native-audio-recorder-player](https://github.com/hyochan/react-native-audio-recorder-player)
-open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Sendable {
+open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable {
     /// 录制回调对象
-    public struct RecordBackType: Sendable {
-        public var isRecording: Bool
-        public var currentPosition: TimeInterval
-        public var currentMetering: Float
+    public struct RecordBackState: Sendable {
+        public var isRecording: Bool = false
+        public var currentPosition: TimeInterval = 0
+        public var currentMetering: Float = 0
+        
+        public init() {}
     }
 
     /// 播放回调对象
-    public struct PlayBackType: Sendable {
+    public struct PlayBackState: Sendable {
         public var isMuted: Bool?
-        public var currentPosition: TimeInterval
-        public var duration: TimeInterval
-        public var isFinished: Bool
+        public var currentPosition: TimeInterval = 0
+        public var duration: TimeInterval = 0
+        public var isFinished: Bool = false
+        
+        public init() {}
     }
 
     /// 音频设置
-    public struct AudioSet: Sendable {
+    public struct AudioSettings: Sendable {
         public var sampleRate: Int?
         public var formatID: AudioFormatID?
         public var mode: AVAudioSession.Mode?
@@ -46,13 +49,25 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
     // MARK: - Accessor
     /// 录制回调监听
-    public var recordBackListener: ((RecordBackType) -> Void)?
+    public var recordBackListener: ((RecordBackState) -> Void)?
     /// 播放回调监听
-    public var playBackListener: ((PlayBackType) -> Void)?
+    public var playBackListener: ((PlayBackState) -> Void)?
     /// 音量监听频率
     public var subscriptionDuration: Double = 0.5
+    
+    /// 音频文件URL
+    public private(set) var audioFileURL: URL?
+    /// 是否正在录制
+    public private(set) var isRecording = false
+    /// 是否录制已暂停
+    public private(set) var isRecordingPaused = false
+    /// 是否正在播放
+    public private(set) var isPlaying = false
+    /// 是否播放已暂停
+    public private(set) var isPaused = false
+    /// 是否正在识别
+    public private(set) var isRecognizing = false
 
-    private var audioFileURL: URL?
     private var audioRecorder: AVAudioRecorder!
     private var recordTimer: Timer?
     private var isMeteringEnabled = false
@@ -66,12 +81,6 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     private var speechRecognizer: SFSpeechRecognizer!
     private var recognitionTask: SFSpeechRecognitionTask?
     private var recognitionLocale: Locale?
-
-    private var isRecording = false
-    private var isPlaying = false
-    private var isRecognizing = false
-    private var hasPaused = false
-    private var hasPausedRecord = false
 
     public override init() {
         super.init()
@@ -87,14 +96,14 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     @discardableResult
     open func startRecorder(
         uri: String? = nil,
-        audioSet: AudioSet? = nil,
+        audioSettings: AudioSettings? = nil,
         meteringEnabled: Bool? = nil
     ) async throws -> String? {
         guard !isRecording else { return nil }
 
         isRecording = true
         do {
-            return try await startRecorder(path: uri ?? "DEFAULT", audioSet: audioSet, meteringEnabled: meteringEnabled ?? false)
+            return try await startRecorder(path: uri ?? "", audioSettings: audioSettings, meteringEnabled: meteringEnabled ?? false)
         } catch {
             isRecording = false
             throw error
@@ -103,9 +112,9 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
     /// 暂停录制
     open func pauseRecorder() async throws {
-        guard !hasPausedRecord else { return }
+        guard !isRecordingPaused else { return }
 
-        hasPausedRecord = true
+        isRecordingPaused = true
         return try await withCheckedThrowingContinuation { continuation in
             recordTimer?.invalidate()
             recordTimer = nil
@@ -124,9 +133,9 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
     /// 继续录制
     open func resumeRecorder() async throws {
-        guard hasPausedRecord else { return }
+        guard isRecordingPaused else { return }
 
-        hasPausedRecord = false
+        isRecordingPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.main.async {
                 if self.audioRecorder == nil {
@@ -150,7 +159,7 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         guard isRecording else { return nil }
 
         isRecording = false
-        hasPausedRecord = false
+        isRecordingPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             if recordTimer != nil {
                 recordTimer!.invalidate()
@@ -176,18 +185,18 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         uri: String? = nil,
         httpHeaders: [String: String]? = nil
     ) async throws -> String? {
-        guard !isPlaying || hasPaused else { return nil }
+        guard !isPlaying || isPaused else { return nil }
 
         isPlaying = true
-        hasPaused = false
-        return try await startPlayer(path: uri ?? "DEFAULT", httpHeaders: httpHeaders ?? [:])
+        isPaused = false
+        return try await startPlayer(path: uri ?? "", httpHeaders: httpHeaders ?? [:])
     }
 
     /// 暂停播放
     open func pausePlayer() async throws {
-        guard isPlaying, !hasPaused else { return }
+        guard isPlaying, !isPaused else { return }
 
-        hasPaused = true
+        isPaused = true
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -203,9 +212,9 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
     /// 继续播放
     open func resumePlayer() async throws {
-        guard isPlaying, hasPaused else { return }
+        guard isPlaying, isPaused else { return }
 
-        hasPaused = false
+        isPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -225,7 +234,7 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         guard isPlaying else { return nil }
 
         isPlaying = false
-        hasPaused = false
+        isPaused = false
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
@@ -318,7 +327,7 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
 
         isRecognizing = true
         do {
-            let sendableResult = try await startRecognizer(path: uri ?? "DEFAULT", locale: locale ?? .current, customize: customize, requestCustomize: requestCustomize)
+            let sendableResult = try await startRecognizer(path: uri ?? "", locale: locale ?? .current, customize: customize, requestCustomize: requestCustomize)
             isRecognizing = false
             return sendableResult.value
         } catch {
@@ -329,23 +338,40 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     
     // MARK: - AVAudioRecorderDelegate
     open func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if !flag { print("Failed to stop recorder") }
+        if !flag {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "AudioRecorderPlayer: Failed to stop recorder")
+            #endif
+        }
     }
 
     open func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
-        print(error ?? "")
+        if let error {
+            #if DEBUG
+            Logger.debug(group: Logger.fw.moduleName, "AudioRecorderPlayer: %@", error.localizedDescription)
+            #endif
+        }
     }
 
     // MARK: - Recorder
-    private func setAudioFileURL(path: String) {
-        if path == "DEFAULT" {
-            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-            audioFileURL = cachesDirectory.appendingPathComponent("sound.m4a")
-        } else if path.hasPrefix("http://") || path.hasPrefix("https://") || path.hasPrefix("file://") {
+    private func setAudioFileURL(path: String, fileExt: String? = nil) {
+        if path.hasPrefix("http://") || path.hasPrefix("https://") {
             audioFileURL = URL(string: path)
+            return
+        }
+        
+        if path.hasPrefix("file://") {
+            audioFileURL = URL(string: path)
+        } else if (path as NSString).isAbsolutePath {
+            audioFileURL = URL(fileURLWithPath: path)
         } else {
-            let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-            audioFileURL = cachesDirectory.appendingPathComponent(path)
+            let filePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AudioRecorder"])
+            let fileName = !path.isEmpty ? path : ("sound." + (fileExt ?? "m4a"))
+            audioFileURL = URL(fileURLWithPath: filePath.fw.appendingPath(fileName))
+        }
+        
+        if let audioFileDir = audioFileURL?.deletingLastPathComponent(), !FileManager.default.fileExists(atPath: audioFileDir.path) {
+            try? FileManager.default.createDirectory(at: audioFileDir, withIntermediateDirectories: true)
         }
     }
 
@@ -358,8 +384,11 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
                 currentMetering = audioRecorder.averagePower(forChannel: 0)
             }
 
-            let status = RecordBackType(isRecording: audioRecorder.isRecording, currentPosition: audioRecorder.currentTime, currentMetering: currentMetering)
-            recordBackListener?(status)
+            var state = RecordBackState()
+            state.isRecording = audioRecorder.isRecording
+            state.currentPosition = audioRecorder.currentTime
+            state.currentMetering = currentMetering
+            recordBackListener?(state)
         }
     }
 
@@ -396,37 +425,32 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     }
 
     @discardableResult
-    private func startRecorder(path: String, audioSet: AudioSet?, meteringEnabled: Bool) async throws -> String {
+    private func startRecorder(path: String, audioSettings: AudioSettings?, meteringEnabled: Bool) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             isMeteringEnabled = meteringEnabled
 
-            let avFormat = audioSet?.formatID ?? kAudioFormatAppleLossless
-            if path == "DEFAULT" {
-                let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-                let fileExt = fileExtension(forAudioFormat: avFormat)
-                audioFileURL = cachesDirectory.appendingPathComponent("sound." + fileExt)
-            } else {
-                setAudioFileURL(path: path)
-            }
+            let avFormat = audioSettings?.formatID ?? kAudioFormatAppleLossless
+            let fileExt = fileExtension(for: avFormat)
+            setAudioFileURL(path: path, fileExt: fileExt)
 
             let audioSession = AVAudioSession.sharedInstance()
             do {
-                try audioSession.setCategory(.playAndRecord, mode: audioSet?.mode ?? .default, options: [AVAudioSession.CategoryOptions.defaultToSpeaker, AVAudioSession.CategoryOptions.allowBluetooth])
+                try audioSession.setCategory(.playAndRecord, mode: audioSettings?.mode ?? .default, options: [AVAudioSession.CategoryOptions.defaultToSpeaker, AVAudioSession.CategoryOptions.allowBluetooth])
                 try audioSession.setActive(true)
 
                 audioSession.requestRecordPermission { granted in
                     DispatchQueue.main.async {
                         if granted {
                             let settings: [String: Any] = [
-                                AVSampleRateKey: audioSet?.sampleRate ?? 44_100,
+                                AVSampleRateKey: audioSettings?.sampleRate ?? 44_100,
                                 AVFormatIDKey: avFormat,
-                                AVNumberOfChannelsKey: audioSet?.numberOfChannels ?? 2,
-                                AVEncoderAudioQualityKey: (audioSet?.encoderAudioQuality ?? .medium).rawValue,
-                                AVLinearPCMBitDepthKey: audioSet?.linearPCMBitDepth ?? AVLinearPCMBitDepthKey.count,
-                                AVLinearPCMIsBigEndianKey: audioSet?.linearPCMIsBigEndian ?? true,
-                                AVLinearPCMIsFloatKey: audioSet?.linearPCMIsFloat ?? false,
-                                AVLinearPCMIsNonInterleaved: audioSet?.linearPCMIsNonInterleaved ?? false,
-                                AVEncoderBitRateKey: audioSet?.encoderBitRate ?? 128_000
+                                AVNumberOfChannelsKey: audioSettings?.numberOfChannels ?? 2,
+                                AVEncoderAudioQualityKey: (audioSettings?.encoderAudioQuality ?? .medium).rawValue,
+                                AVLinearPCMBitDepthKey: audioSettings?.linearPCMBitDepth ?? AVLinearPCMBitDepthKey.count,
+                                AVLinearPCMIsBigEndianKey: audioSettings?.linearPCMIsBigEndian ?? true,
+                                AVLinearPCMIsFloatKey: audioSettings?.linearPCMIsFloat ?? false,
+                                AVLinearPCMIsNonInterleaved: audioSettings?.linearPCMIsNonInterleaved ?? false,
+                                AVEncoderBitRateKey: audioSettings?.encoderBitRate ?? 128_000
                             ]
 
                             do {
@@ -471,14 +495,12 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         timeObserverToken = audioPlayer.addPeriodicTimeObserver(forInterval: time, queue: .main) { _ in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer != nil {
-                    self.playerCallback(
-                        PlayBackType(
-                            isMuted: self.audioPlayer.isMuted,
-                            currentPosition: self.audioPlayerItem.currentTime().seconds,
-                            duration: self.audioPlayerItem.asset.duration.seconds,
-                            isFinished: false
-                        )
-                    )
+                    var state = PlayBackState()
+                    state.isMuted = self.audioPlayer.isMuted
+                    state.currentPosition = self.audioPlayerItem.currentTime().seconds
+                    state.duration = self.audioPlayerItem.asset.duration.seconds
+                    state.isFinished = false
+                    self.playerCallback(state)
                 }
             }
         }
@@ -529,18 +551,16 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
     @objc private func playerDidFinishPlaying(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             let duration = playerItem.duration.seconds
-            playerCallback(
-                PlayBackType(
-                    isMuted: audioPlayer?.isMuted,
-                    currentPosition: duration,
-                    duration: duration,
-                    isFinished: true
-                )
-            )
+            var state = PlayBackState()
+            state.isMuted = audioPlayer?.isMuted
+            state.currentPosition = duration
+            state.duration = duration
+            state.isFinished = true
+            playerCallback(state)
         }
     }
 
-    private func playerCallback(_ event: PlayBackType) {
+    private func playerCallback(_ event: PlayBackState) {
         playBackListener?(event)
 
         if event.isFinished {
@@ -550,8 +570,8 @@ open class AudioRecorderPlayer: NSObject, AVAudioRecorderDelegate, @unchecked Se
         }
     }
 
-    private func fileExtension(forAudioFormat format: AudioFormatID) -> String {
-        switch format {
+    private func fileExtension(for audioFormat: AudioFormatID) -> String {
+        switch audioFormat {
         case kAudioFormatOpus:
             return "ogg"
         case kAudioFormatLinearPCM:
