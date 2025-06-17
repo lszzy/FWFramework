@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-#if canImport(SwiftUI)
 import Combine
 import SwiftUI
 
@@ -113,5 +112,3 @@ extension UIHostingController where Content == AnyView {
         return hostingController
     }
 }
-
-#endif

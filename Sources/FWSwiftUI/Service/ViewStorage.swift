@@ -5,7 +5,6 @@
 //  Created by wuyong on 2025/3/12.
 //
 
-#if canImport(SwiftUI)
 import Combine
 import SwiftUI
 
@@ -257,5 +256,3 @@ private struct OnChangeOfValue<Base: View, Value: Equatable>: View {
         return base
     }
 }
-
-#endif

@@ -5,7 +5,6 @@
 //  Created by wuyong on 2025/3/11.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
@@ -237,5 +236,3 @@ extension EnvironmentValues {
         set { self[GridStyleKey.self] = newValue }
     }
 }
-
-#endif

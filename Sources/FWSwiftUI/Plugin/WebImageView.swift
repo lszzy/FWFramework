@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-#if canImport(SwiftUI) && canImport(Combine)
 import Combine
 import SwiftUI
 #if FWMacroSPM
@@ -152,5 +151,3 @@ extension WebImageView {
         }
     }
 }
-
-#endif

@@ -5,7 +5,6 @@
 //  Created by wuyong on 2025/6/13.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 import Combine
 import Speech
@@ -817,5 +816,3 @@ public extension SwiftSpeech.ViewModifiers {
         }
     }
 }
-
-#endif

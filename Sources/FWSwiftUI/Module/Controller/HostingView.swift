@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
@@ -146,5 +145,3 @@ open class HostingView<Content: View>: UIView {
         return hostingView
     }
 }
-
-#endif

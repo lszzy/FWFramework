@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/18.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
@@ -522,5 +521,3 @@ extension FrameworkConfiguration {
     fileprivate static var dividerDefaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
     fileprivate static var dividerColorConfiguration: (@Sendable () -> Color)?
 }
-
-#endif

@@ -5,7 +5,6 @@
 //  Created by wuyong on 2025/3/11.
 //
 
-#if canImport(SwiftUI)
 import Combine
 import SwiftUI
 import UIKit
@@ -1616,5 +1615,3 @@ class PopupPassthroughController<Content: View>: UIHostingController<Content> {
         }
     }
 }
-
-#endif

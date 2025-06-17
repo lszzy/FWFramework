@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/23.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
@@ -56,5 +55,3 @@ open class HostingController: UIHostingController<AnyView> {
     /// 初始化布局，viewDidLoad自动调用，子类重写
     open func setupLayout() {}
 }
-
-#endif
