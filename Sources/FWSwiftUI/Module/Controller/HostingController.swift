@@ -18,24 +18,21 @@ open class HostingController: UIHostingController<AnyView> {
     // MARK: - Lifecyecle
     public init() {
         super.init(rootView: AnyView(EmptyView()))
-        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
-        if !isSetup {
+        if !(self is ViewControllerProtocol) {
             didInitialize()
         }
     }
 
     @MainActor public dynamic required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder, rootView: AnyView(EmptyView()))
-        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
-        if !isSetup {
+        if !(self is ViewControllerProtocol) {
             didInitialize()
         }
     }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
-        let isSetup = FrameworkConfiguration.isViewControllerProtocol?(self) ?? false
-        if !isSetup {
+        if !(self is ViewControllerProtocol) {
             setupNavbar()
             setupSubviews()
             setupLayout()
