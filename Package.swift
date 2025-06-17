@@ -31,10 +31,6 @@ let package = Package(
             targets: ["FWPluginContacts"]
         ),
         .library(
-            name: "FWPluginMicrophone",
-            targets: ["FWPluginMicrophone"]
-        ),
-        .library(
             name: "FWPluginTracking",
             targets: ["FWPluginTracking"]
         ),
@@ -131,15 +127,6 @@ let package = Package(
             name: "FWPluginContacts",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Authorize/Contacts",
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM")
-            ]
-        ),
-        .target(
-            name: "FWPluginMicrophone",
-            dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Authorize/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

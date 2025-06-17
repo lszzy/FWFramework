@@ -75,11 +75,6 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
 
-    ss.subspec 'Microphone' do |sss|
-      sss.source_files = 'Sources/FWPlugin/Authorize/Microphone/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Service'
-    end
-
     ss.subspec 'Calendar' do |sss|
       sss.source_files = 'Sources/FWPlugin/Authorize/Calendar/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
