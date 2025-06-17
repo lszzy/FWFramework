@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - IndicatorView
 /// 自定义指示器视图

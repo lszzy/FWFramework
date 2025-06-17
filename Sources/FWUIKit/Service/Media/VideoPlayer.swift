@@ -8,6 +8,9 @@
 import AVFoundation
 import CoreGraphics
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - VideoPlayerDelegate
 /// Player delegate protocol

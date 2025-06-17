@@ -7,6 +7,9 @@
 
 import AVFoundation
 import Speech
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 音频录制播放器
 ///

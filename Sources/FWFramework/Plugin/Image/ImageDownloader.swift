@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 // MARK: - ImageDownloader
 /// 图片下载优先顺序

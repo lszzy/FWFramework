@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 // MARK: - Wrapper+UIView
 @MainActor extension Wrapper where Base: UIView {

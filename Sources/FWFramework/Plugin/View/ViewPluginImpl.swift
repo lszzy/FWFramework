@@ -6,9 +6,6 @@
 //
 
 import UIKit
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 /// 默认视图插件
 open class ViewPluginImpl: NSObject, ViewPlugin, @unchecked Sendable {
@@ -25,7 +22,7 @@ open class ViewPluginImpl: NSObject, ViewPlugin, @unchecked Sendable {
 
     // MARK: - ViewPlugin
     open func progressView(style: ProgressViewStyle) -> UIView & ProgressViewPlugin {
-        let progressView = customProgressView?(style) ?? ProgressView()
+        let progressView = customProgressView?(style) ?? UIActivityIndicatorView.fw.indicatorView(color: nil)
         if let indicatorSize = style.indicatorSize {
             progressView.indicatorSize = indicatorSize
         }

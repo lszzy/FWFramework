@@ -9,6 +9,9 @@ import AVFoundation
 import MobileCoreServices
 import Photos
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - Asset
 /// 资源类型枚举

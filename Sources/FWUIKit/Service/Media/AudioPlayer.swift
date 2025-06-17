@@ -7,6 +7,9 @@
 
 import AVFoundation
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 音频播放器事件代理
 @MainActor @objc public protocol AudioPlayerDelegate {
