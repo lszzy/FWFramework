@@ -426,25 +426,18 @@ enum TestMappableModelEnum: String {
 }
 
 // MARK: - TestObjectParameter
-class TestObjectParameter: ObjectParameter {
-    var id: Int = 0
-    var name: String = ""
-    var block: BlockVoid?
-
-    required init() {}
-
-    required init(dictionaryValue: [AnyHashable: Any]) {
-        self.id = dictionaryValue["id"].safeInt
-        self.name = dictionaryValue["name"].safeString
-        self.block = dictionaryValue["block"] as? BlockVoid
+class TestObjectParameter: AbstractParameter {
+    var id: Int {
+        get { get().safeInt }
+        set { set(newValue) }
     }
-
-    public var dictionaryValue: [AnyHashable: Any] {
-        var dictionary: [AnyHashable: Any] = [:]
-        dictionary["id"] = id
-        dictionary["name"] = name
-        dictionary["block"] = block
-        return dictionary
+    var name: String {
+        get { get().safeString }
+        set { set(newValue) }
+    }
+    var block: BlockVoid? {
+        get { get() }
+        set { set(newValue) }
     }
 }
 

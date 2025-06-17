@@ -77,8 +77,20 @@ extension Dictionary: DictionaryParameter {
     public var dictionaryValue: [Key: Value] { self }
 }
 
-extension ObjectParameter {
-    public var dictionaryValue: [AnyHashable: Any] {
-        NSObject.fw.mirrorDictionary(self)
+// MARK: - AbstractParameter
+open class AbstractParameter: ObjectParameter {
+    public var dictionaryValue: [AnyHashable: Any] = [:]
+    public required init() {}
+    public required init(dictionaryValue: [AnyHashable: Any]) {
+        self.dictionaryValue = dictionaryValue
+    }
+    public func get<T>(_ key: AnyHashable = #function, as type: T.Type = T.self) -> T? {
+        return dictionaryValue[key] as? T
+    }
+    public func get(_ key: AnyHashable = #function) -> Any? {
+        return dictionaryValue[key]
+    }
+    public func set(_ value: Any?, for key: AnyHashable = #function) {
+        dictionaryValue[key] = value
     }
 }

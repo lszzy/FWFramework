@@ -92,7 +92,7 @@ public class Router: NSObject, @unchecked Sendable {
     public typealias Completion = @MainActor @Sendable (Sendable?) -> Void
 
     /// 路由参数类，可直接使用，也可完全自定义
-    open class Parameter: ObjectParameter, @unchecked Sendable {
+    open class Parameter: AbstractParameter, @unchecked Sendable {
         /// 路由信息来源Key，兼容字典传参，默认未使用
         public static let routerSourceKey = "routerSource"
         /// 路由信息选项Key，兼容字典传参，支持NavigationOptions
@@ -105,36 +105,34 @@ public class Router: NSObject, @unchecked Sendable {
         public static let routerHandlerKey = "routerHandler"
 
         /// 路由信息来源，默认未使用
-        open var routerSource: String?
-        /// 路由信息选项，支持NavigationOptions
-        open var routerOptions: NavigatorOptions?
-        /// 路由动画选项，仅open生效
-        open var routerAnimated: Bool?
-        /// 路由完成选项，仅open生效
-        open var routerCompleted: Bool?
-        /// 路由信息句柄，仅open生效
-        open var routerHandler: (@convention(block) @MainActor @Sendable (Context, UIViewController) -> Void)?
-
-        public required init() {}
-
-        public required init(dictionaryValue: [AnyHashable: Any]) {
-            self.routerSource = dictionaryValue[Self.routerSourceKey].string
-            if let options = dictionaryValue[Self.routerOptionsKey] {
-                self.routerOptions = options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
-            }
-            self.routerAnimated = dictionaryValue[Self.routerAnimatedKey].bool
-            self.routerCompleted = dictionaryValue[Self.routerCompletedKey].bool
-            self.routerHandler = dictionaryValue[Self.routerHandlerKey] as? @convention(block) @MainActor @Sendable (Context, UIViewController) -> Void
+        open var routerSource: String? {
+            get { get(Self.routerSourceKey).string }
+            set { set(newValue, for: Self.routerSourceKey) }
         }
-
-        public var dictionaryValue: [AnyHashable: Any] {
-            var dictionary: [AnyHashable: Any] = [:]
-            dictionary[Self.routerSourceKey] = routerSource
-            dictionary[Self.routerOptionsKey] = routerOptions
-            dictionary[Self.routerAnimatedKey] = routerAnimated
-            dictionary[Self.routerCompletedKey] = routerCompleted
-            dictionary[Self.routerHandlerKey] = routerHandler
-            return dictionary
+        /// 路由信息选项，支持NavigationOptions
+        open var routerOptions: NavigatorOptions? {
+            get {
+                guard let options = get(Self.routerOptionsKey) else { return nil }
+                return options as? NavigatorOptions ?? NavigatorOptions(rawValue: NSNumber.fw.safeNumber(options).intValue)
+            }
+            set {
+                set(newValue, for: Self.routerOptionsKey)
+            }
+        }
+        /// 路由动画选项，仅open生效
+        open var routerAnimated: Bool? {
+            get { get(Self.routerAnimatedKey).bool }
+            set { set(newValue, for: Self.routerAnimatedKey) }
+        }
+        /// 路由完成选项，仅open生效
+        open var routerCompleted: Bool? {
+            get { get(Self.routerCompletedKey).bool }
+            set { set(newValue, for: Self.routerCompletedKey) }
+        }
+        /// 路由信息句柄，仅open生效
+        open var routerHandler: (@convention(block) @MainActor @Sendable (Context, UIViewController) -> Void)? {
+            get { get(Self.routerHandlerKey) }
+            set { set(newValue, for: Self.routerHandlerKey) }
         }
     }
 
