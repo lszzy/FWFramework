@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
     end
     
     ss.subspec 'Module' do |sss|
-      sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
+      sss.source_files = 'Sources/FWFramework/Module/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end
   end
@@ -45,16 +45,19 @@ Pod::Spec.new do |s|
     
     ss.subspec 'Service' do |sss|
       sss.source_files = 'Sources/FWUIKit/Service/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Toolkit'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
       
     ss.subspec 'Plugin' do |sss|
       sss.source_files = 'Sources/FWUIKit/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Service'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Module' do |sss|
       sss.source_files = 'Sources/FWUIKit/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWUIKit/Plugin'
       sss.dependency 'FWFramework/FWFramework/Module'
     end
   end
@@ -69,18 +72,21 @@ Pod::Spec.new do |s|
     ss.subspec 'Service' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Service/**/*.swift'
+      sss.dependency 'FWFramework/FWSwiftUI/Toolkit'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
     ss.subspec 'Plugin' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWSwiftUI/Service'
       sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWSwiftUI/Plugin'
       sss.dependency 'FWFramework/FWFramework/Module'
     end
   end
