@@ -69,7 +69,7 @@ import UIKit
      */
     public static func pickerController(
         selectionLimit: Int,
-        cropController: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        cropController: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?,
         completion: @escaping @MainActor @Sendable ([UIImage], [Any], Bool) -> Void
     ) -> UIViewController? {
         if #available(iOS 14.0, *) {
@@ -347,22 +347,14 @@ import UIKit
      */
     public static func pickerController(
         sourceType: UIImagePickerController.SourceType,
-        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?,
         completion: @escaping @MainActor @Sendable (UIImage?, [AnyHashable: Any]?, Bool) -> Void
     ) -> UIImagePickerController? {
         let pickerController = UIImagePickerController.fw.pickerController(sourceType: sourceType, filterType: .image, allowsEditing: false, shouldDismiss: false) { picker, object, info, cancel in
             let originalImage = cancel ? nil : (object as? UIImage)
-            if let originalImage {
-                var cropController: ImageCropController
-                if let cropControllerBlock {
-                    cropController = cropControllerBlock(originalImage)
-                } else {
-                    cropController = ImageCropController(image: originalImage)
-                    cropController.aspectRatioPreset = .presetSquare
-                    cropController.aspectRatioLockEnabled = true
-                    cropController.resetAspectRatioEnabled = false
-                    cropController.aspectRatioPickerButtonHidden = true
-                }
+            let cropControllerBlock = cropControllerBlock ?? FrameworkConfiguration.cropControllerBlock
+            if let originalImage, let cropControllerBlock {
+                let cropController = cropControllerBlock(originalImage)
                 cropController.onDidCropToImage = { image, _, _ in
                     picker?.dismiss(animated: true, completion: {
                         completion(image, info, false)
@@ -462,21 +454,13 @@ import UIKit
      */
     public static func pickerController(
         selectionLimit: Int,
-        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?,
+        cropController cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?,
         completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void
     ) -> PHPickerViewController {
         let pickerController = PHPickerViewController.fw.pickerController(filterType: .image, selectionLimit: selectionLimit, shouldDismiss: false) { picker, objects, results, cancel in
-            if objects.count == 1, let originalImage = objects.first as? UIImage {
-                var cropController: ImageCropController
-                if let cropControllerBlock {
-                    cropController = cropControllerBlock(originalImage)
-                } else {
-                    cropController = ImageCropController(image: originalImage)
-                    cropController.aspectRatioPreset = .presetSquare
-                    cropController.aspectRatioLockEnabled = true
-                    cropController.resetAspectRatioEnabled = false
-                    cropController.aspectRatioPickerButtonHidden = true
-                }
+            let cropControllerBlock = cropControllerBlock ?? FrameworkConfiguration.cropControllerBlock
+            if objects.count == 1, let originalImage = objects.first as? UIImage, let cropControllerBlock {
+                let cropController = cropControllerBlock(originalImage)
                 cropController.onDidCropToImage = { image, _, _ in
                     picker?.presentingViewController?.dismiss(animated: true, completion: {
                         completion([image], results, false)
@@ -521,6 +505,13 @@ import UIKit
         get { property(forName: #function) as? (PHPickerViewController, Int, Int) -> Void }
         set { setPropertyCopy(newValue, forName: #function) }
     }
+}
+
+// MARK: - ImageCropControllerProtocol
+/// 图片裁剪控制器协议
+@MainActor public protocol ImageCropControllerProtocol: AnyObject {
+    var onDidFinishCancelled: ((_ isFinished: Bool) -> Void)? { get set }
+    var onDidCropToImage: ((_ image: UIImage, _ cropRect: CGRect, _ angle: Int) -> Void)? { get set }
 }
 
 // MARK: ImagePickerPlugin
@@ -613,7 +604,7 @@ extension ImagePickerPlugin {
         } else if checkVideo && mediaType == (kUTTypeMovie as String) {
             // 视频文件在tmp临时目录中，为防止系统自动删除，统一拷贝到选择器目录
             if let url = info[.mediaURL] as? URL {
-                let filePath = AssetManager.imagePickerPath
+                let filePath = ImagePickerPluginImpl.imagePickerPath
                 try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                 if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw.md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                     let tempFileURL = URL(fileURLWithPath: fullPath)
@@ -729,7 +720,7 @@ extension ImagePickerPlugin {
             result.itemProvider.loadFileRepresentation(forTypeIdentifier: kUTTypeMovie as String) { url, _ in
                 var videoURL: URL?
                 if let url {
-                    let filePath = AssetManager.imagePickerPath
+                    let filePath = ImagePickerPluginImpl.imagePickerPath
                     try? FileManager.default.createDirectory(atPath: filePath, withIntermediateDirectories: true, attributes: nil)
                     if let fullPath = ((filePath as NSString).appendingPathComponent((url.absoluteString + UUID().uuidString).fw.md5Encode) as NSString).appendingPathExtension(url.pathExtension) {
                         let fileURL = URL(fileURLWithPath: fullPath)
@@ -763,4 +754,9 @@ extension ImagePickerPlugin {
 @available(iOS 14, *)
 extension PHPickerViewController {
     fileprivate static var innerPickerConfigurationBlock: (() -> PHPickerConfiguration)?
+}
+
+// MARK: - FrameworkConfiguration+ImagePickerPlugin
+extension FrameworkConfiguration {
+    public static var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
 }

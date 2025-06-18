@@ -12,6 +12,11 @@ import UIKit
 // MARK: - ImagePickerPluginImpl
 /// 默认图片选取插件
 open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendable {
+    /// 图片选择器缓存文件存放目录，使用完成后需自行删除
+    public nonisolated static var imagePickerPath: String {
+        return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager", "ImagePicker"])
+    }
+    
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)
@@ -30,7 +35,7 @@ open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendab
     open var presentationFullScreen: Bool = false
 
     /// 自定义图片裁剪控制器句柄，启用自定义裁剪后生效
-    open var cropControllerBlock: (@MainActor @Sendable (UIImage) -> ImageCropController)?
+    open var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
 
     /// 自定义视频质量，默认nil时不生效
     open var videoQuality: UIImagePickerController.QualityType?
