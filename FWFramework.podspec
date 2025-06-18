@@ -13,59 +13,75 @@ Pod::Spec.new do |s|
   s.default_subspecs      = ['FWFramework', 'FWUIKit']
   
   s.subspec 'FWFramework' do |ss|
-    ss.subspec 'Kernel' do |sss|
-      sss.source_files = 'Sources/FWFramework/Kernel/**/*.swift'
+    ss.subspec 'Toolkit' do |sss|
+      sss.source_files = 'Sources/FWFramework/Toolkit/**/*.swift'
       sss.resources = ['Sources/PrivacyInfo.xcprivacy']
       sss.pod_target_xcconfig = {
         'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => '$(inherited)'
       }
     end
     
-    ss.subspec 'Toolkit' do |sss|
-      sss.source_files = 'Sources/FWFramework/Toolkit/**/*.swift'
-      sss.dependency 'FWFramework/FWFramework/Kernel'
-    end
-    
     ss.subspec 'Service' do |sss|
       sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Toolkit'
     end
+    
+    ss.subspec 'Plugin' do |sss|
+      sss.source_files = 'Sources/FWFramework/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
+    ss.subspec 'Module' do |sss|
+      sss.source_files = 'Sources/FWFramework/Service/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
+    end
   end
   
   s.subspec 'FWUIKit' do |ss|
-    ss.subspec 'Plugin' do |sss|
-      sss.source_files = 'Sources/FWUIKit/Plugin/**/*.swift'
+    ss.subspec 'Toolkit' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Toolkit/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Toolkit'
+    end
+    
+    ss.subspec 'Service' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Service/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
       
-    ss.subspec 'Module' do |sss|
-      sss.source_files = 'Sources/FWUIKit/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+    ss.subspec 'Plugin' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Plugin/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
-    ss.subspec 'Extend' do |sss|
-      sss.source_files = 'Sources/FWUIKit/Extend/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Module'
+    ss.subspec 'Module' do |sss|
+      sss.source_files = 'Sources/FWUIKit/Module/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Module'
     end
   end
   
   s.subspec 'FWSwiftUI' do |ss|
+    ss.subspec 'Toolkit' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Toolkit/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Toolkit'
+    end
+      
+    ss.subspec 'Service' do |sss|
+      sss.weak_frameworks = 'SwiftUI', 'Combine'
+      sss.source_files = 'Sources/FWSwiftUI/Service/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
     ss.subspec 'Plugin' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Plugin/**/*.swift'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Module' do |sss|
       sss.weak_frameworks = 'SwiftUI', 'Combine'
       sss.source_files = 'Sources/FWSwiftUI/Module/**/*.swift'
-      sss.dependency 'FWFramework/FWSwiftUI/Plugin'
-    end
-    
-    ss.subspec 'Extend' do |sss|
-      sss.weak_frameworks = 'SwiftUI', 'Combine'
-      sss.source_files = 'Sources/FWSwiftUI/Extend/**/*.swift'
-      sss.dependency 'FWFramework/FWSwiftUI/Module'
+      sss.dependency 'FWFramework/FWFramework/Module'
     end
   end
   
@@ -108,7 +124,7 @@ Pod::Spec.new do |s|
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'Alamofire' do |sss|
@@ -126,7 +142,7 @@ Pod::Spec.new do |s|
     ss.subspec 'Lottie' do |sss|
       sss.source_files = 'Sources/FWPlugin/Lottie/**/*.swift'
       sss.dependency 'lottie-ios'
-      sss.dependency 'FWFramework/FWUIKit/Plugin'
+      sss.dependency 'FWFramework/FWFramework/Plugin'
     end
     
     ss.subspec 'MMKV' do |sss|
