@@ -287,7 +287,7 @@ public extension SwiftSpeech {
 }
 
 public extension SwiftSpeech {
-    enum State {
+    enum State: Sendable {
         case pending
         case recording
         case cancelling
@@ -419,7 +419,7 @@ public extension SwiftSpeech.Session {
 }
 
 public extension SwiftSpeech.Session {
-    struct AudioSessionConfiguration {
+    struct AudioSessionConfiguration: @unchecked Sendable {
         public var onStartRecording: (AVAudioSession) throws -> Void
         public var onStopRecording: (AVAudioSession) throws -> Void
         
@@ -635,7 +635,7 @@ public extension SwiftSpeech.ViewModifiers {
         var gesture: some Gesture {
             let longPress = LongPressGesture(minimumDuration: 0)
                 .onEnded { _ in
-                    withAnimation(self.animation, self.startRecording)
+                    try? withAnimation(self.animation, self.startRecording)
                     self.viewComponentState = .recording
                 }
             
@@ -651,9 +651,9 @@ public extension SwiftSpeech.ViewModifiers {
                 }
                 .onEnded { value in
                     if value.translation.height < -self.distanceToCancel {
-                        withAnimation(self.animation, self.cancelRecording)
+                        try? withAnimation(self.animation, self.cancelRecording)
                     } else {
-                        withAnimation(self.animation, self.endRecording)
+                        try? withAnimation(self.animation, self.endRecording)
                     }
                 }
             
