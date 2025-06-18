@@ -8,7 +8,6 @@
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
-@_spi(FW) import FWUIKit
 #endif
 
 // MARK: - ImageView

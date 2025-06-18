@@ -9,7 +9,6 @@ import SDWebImage
 import UIKit
 #if FWMacroSPM
 @_spi(FW) import FWFramework
-@_spi(FW) import FWUIKit
 #endif
 
 // MARK: - SDWebImageImpl
