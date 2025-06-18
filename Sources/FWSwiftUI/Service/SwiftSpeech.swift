@@ -8,6 +8,9 @@
 import SwiftUI
 import Combine
 import Speech
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// [SwiftSpeech](https://github.com/Cay-Zhang/SwiftSpeech)
 public struct SwiftSpeech {
@@ -15,15 +18,18 @@ public struct SwiftSpeech {
     public struct Demos { }
     internal struct EnvironmentKeys { }
     
-    public static var defaultAnimation: Animation = .interactiveSpring()
+    public static var defaultAnimation: Animation {
+        get { FrameworkConfiguration.speechDefaultAnimation }
+        set { FrameworkConfiguration.speechDefaultAnimation = newValue }
+    }
 }
 
 extension SwiftSpeech {
-    public static func requestSpeechRecognitionAuthorization() {
+    @MainActor public static func requestSpeechRecognitionAuthorization() {
         AuthorizationCenter.shared.requestSpeechRecognitionAuthorization()
     }
     
-    class AuthorizationCenter: ObservableObject {
+    @MainActor class AuthorizationCenter: ObservableObject {
         @Published var speechRecognitionAuthorizationStatus: SFSpeechRecognizerAuthorizationStatus = SFSpeechRecognizer.authorizationStatus()
         
         func requestSpeechRecognitionAuthorization() {
@@ -40,7 +46,7 @@ extension SwiftSpeech {
     }
 }
 
-@propertyWrapper public struct SpeechRecognitionAuthStatus: DynamicProperty {
+@propertyWrapper @MainActor public struct SpeechRecognitionAuthStatus: DynamicProperty {
     @ObservedObject var authCenter = SwiftSpeech.AuthorizationCenter.shared
     
     let trueValues: Set<SFSpeechRecognizerAuthorizationStatus>
@@ -64,15 +70,21 @@ extension SwiftSpeech.EnvironmentKeys {
     }
     
     struct ActionsOnStartRecording: EnvironmentKey {
-        static let defaultValue: [(_ session: SwiftSpeech.Session) -> Void] = []
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
+            FrameworkConfiguration.speechStartRecording
+        }
     }
     
     struct ActionsOnStopRecording: EnvironmentKey {
-        static let defaultValue: [(_ session: SwiftSpeech.Session) -> Void] = []
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
+            FrameworkConfiguration.speechStopRecording
+        }
     }
     
     struct ActionsOnCancelRecording: EnvironmentKey {
-        static let defaultValue: [(_ session: SwiftSpeech.Session) -> Void] = []
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
+            FrameworkConfiguration.speechCancelRecording
+        }
     }
 }
 
@@ -445,7 +457,10 @@ public extension SwiftSpeech.Session {
 }
 
 public class SpeechRecognizer {
-    static var instances = [SpeechRecognizer]()
+    static var instances: [SpeechRecognizer] {
+        get { FrameworkConfiguration.speechRecognizerInstances }
+        set { FrameworkConfiguration.speechRecognizerInstances = newValue }
+    }
     
     public typealias ID = UUID
     
@@ -815,4 +830,13 @@ public extension SwiftSpeech.ViewModifiers {
             }
         }
     }
+}
+
+// MARK: - FrameworkConfiguration+SwiftSpeech
+extension FrameworkConfiguration {
+    fileprivate static var speechDefaultAnimation: Animation = .interactiveSpring()
+    fileprivate static var speechRecognizerInstances = [SpeechRecognizer]()
+    fileprivate static let speechStartRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
+    fileprivate static let speechStopRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
+    fileprivate static let speechCancelRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
 }
