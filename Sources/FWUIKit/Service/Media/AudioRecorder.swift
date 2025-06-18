@@ -325,14 +325,14 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         locale: Locale? = nil,
         customize: ((SFSpeechRecognizer) -> Void)? = nil,
         requestCustomize: ((SFSpeechURLRecognitionRequest) -> Void)? = nil
-    ) async throws -> SFSpeechRecognitionResult? {
+    ) async throws -> String? {
         guard !isRecognizing else { return nil }
 
         isRecognizing = true
         do {
-            let sendableResult = try await startRecognizer(path: uri ?? "", locale: locale ?? .current, customize: customize, requestCustomize: requestCustomize)
+            let result = try await startRecognizer(path: uri ?? "", locale: locale ?? .current, customize: customize, requestCustomize: requestCustomize)
             isRecognizing = false
-            return sendableResult.value
+            return result
         } catch {
             isRecognizing = false
             throw error
@@ -624,7 +624,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         locale: Locale,
         customize: ((SFSpeechRecognizer) -> Void)?,
         requestCustomize: ((SFSpeechURLRecognitionRequest) -> Void)?
-    ) async throws -> SendableValue<SFSpeechRecognitionResult> {
+    ) async throws -> String {
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 SFSpeechRecognizer.requestAuthorization { status in
@@ -658,7 +658,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
                             self?.recognitionTask = nil
                             if !sendableResumed.value {
                                 sendableResumed.value = true
-                                continuation.resume(returning: SendableValue(result))
+                                continuation.resume(returning: result.bestTranscription.formattedString)
                             }
                         } else if let error {
                             self?.recognitionTask = nil

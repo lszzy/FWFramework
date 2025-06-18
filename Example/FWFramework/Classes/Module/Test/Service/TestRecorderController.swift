@@ -410,7 +410,7 @@ extension TestRecorderController {
                 state.recognizeText = "Recognizing..."
                 updateState()
                 let result = try await recorder.startRecognizer(locale: locale)
-                state.recognizeText = result?.bestTranscription.formattedString ?? ""
+                state.recognizeText = result ?? ""
                 updateState()
             } catch {
                 state.recognizeText = ""
