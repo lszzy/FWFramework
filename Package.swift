@@ -107,7 +107,7 @@ let package = Package(
         ),
         .target(
             name: "FWSwiftUI",
-            dependencies: ["FWUIKit"],
+            dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
@@ -202,7 +202,6 @@ let package = Package(
             name: "FWPluginSDWebImage",
             dependencies: [
                 "FWFramework",
-                "FWUIKit",
                 .product(name: "SDWebImage", package: "SDWebImage")
             ],
             path: "Sources/FWPlugin/SDWebImage",
@@ -215,7 +214,6 @@ let package = Package(
             name: "FWPluginLottie",
             dependencies: [
                 "FWFramework",
-                "FWUIKit",
                 .product(name: "Lottie", package: "lottie-ios")
             ],
             path: "Sources/FWPlugin/Lottie",
