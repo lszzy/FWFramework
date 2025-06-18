@@ -29,20 +29,20 @@ extension SwiftSpeech {
         AuthorizationCenter.shared.requestSpeechRecognitionAuthorization()
     }
     
-    @MainActor class AuthorizationCenter: ObservableObject {
+    class AuthorizationCenter: ObservableObject, @unchecked Sendable {
         @Published var speechRecognitionAuthorizationStatus: SFSpeechRecognizerAuthorizationStatus = SFSpeechRecognizer.authorizationStatus()
         
         func requestSpeechRecognitionAuthorization() {
             SFSpeechRecognizer.requestAuthorization { authStatus in
-                if self.speechRecognitionAuthorizationStatus != authStatus {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if self.speechRecognitionAuthorizationStatus != authStatus {
                         self.speechRecognitionAuthorizationStatus = authStatus
                     }
                 }
             }
         }
         
-        static let shared = AuthorizationCenter()
+        @MainActor static let shared = AuthorizationCenter()
     }
 }
 
@@ -70,21 +70,15 @@ extension SwiftSpeech.EnvironmentKeys {
     }
     
     struct ActionsOnStartRecording: EnvironmentKey {
-        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
-            FrameworkConfiguration.speechStartRecording
-        }
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] { [] }
     }
     
     struct ActionsOnStopRecording: EnvironmentKey {
-        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
-            FrameworkConfiguration.speechStopRecording
-        }
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] { [] }
     }
     
     struct ActionsOnCancelRecording: EnvironmentKey {
-        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] {
-            FrameworkConfiguration.speechCancelRecording
-        }
+        static var defaultValue: [(_ session: SwiftSpeech.Session) -> Void] { [] }
     }
 }
 
@@ -836,7 +830,4 @@ public extension SwiftSpeech.ViewModifiers {
 extension FrameworkConfiguration {
     fileprivate static var speechDefaultAnimation: Animation = .interactiveSpring()
     fileprivate static var speechRecognizerInstances = [SpeechRecognizer]()
-    fileprivate static let speechStartRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
-    fileprivate static let speechStopRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
-    fileprivate static let speechCancelRecording: [(_ session: SwiftSpeech.Session) -> Void] = []
 }
