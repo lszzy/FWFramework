@@ -54,7 +54,7 @@ This framework supports Swift Package Manager, just add and check the required m
     import FWPluginMacros  
 
 ## [Api](https://fwframework.wuyong.site)
-The document is located in the docs folder, just open index.html in the browser, or run docs.sh to automatically generate the Api document.
+The API document can be automatically generated into the docs folder by running scripts/jazzy.sh, and the browser can open index.html.
 
 Custom code prefix is app example:
 

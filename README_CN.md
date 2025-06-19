@@ -54,7 +54,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
     import FWPluginMacros 
 
 ## [Api文档](https://fwframework.wuyong.site)
-文档位于docs文件夹，浏览器打开index.html即可，也可运行docs.sh自动生成Api文档。
+Api文档可运行scripts/jazzy.sh自动生成到docs文件夹，浏览器打开index.html即可。
 
 自定义代码前缀为app示例：
 
