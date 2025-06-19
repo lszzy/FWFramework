@@ -104,7 +104,7 @@ public extension EnvironmentValues {
     }
 }
 
-public extension View {
+@MainActor public extension View {
     func onStartRecording(appendAction actionToAppend: @escaping (_ session: SwiftSpeech.Session) -> Void) ->
     ModifiedContent<Self, _EnvironmentKeyTransformModifier<[(_ session: SwiftSpeech.Session) -> Void]>> {
         self.transformEnvironment(\.actionsOnStartRecording) { actions in
@@ -127,7 +127,7 @@ public extension View {
     }
 }
 
-public extension View {
+@MainActor public extension View {
     func onStartRecording<S: Subject>(sendSessionTo subject: S) -> ModifiedContent<Self, _EnvironmentKeyTransformModifier<[(SwiftSpeech.Session) -> Void]>> where S.Output == SwiftSpeech.Session {
         self.onStartRecording { session in
             subject.send(session)
@@ -165,7 +165,7 @@ public extension View {
     }
 }
 
-public extension View {
+@MainActor public extension View {
     func swiftSpeechRecordOnHold(
         sessionConfiguration: SwiftSpeech.Session.Configuration = SwiftSpeech.Session.Configuration(),
         animation: Animation = SwiftSpeech.defaultAnimation,
