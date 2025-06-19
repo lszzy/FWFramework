@@ -34,7 +34,7 @@ extension SwiftSpeech {
         
         func requestSpeechRecognitionAuthorization() {
             SFSpeechRecognizer.requestAuthorization { authStatus in
-                DispatchQueue.main.async {
+                DispatchQueue.fw.mainAsync {
                     if self.speechRecognitionAuthorizationStatus != authStatus {
                         self.speechRecognitionAuthorizationStatus = authStatus
                     }
