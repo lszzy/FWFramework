@@ -5,7 +5,6 @@
 //  Created by wuyong on 2022/8/18.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 #if FWMacroSPM
 @_spi(FW) import FWFramework
@@ -488,5 +487,3 @@ import SwiftUI
         }
     }
 }
-
-#endif

@@ -10,28 +10,28 @@ import Foundation
 // MARK: - CacheType
 /// 缓存类型枚举
 public struct CacheType: RawRepresentable, Equatable, Hashable, Sendable {
-    public typealias RawValue = Int
+    public typealias RawValue = String
 
     /// 默认缓存，同文件
-    public static let `default`: CacheType = .init(0)
+    public static let `default`: CacheType = .init("default")
     /// 内存缓存
-    public static let memory: CacheType = .init(1)
+    public static let memory: CacheType = .init("memory")
     /// UserDefaults缓存
-    public static let userDefaults: CacheType = .init(2)
+    public static let userDefaults: CacheType = .init("userDefaults")
     /// Keychain缓存
-    public static let keychain: CacheType = .init(3)
+    public static let keychain: CacheType = .init("keychain")
     /// 文件缓存
-    public static let file: CacheType = .init(4)
+    public static let file: CacheType = .init("file")
     /// Sqlite数据库缓存
-    public static let sqlite: CacheType = .init(5)
+    public static let sqlite: CacheType = .init("sqlite")
 
-    public var rawValue: Int
+    public var rawValue: String
 
-    public init(rawValue: Int) {
+    public init(rawValue: String) {
         self.rawValue = rawValue
     }
 
-    public init(_ rawValue: Int) {
+    public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
 }

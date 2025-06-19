@@ -23,7 +23,7 @@ extension Notification.Name {
 ///
 /// 注意：Info.plist需要添加NSLocationWhenInUseUsageDescription项。
 /// 如果请求Always定位，还需添加NSLocationAlwaysUsageDescription项和NSLocationAlwaysAndWhenInUseUsageDescription项。
-/// iOS11可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器
+/// 可通过showsBackgroundLocationIndicator配置是否显示后台定位指示器；可调用startMonitoringSignificantLocationChanges开启定位保活。
 open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Sendable {
     /// 单例模式
     public static let shared = LocationManager()
@@ -61,6 +61,71 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
         return geocoder
     }
 
+    /// 经纬度是否在国外
+    open class func isOutOfChina(_ coordinate: CLLocationCoordinate2D) -> Bool {
+        let lon = coordinate.longitude
+        let lat = coordinate.latitude
+        if lon < 72.004 || lon > 137.8347 { return true }
+        if lat < 0.8293 || lat > 55.8271 { return true }
+        return false
+    }
+
+    /// WGS84国际坐标系转换为GCJ02国内火星坐标系
+    open class func wgs84ToGcj02(_ coordinate: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        let lon = coordinate.longitude
+        let lat = coordinate.latitude
+        let a = 6_378_245.0
+        let ee = 0.00669342162296594323
+        var dLat = transformLat(x: lon - 105.0, y: lat - 35.0)
+        var dLon = transformLon(x: lon - 105.0, y: lat - 35.0)
+        let radLat = lat / 180.0 * .pi
+        var magic = sin(radLat)
+        magic = 1 - ee * magic * magic
+        let sqrtMagic = sqrt(magic)
+        dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * .pi)
+        dLon = (dLon * 180.0) / (a / sqrtMagic * cos(radLat) * .pi)
+        let mgLat = lat + dLat
+        let mgLon = lon + dLon
+        return .init(latitude: mgLat, longitude: mgLon)
+    }
+
+    /// GCJ02国内火星坐标系转换为WGS84国际坐标系
+    open class func gcj02ToWgs84(_ coordinate: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        let lon = coordinate.longitude
+        let lat = coordinate.latitude
+        let a = 6_378_245.0
+        let ee = 0.00669342162296594323
+        var dLat = transformLat(x: lon - 105.0, y: lat - 35.0)
+        var dLon = transformLon(x: lon - 105.0, y: lat - 35.0)
+        let radLat = lat / 180.0 * .pi
+        var magic = sin(radLat)
+        magic = 1 - ee * magic * magic
+        let sqrtMagic = sqrt(magic)
+        dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * .pi)
+        dLon = (dLon * 180.0) / (a / sqrtMagic * cos(radLat) * .pi)
+        let mgLat = lat + dLat
+        let mgLon = lon + dLon
+        return .init(latitude: lat * 2 - mgLat, longitude: lon * 2 - mgLon)
+    }
+
+    private class func transformLat(x: Double, y: Double) -> Double {
+        var lat: Double = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y
+            + 0.2 * sqrt(fabs(x))
+        lat += (20.0 * sin(6.0 * x * .pi) + 20.0 * sin(2.0 * x * .pi)) * 2.0 / 3.0
+        lat += (20.0 * sin(y * .pi) + 40.0 * sin(y / 3.0 * .pi)) * 2.0 / 3.0
+        lat += (160.0 * sin(y / 12.0 * .pi) + 320 * sin(y * .pi / 30.0)) * 2.0 / 3.0
+        return lat
+    }
+
+    private class func transformLon(x: Double, y: Double) -> Double {
+        var lon = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1
+            * sqrt(fabs(x))
+        lon += (20.0 * sin(6.0 * x * .pi) + 20.0 * sin(2.0 * x * .pi)) * 2.0 / 3.0
+        lon += (20.0 * sin(x * .pi) + 40.0 * sin(x / 3.0 * .pi)) * 2.0 / 3.0
+        lon += (150.0 * sin(x / 12.0 * .pi) + 300.0 * sin(x / 30.0 * .pi)) * 2.0 / 3.0
+        return lon
+    }
+
     /// 是否启用Always定位，默认NO，请求WhenInUse定位
     open var alwaysLocation: Bool = false
 
@@ -70,9 +135,17 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     /// 是否启用方向监听，默认NO。如果设备不支持方向，则不能启用
     open var headingEnabled: Bool = false {
         didSet {
-            // 不支持方向时，设置无效
             if headingEnabled && !CLLocationManager.headingAvailable() {
                 headingEnabled = false
+            }
+        }
+    }
+
+    /// 是否启用重要位置变化监听，默认NO。如果设备不支持，则不能启用
+    open var monitoringEnabled: Bool = false {
+        didSet {
+            if monitoringEnabled && !CLLocationManager.significantLocationChangeMonitoringAvailable() {
+                monitoringEnabled = false
             }
         }
     }
@@ -105,6 +178,12 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
     /// 定位改变block方式回调，可通过error判断是否定位成功
     open var locationChanged: (@Sendable (LocationManager) -> Void)?
 
+    /// 自定义定位开始处理句柄，可用于额外参数配置等
+    open var customStartBlock: (@Sendable (CLLocationManager) -> Void)?
+
+    /// 自定义定位结束处理句柄，可用于额外参数配置等
+    open var customStopBlock: (@Sendable (CLLocationManager) -> Void)?
+
     private var isCompleted: Bool = false
 
     /// 开始更新位置
@@ -121,10 +200,14 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
         if backgroundLocation {
             locationManager.allowsBackgroundLocationUpdates = true
         }
+        customStartBlock?(locationManager)
 
         locationManager.startUpdatingLocation()
         if headingEnabled {
             locationManager.startUpdatingHeading()
+        }
+        if monitoringEnabled {
+            locationManager.startMonitoringSignificantLocationChanges()
         }
     }
 
@@ -137,7 +220,11 @@ open class LocationManager: NSObject, CLLocationManagerDelegate, @unchecked Send
         if backgroundLocation {
             locationManager.allowsBackgroundLocationUpdates = false
         }
+        customStopBlock?(locationManager)
 
+        if monitoringEnabled {
+            locationManager.stopMonitoringSignificantLocationChanges()
+        }
         if headingEnabled {
             locationManager.stopUpdatingHeading()
         }

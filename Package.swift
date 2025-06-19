@@ -31,16 +31,24 @@ let package = Package(
             targets: ["FWPluginContacts"]
         ),
         .library(
-            name: "FWPluginMicrophone",
-            targets: ["FWPluginMicrophone"]
-        ),
-        .library(
             name: "FWPluginTracking",
             targets: ["FWPluginTracking"]
         ),
         .library(
             name: "FWPluginBiometry",
             targets: ["FWPluginBiometry"]
+        ),
+        .library(
+            name: "FWPluginBluetooth",
+            targets: ["FWPluginBluetooth"]
+        ),
+        .library(
+            name: "FWPluginMotion",
+            targets: ["FWPluginMotion"]
+        ),
+        .library(
+            name: "FWPluginSpeech",
+            targets: ["FWPluginSpeech"]
         ),
         .library(
             name: "FWPluginMacros",
@@ -59,6 +67,10 @@ let package = Package(
             targets: ["FWPluginAlamofire"]
         ),
         .library(
+            name: "FWPluginObjectMapper",
+            targets: ["FWPluginObjectMapper"]
+        ),
+        .library(
             name: "FWPluginMMKV",
             targets: ["FWPluginMMKV"]
         ),
@@ -71,6 +83,7 @@ let package = Package(
         .package(url: "https://github.com/SDWebImage/SDWebImage.git", from: "5.9.0"),
         .package(url: "https://github.com/airbnb/lottie-ios.git", from: "4.0.0"),
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0"),
+        .package(url: "https://github.com/tristanhimmelman/ObjectMapper.git", from: "4.0.0"),
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0")
     ],
     targets: [
@@ -94,7 +107,7 @@ let package = Package(
         ),
         .target(
             name: "FWSwiftUI",
-            dependencies: ["FWUIKit"],
+            dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
@@ -120,15 +133,6 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FWPluginMicrophone",
-            dependencies: ["FWFramework"],
-            path: "Sources/FWPlugin/Authorize/Microphone",
-            swiftSettings: [
-                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
-                .define("FWMacroSPM")
-            ]
-        ),
-        .target(
             name: "FWPluginTracking",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Authorize/Tracking",
@@ -141,6 +145,33 @@ let package = Package(
             name: "FWPluginBiometry",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Authorize/Biometry",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginBluetooth",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Bluetooth",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginMotion",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Motion",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginSpeech",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Speech",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")
@@ -171,7 +202,6 @@ let package = Package(
             name: "FWPluginSDWebImage",
             dependencies: [
                 "FWFramework",
-                "FWUIKit",
                 .product(name: "SDWebImage", package: "SDWebImage")
             ],
             path: "Sources/FWPlugin/SDWebImage",
@@ -184,7 +214,6 @@ let package = Package(
             name: "FWPluginLottie",
             dependencies: [
                 "FWFramework",
-                "FWUIKit",
                 .product(name: "Lottie", package: "lottie-ios")
             ],
             path: "Sources/FWPlugin/Lottie",
@@ -200,6 +229,18 @@ let package = Package(
                 .product(name: "Alamofire", package: "Alamofire")
             ],
             path: "Sources/FWPlugin/Alamofire",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginObjectMapper",
+            dependencies: [
+                "FWFramework",
+                .product(name: "ObjectMapper", package: "ObjectMapper")
+            ],
+            path: "Sources/FWPlugin/ObjectMapper",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

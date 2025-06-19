@@ -1,5 +1,24 @@
 # Changelog
 
+## [8.0.0] - 2025-06-20
+
+### Added
+* Refactor the submodule list, use as needed, and reduce the size of the core module
+* Add Bluetooth, motion, and voice recognition permission management, and change the microphone to built-in permission
+* ImagePlugin splits out the ImageCoderPlugin encoding plug-in
+* Add AudioRecorder recording and voice recognition components
+* Add SwiftSpeech instant input recognition SwiftUI component
+* Add ObjectMapper model plug-in
+* Add Alamofire SSE request extension
+* Remove JSONModel component and KeyMappable protocol
+* Add MappedCodableModel and AbstractParameter parameter
+* Abstract ImageCropControllerProtocol protocol, which can be implemented by the application
+
+### Migrate
+1. Since the submodule list has been refactored, the old version of the submodule needs to be migrated to the new version of the submodule list
+2. Please migrate JSONModel to SmartModel or MappableModel
+3. If you encounter code errors, please migrate to new class names and method names, or refer to the Example project
+
 ## [7.1.0] - 2025-05-21
 
 ### Changed

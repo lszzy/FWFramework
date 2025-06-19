@@ -72,6 +72,14 @@
 	<string>请点击“好”以允许访问。</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>请点击“允许”以允许访问。</string>
+	<key>NSMotionUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

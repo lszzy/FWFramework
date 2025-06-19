@@ -47,6 +47,9 @@ class TestAuthorizeController: UIViewController, TableViewControllerProtocol {
             ["提醒", AuthorizeType.reminders],
             ["通知", AuthorizeType.notifications],
             ["广告追踪", AuthorizeType.tracking],
+            ["蓝牙", AuthorizeType.bluetooth],
+            ["运动", AuthorizeType.motion],
+            ["语音识别", AuthorizeType.speech],
             ["生物识别", AuthorizeType.biometry]
         ]
         tableData.append(contentsOf: authorizeList)

@@ -26,6 +26,8 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable, Sendable {
     public static let camera: AuthorizeType = .init("camera")
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
     public static let notifications: AuthorizeType = .init("notifications")
+    /// 麦克风，Info.plist需配置NSMicrophoneUsageDescription
+    public static let microphone: AuthorizeType = .init("microphone")
 
     public var rawValue: String
 
@@ -111,6 +113,8 @@ public class AuthorizeManager {
             return AuthorizeCamera.shared
         case .notifications:
             return AuthorizeNotifications.shared
+        case .microphone:
+            return AuthorizeMicrophone.shared
         default:
             return nil
         }
@@ -137,14 +141,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         self.isAlways = isAlways
     }
 
-    public static func authorizeStatus(for manager: CLLocationManager, isAlways: Bool = false) -> AuthorizeStatus {
-        let status: CLAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            status = manager.authorizationStatus
-        } else {
-            status = CLLocationManager.authorizationStatus()
-        }
-
+    private func authorizeStatus(for status: CLAuthorizationStatus, isAlways: Bool = false) -> AuthorizeStatus {
         switch status {
         case .restricted:
             return .restricted
@@ -164,20 +161,16 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     }
 
     public func authorizeStatus() -> AuthorizeStatus {
-        AuthorizeLocation.authorizeStatus(for: locationManager, isAlways: isAlways)
+        let status: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = locationManager.authorizationStatus
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+        return authorizeStatus(for: status, isAlways: isAlways)
     }
 
     public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
-        let authorizeStatus = authorizeStatus()
-        if authorizeStatus != .notDetermined {
-            if completion != nil {
-                DispatchQueue.fw.mainAsync {
-                    completion?(authorizeStatus, nil)
-                }
-            }
-            return
-        }
-
         completionBlock = completion
         if isAlways {
             locationManager.requestAlwaysAuthorization()
@@ -186,8 +179,9 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
         }
     }
 
+    @available(iOS 14.0, *)
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let authorizeStatus = authorizeStatus()
+        let authorizeStatus = authorizeStatus(for: manager.authorizationStatus, isAlways: isAlways)
         if authorizeStatus != .notDetermined, completionBlock != nil {
             DispatchQueue.fw.mainAsync {
                 self.completionBlock?(authorizeStatus, nil)
@@ -197,7 +191,7 @@ public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDe
     }
 
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        let authorizeStatus = authorizeStatus()
+        let authorizeStatus = authorizeStatus(for: status, isAlways: isAlways)
         if authorizeStatus != .notDetermined, completionBlock != nil {
             DispatchQueue.fw.mainAsync {
                 self.completionBlock?(authorizeStatus, nil)
@@ -354,6 +348,35 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol, @unchecked Sen
         }
         DispatchQueue.fw.mainAsync {
             UIApplication.shared.registerForRemoteNotifications()
+        }
+    }
+}
+
+// MARK: - AuthorizeMicrophone
+/// 麦克风授权
+public class AuthorizeMicrophone: NSObject, AuthorizeProtocol, @unchecked Sendable {
+    public static let shared = AuthorizeMicrophone()
+
+    public func authorizeStatus() -> AuthorizeStatus {
+        let status = AVAudioSession.sharedInstance().recordPermission
+        switch status {
+        case .denied:
+            return .denied
+        case .granted:
+            return .authorized
+        default:
+            return .notDetermined
+        }
+    }
+
+    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            let status: AuthorizeStatus = granted ? .authorized : .denied
+            if completion != nil {
+                DispatchQueue.fw.mainAsync {
+                    completion?(status, nil)
+                }
+            }
         }
     }
 }

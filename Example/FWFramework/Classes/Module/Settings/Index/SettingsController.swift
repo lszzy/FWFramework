@@ -444,7 +444,9 @@ extension SettingsController {
         RefreshPluginImpl.shared.showsFinishedView = SettingsController.refreshShowsFinishedView
 
         PluginManager.unloadPlugin(ImagePlugin.self)
+        PluginManager.unloadPlugin(ImageCoderPlugin.self)
         PluginManager.registerPlugin(ImagePlugin.self, object: SettingsController.imagePluginImpl == SettingsController.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
+        PluginManager.registerPlugin(ImageCoderPlugin.self, object: SettingsController.imagePluginImpl == SettingsController.imagePlugins[0] ? ImagePluginImpl.self : SDWebImageImpl.self)
         ImagePluginImpl.shared.showsIndicator = SettingsController.imageShowsIndicator
         SDWebImageImpl.shared.showsIndicator = SettingsController.imageShowsIndicator
         ImagePluginImpl.shared.hidesPlaceholderIndicator = SettingsController.imageHidesPlaceholderIndicator

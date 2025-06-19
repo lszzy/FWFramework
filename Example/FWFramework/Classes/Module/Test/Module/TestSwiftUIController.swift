@@ -8,6 +8,7 @@
 
 #if canImport(SwiftUI)
 import Combine
+import CoreMotion
 import FWFramework
 import SwiftUI
 
@@ -158,6 +159,10 @@ struct TestSwiftUIContent: View {
                                 .resizable()
                                 .clipped()
                                 .frame(width: 100, height: 100)
+                        }
+
+                        if #available(iOS 14.0, *) {
+                            TestSwiftUIMotionEffectView()
                         }
 
                         AttributedText(NSMutableAttributedString {
@@ -411,6 +416,67 @@ struct TestSwiftUIToggleStyle: ToggleStyle {
                     configuration.isOn.toggle()
                 })
         }
+    }
+}
+
+class TestSwiftUIMotionManager: ObservableObject {
+    private let motionManager = CMMotionManager()
+
+    @Published var xRotation = 0.0
+    @Published var yRotation = 0.0
+
+    init() {
+        motionManager.deviceMotionUpdateInterval = 1 / 20.0
+
+        motionManager.startDeviceMotionUpdates(to: .main, withHandler: { [weak self] data, _ in
+            guard let motion = data?.attitude else { return }
+
+            self?.xRotation = motion.roll
+            self?.yRotation = motion.pitch
+        })
+    }
+
+    deinit {
+        motionManager.stopDeviceMotionUpdates()
+    }
+}
+
+@available(iOS 14.0, *)
+struct TestSwiftUIMotionEffectView: View {
+    @StateObject private var motionManager = TestSwiftUIMotionManager()
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .frame(width: 200, height: 200)
+
+            Image(systemName: "swift")
+                .font(.system(size: 100))
+        }
+        .then { view in
+            if #available(iOS 16.0, *) {
+                return view.foregroundStyle(
+                    .white.gradient.shadow(
+                        .inner(
+                            color: .black.opacity(0.7),
+                            radius: 8,
+                            x: motionManager.xRotation * -25,
+                            y: motionManager.yRotation * -25
+                        )
+                    )
+                ).eraseToAnyView()
+            } else {
+                return view.eraseToAnyView()
+            }
+        }
+        .rotation3DEffect(
+            .degrees(motionManager.xRotation * 25),
+            axis: (x: 0, y: 1, z: 0)
+        )
+        .rotation3DEffect(
+            .degrees(motionManager.yRotation * 25),
+            axis: (x: -1, y: 0, z: 0)
+        )
     }
 }
 

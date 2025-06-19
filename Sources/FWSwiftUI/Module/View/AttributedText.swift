@@ -5,7 +5,6 @@
 //  Created by wuyong on 2024/8/16.
 //
 
-#if canImport(SwiftUI)
 import SwiftUI
 import UIKit
 #if FWMacroSPM
@@ -179,5 +178,3 @@ extension AttributedText {
         }
     }
 }
-
-#endif

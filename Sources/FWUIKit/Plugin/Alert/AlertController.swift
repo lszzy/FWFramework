@@ -146,6 +146,7 @@ public class AlertControllerAppearance: NSObject, @unchecked Sendable {
 /// 自定义弹窗控制器
 ///
 /// [SPAlertController](https://github.com/SPStore/SPAlertController)
+@objc(ObjCAlertController)
 open class AlertController: UIViewController, UIViewControllerTransitioningDelegate {
     /// 获取所有动作
     open private(set) var actions: [AlertAction] = []

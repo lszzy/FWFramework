@@ -44,7 +44,7 @@ public enum ImageCropToolbarPosition: Int, Sendable {
 }
 
 /// [TOCropViewController](https://github.com/TimOliver/TOCropViewController)
-open class ImageCropController: UIViewController, ImageCropViewDelegate {
+open class ImageCropController: UIViewController, ImageCropControllerProtocol, ImageCropViewDelegate {
     open private(set) var image: UIImage
     open private(set) var croppingStyle: ImageCropCroppingStyle
     open weak var delegate: ImageCropControllerDelegate?
@@ -2798,5 +2798,19 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
             canReset = true
         }
         canBeReset = canReset
+    }
+}
+
+// MARK: - FrameworkAutoloader+ImagePickerPlugin
+extension FrameworkAutoloader {
+    @objc static func loadPlugin_ImagePickerPlugin() {
+        FrameworkConfiguration.cropControllerBlock = { image in
+            let cropController = ImageCropController(image: image)
+            cropController.aspectRatioPreset = .presetSquare
+            cropController.aspectRatioLockEnabled = true
+            cropController.resetAspectRatioEnabled = false
+            cropController.aspectRatioPickerButtonHidden = true
+            return cropController
+        }
     }
 }

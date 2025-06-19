@@ -6,6 +6,9 @@
 //
 
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 /// 框架默认进度条视图
 open class ProgressView: UIView, ProgressViewPlugin {

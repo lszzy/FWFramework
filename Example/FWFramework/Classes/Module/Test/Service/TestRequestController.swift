@@ -6,6 +6,7 @@
 //  Copyright © 2023 CocoaPods. All rights reserved.
 //
 
+import Alamofire
 import FWFramework
 import UIKit
 
@@ -28,13 +29,7 @@ class AppRequest: HTTPRequest, @unchecked Sendable {
 class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = TestModel
 
-    /*
-     // 兼容JSONModel协议
-     struct TestModel: JSONModel {
-         var name: String = ""
-     }*/
-
-    // 也兼容CodableModel协议
+    // 兼容CodableModel协议等
     struct TestModel: CodableModel {
         var name: String = ""
     }
@@ -109,7 +104,7 @@ class TestModelRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
 class TestWeatherRequest: HTTPRequest, ResponseModelRequest, @unchecked Sendable {
     typealias ResponseModel = [TestWeatherModel]
 
-    struct TestWeatherModel: JSONModel {
+    struct TestWeatherModel: SmartModel {
         var city: String = ""
         var temp: String = ""
     }
@@ -252,6 +247,8 @@ class TestRequestController: UIViewController {
     @MMAPValue("testHostName")
     private var testHostName: String? = "www.wuyong.site"
 
+    private var sseRequest: DataStreamRequest?
+
     // MARK: - Subviews
     private lazy var succeedButton: UIButton = {
         let button = AppTheme.largeButton()
@@ -309,12 +306,26 @@ class TestRequestController: UIViewController {
         return button
     }()
 
+    private lazy var sseButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("SSE Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onSSE))
+        return button
+    }()
+
     private lazy var observeButton: UIButton = {
         let button = AppTheme.largeButton()
         button.setTitle("Observe Status", for: .normal)
         button.app.addTouch(target: self, action: #selector(onObserve))
         return button
     }()
+
+    deinit {
+        if sseRequest != nil {
+            sseRequest?.cancel()
+            sseRequest = nil
+        }
+    }
 }
 
 // MARK: - Setup
@@ -388,6 +399,7 @@ extension TestRequestController: ViewControllerProtocol {
         view.addSubview(syncButton)
         view.addSubview(uploadButton)
         view.addSubview(downloadButton)
+        view.addSubview(sseButton)
         view.addSubview(observeButton)
     }
 
@@ -424,9 +436,13 @@ extension TestRequestController: ViewControllerProtocol {
             .centerX()
             .top(toViewBottom: uploadButton, offset: 10)
 
-        observeButton.app.layoutChain
+        sseButton.app.layoutChain
             .centerX()
             .top(toViewBottom: downloadButton, offset: 10)
+
+        observeButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: sseButton, offset: 10)
     }
 }
 
@@ -667,6 +683,27 @@ extension TestRequestController {
             })
         } failure: { [weak self] _ in
             self?.app.showMessage(text: RequestError.isConnectionError(request.error) ? "请先开启Debug Web Server" : request.error?.localizedDescription)
+        }
+    }
+
+    @objc private func onSSE() {
+        if sseRequest != nil {
+            sseRequest?.cancel()
+            sseRequest = nil
+
+            sseButton.setTitle("SSE Request", for: .normal)
+            return
+        }
+
+        let endpoint = URL(string: "http://127.0.0.1:8000/")!
+        sseRequest = AlamofireImpl.shared.session.eventSourceRequest(endpoint, lastEventID: "0")
+        sseRequest?.responseEventSource { [weak self] eventSource in
+            switch eventSource.event {
+            case let .message(message):
+                self?.sseButton.setTitle(message.data?.app.substring(to: 19), for: .normal)
+            case let .complete(completion):
+                self?.sseButton.setTitle(completion.error == nil ? "SSE Completed" : "SSE Failed", for: .normal)
+            }
         }
     }
 

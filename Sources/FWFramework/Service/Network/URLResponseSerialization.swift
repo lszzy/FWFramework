@@ -331,6 +331,27 @@ open class CompoundResponseSerializer: HTTPResponseSerializer {
     }
 }
 
+// MARK: - ImageCoderOptions
+/// 本地图片解码编码选项，默认兼容SDWebImage
+public struct ImageCoderOptions: RawRepresentable, Equatable, Hashable, Sendable {
+    public typealias RawValue = String
+
+    /// 图片解码scale选项，默认未指定时为1
+    public static let scaleFactor: ImageCoderOptions = .init("imageScaleFactor")
+    /// 图片解码缩略图像素尺寸选项，默认未指定时为zero
+    public static let thumbnailPixelSize: ImageCoderOptions = .init("decodeThumbnailPixelSize")
+
+    public var rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public init(_ rawValue: String) {
+        self.rawValue = rawValue
+    }
+}
+
 // MARK: - FrameworkConfiguration+URLResponseSerialization
 extension FrameworkConfiguration {
     public static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
