@@ -1,5 +1,24 @@
 # 更新日志
 
+## [8.0.0] - 2025-06-20
+
+### Added
+* 重构子模块列表，按需使用，减小核心模块体积
+* 新增蓝牙、运动、语音识别权限管理，麦克风改为内置权限
+* ImagePlugin拆分出ImageCoderPlugin编码插件
+* 新增AudioRecorder录音和语音识别组件
+* 新增SwiftSpeech即时录入识别SwiftUI组件
+* 新增ObjectMapper模型插件
+* 新增Alamofire SSE请求扩展
+* 移除JSONModel组件、移除KeyMappable协议
+* 新增MappedCodableModel，新增AbstractParameter参数
+* 抽象ImageCropControllerProtocol协议，应用可自行实现
+
+### Migrate
+1. 由于子模块列表已重构，需将旧版子模块迁移到新版子模块列表
+2. JSONModel请迁移至SmartModel或MappableModel
+3. 如遇代码报错，请迁移至新类名和方法名，或参考Example项目
+
 ## [7.1.0] - 2025-05-21
 
 ### Changed
