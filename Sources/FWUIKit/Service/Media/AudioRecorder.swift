@@ -20,7 +20,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         public var isRecording: Bool = false
         public var currentPosition: TimeInterval = 0
         public var currentMetering: Float = 0
-        
+
         public init() {}
     }
 
@@ -30,7 +30,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         public var currentPosition: TimeInterval = 0
         public var duration: TimeInterval = 0
         public var isFinished: Bool = false
-        
+
         public init() {}
     }
 
@@ -46,7 +46,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         public var linearPCMIsBigEndian: Bool?
         public var linearPCMIsFloat: Bool?
         public var linearPCMIsNonInterleaved: Bool?
-        
+
         public init() {}
     }
 
@@ -57,7 +57,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
     public var playBackListener: ((PlayBackState) -> Void)?
     /// 音量监听频率
     public var subscriptionDuration: Double = 0.5
-    
+
     /// 音频文件URL
     public private(set) var audioFileURL: URL?
     /// 是否正在录制
@@ -80,12 +80,12 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
     private var audioPlayerItem: AVPlayerItem!
     private var audioPlayer: AVPlayer!
     private var timeObserverToken: Any?
-    
+
     private var speechRecognizer: SFSpeechRecognizer!
     private var recognitionTask: SFSpeechRecognitionTask?
     private var recognitionLocale: Locale?
 
-    public override init() {
+    override public init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(handleAudioSessionInterruption(_:)), name: AVAudioSession.interruptionNotification, object: AVAudioSession.sharedInstance())
     }
@@ -275,7 +275,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Value of volume should be between 0.0 to 1.0"]))
                 return
             }
-            
+
             if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
@@ -318,7 +318,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
             return String(format: "%02ld:%02ld", minutes, seconds)
         }
     }
-    
+
     /// 开始语音识别，取消调用Task.cancel即可
     open func startRecognizer(
         uri: String? = nil,
@@ -338,7 +338,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
             throw error
         }
     }
-    
+
     // MARK: - AVAudioRecorderDelegate
     open func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if !flag {
@@ -362,7 +362,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
             audioFileURL = URL(string: path)
             return
         }
-        
+
         if path.hasPrefix("file://") {
             audioFileURL = URL(string: path)
         } else if (path as NSString).isAbsolutePath {
@@ -372,7 +372,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
             let fileName = !path.isEmpty ? path : ("sound." + (fileExt ?? "m4a"))
             audioFileURL = URL(fileURLWithPath: filePath.fw.appendingPath(fileName))
         }
-        
+
         if let audioFileDir = audioFileURL?.deletingLastPathComponent(), !FileManager.default.fileExists(atPath: audioFileDir.path) {
             try? FileManager.default.createDirectory(at: audioFileDir, withIntermediateDirectories: true)
         }
@@ -617,7 +617,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
             return "audio"
         }
     }
-    
+
     // MARK: - Recognizer
     private func startRecognizer(
         path: String,
@@ -625,21 +625,21 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
         customize: ((SFSpeechRecognizer) -> Void)?,
         requestCustomize: ((SFSpeechURLRecognitionRequest) -> Void)?
     ) async throws -> String {
-        return try await withTaskCancellationHandler {
+        try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { continuation in
                 SFSpeechRecognizer.requestAuthorization { status in
                     guard status == .authorized else {
                         continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Recognize permission not granted"]))
                         return
                     }
-                    
+
                     self.setAudioFileURL(path: path)
                     guard let recordURL = self.audioFileURL,
                           FileManager.default.fileExists(atPath: recordURL.path) else {
                         continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "The audio file does not exist"]))
                         return
                     }
-                    
+
                     if self.speechRecognizer == nil || locale != self.recognitionLocale {
                         self.speechRecognizer = SFSpeechRecognizer(locale: locale)
                         self.recognitionLocale = locale
@@ -649,7 +649,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
                         return
                     }
                     customize?(self.speechRecognizer)
-                    
+
                     let recognitionRequest = SFSpeechURLRecognitionRequest(url: recordURL)
                     requestCustomize?(recognitionRequest)
                     let sendableResumed = SendableValue(false)

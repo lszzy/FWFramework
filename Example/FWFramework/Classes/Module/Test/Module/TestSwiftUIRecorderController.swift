@@ -12,7 +12,7 @@ import SwiftUI
 class TestSwiftUIRecorderController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         app.navigationBarHidden = false
-        
+
         let hostingView = TestSwiftUIRecorderView()
             .viewContext(self)
             .wrappedHostingView()
@@ -26,19 +26,19 @@ class TestSwiftUIRecorderController: UIViewController, ViewControllerProtocol {
 
 struct TestSwiftUIRecorderView: View {
     @Environment(\.viewContext) var viewContext: ViewContext
-    
+
     @State var locale: Locale = .current
     @State var demo: Int = 0
-    
+
     let demos = ["Demo - Basic", "Demo - Colors", "Demo - List"]
-    
+
     var body: some View {
         VStack(spacing: 30) {
             Button {
                 let locales = Array(SwiftSpeech.supportedLocales())
-                viewContext.viewController?.app.showSheet(title: nil, message: nil, actions: locales.map({
+                viewContext.viewController?.app.showSheet(title: nil, message: nil, actions: locales.map {
                     $0.localizedString(forLanguageCode: $0.languageCode ?? "") ?? ""
-                }), actionBlock: { index in
+                }, actionBlock: { index in
                     locale = locales[index]
                 })
             } label: {
@@ -51,7 +51,7 @@ struct TestSwiftUIRecorderView: View {
             .buttonStyle(BorderlessButtonStyle())
             .frame(width: (APP.screenWidth - 64) / 2, height: 40)
             .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
-            
+
             Button {
                 viewContext.viewController?.app.showSheet(title: nil, message: nil, actions: demos, actionBlock: { index in
                     demo = index
@@ -66,7 +66,7 @@ struct TestSwiftUIRecorderView: View {
             .buttonStyle(BorderlessButtonStyle())
             .frame(width: (APP.screenWidth - 64) / 2, height: 40)
             .border(Color.gray, width: Divider.defaultSize, cornerRadius: 20)
-            
+
             switch demo {
             case 1:
                 DemosColors(locale: locale)
@@ -80,25 +80,23 @@ struct TestSwiftUIRecorderView: View {
 }
 
 extension TestSwiftUIRecorderView {
-    
-    struct DemosBasic : View {
-        
+    struct DemosBasic: View {
         var sessionConfiguration: SwiftSpeech.Session.Configuration
-        
+
         @State private var text = "Tap to Speak"
-        
+
         public init(sessionConfiguration: SwiftSpeech.Session.Configuration) {
             self.sessionConfiguration = sessionConfiguration
         }
-        
+
         public init(locale: Locale = .current) {
             self.init(sessionConfiguration: SwiftSpeech.Session.Configuration(locale: locale))
         }
-        
+
         public init(localeIdentifier: String) {
             self.init(locale: Locale(identifier: localeIdentifier))
         }
-        
+
         public var body: some View {
             VStack(spacing: 35.0) {
                 Text(text)
@@ -106,21 +104,19 @@ extension TestSwiftUIRecorderView {
                 SwiftSpeech.RecordButton()
                     .swiftSpeechToggleRecordingOnTap(sessionConfiguration: sessionConfiguration, animation: .spring(response: 0.3, dampingFraction: 0.5, blendDuration: 0))
                     .onRecognizeLatest(update: $text)
-                
+
             }.onAppear {
                 SwiftSpeech.requestSpeechRecognitionAuthorization()
             }
         }
-        
     }
-    
-    struct DemosColors : View {
 
+    struct DemosColors: View {
         @State private var text = "Hold and say a color!"
-        
+
         private var locale: Locale?
 
-        static let colorDictionary: [String : Color] = [
+        static let colorDictionary: [String: Color] = [
             "black": .black,
             "white": .white,
             "blue": .blue,
@@ -140,7 +136,7 @@ extension TestSwiftUIRecorderView {
             "粉色": .pink,
             "紫色": .purple,
             "红色": .red,
-            "黄色": .yellow,
+            "黄色": .yellow
         ]
 
         var color: Color? {
@@ -168,23 +164,21 @@ extension TestSwiftUIRecorderView {
                 SwiftSpeech.requestSpeechRecognitionAuthorization()
             }
         }
-
     }
 
-    struct DemosList : View {
-
+    struct DemosList: View {
         var sessionConfiguration: SwiftSpeech.Session.Configuration
 
         @State var list: [(session: SwiftSpeech.Session, text: String)] = []
-        
+
         public init(sessionConfiguration: SwiftSpeech.Session.Configuration) {
             self.sessionConfiguration = sessionConfiguration
         }
-        
+
         public init(locale: Locale = .current) {
             self.init(sessionConfiguration: SwiftSpeech.Session.Configuration(locale: locale))
         }
-        
+
         public init(localeIdentifier: String) {
             self.init(locale: Locale(identifier: localeIdentifier))
         }

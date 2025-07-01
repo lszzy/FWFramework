@@ -29,7 +29,7 @@ class TestController: UIViewController {
             ["Socket", "TestSocketController"],
             ["AudioPlayer", "TestAudioController"],
             ["VideoPlayer", "TestVideoController"],
-            ["AudioRecorder", "TestRecorderController"],
+            ["AudioRecorder", "TestRecorderController"]
         ]],
         ["Toolkit", [
             ["Adaptive", "TestAdaptiveController"],

@@ -14,9 +14,9 @@ import UIKit
 open class ImagePickerPluginImpl: NSObject, ImagePickerPlugin, @unchecked Sendable {
     /// 图片选择器缓存文件存放目录，使用完成后需自行删除
     public nonisolated static var imagePickerPath: String {
-        return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager", "ImagePicker"])
+        FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager", "ImagePicker"])
     }
-    
+
     // MARK: - Accessor
     /// 单例模式
     @objc(sharedInstance)

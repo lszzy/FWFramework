@@ -313,7 +313,7 @@ extension PlatformViewController {
 // MARK: - IntrospectionView
 typealias IntrospectionViewID = UUID
 
-@MainActor fileprivate enum IntrospectionStore {
+@MainActor private enum IntrospectionStore {
     static var shared: [IntrospectionViewID: Pair] = [:]
 
     struct Pair {

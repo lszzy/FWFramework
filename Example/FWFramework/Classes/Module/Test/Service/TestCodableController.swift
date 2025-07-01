@@ -431,10 +431,12 @@ class TestObjectParameter: AbstractParameter {
         get { get().safeInt }
         set { set(newValue) }
     }
+
     var name: String {
         get { get().safeString }
         set { set(newValue) }
     }
+
     var block: BlockVoid? {
         get { get() }
         set { set(newValue) }
