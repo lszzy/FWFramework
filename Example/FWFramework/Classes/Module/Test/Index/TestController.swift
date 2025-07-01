@@ -27,6 +27,7 @@ class TestController: UIViewController {
             ["Codable", "TestCodableController"],
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
+            ["Purchase", "TestPurchaseController"],
             ["AudioPlayer", "TestAudioController"],
             ["VideoPlayer", "TestVideoController"],
             ["AudioRecorder", "TestRecorderController"]

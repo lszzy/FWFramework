@@ -255,22 +255,23 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
     }
 
     /// 跳转播放
-    open func seekToPlayer(_ seconds: Double) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
+    @discardableResult
+    open func seekToPlayer(_ seconds: Double) async throws -> CMTime {
+        try await withCheckedThrowingContinuation { continuation in
             if self.audioPlayer == nil {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
                 return
             }
 
             audioPlayer.seek(to: CMTime(seconds: seconds, preferredTimescale: CMTimeScale(NSEC_PER_SEC)))
-            continuation.resume()
+            continuation.resume(returning: audioPlayer.currentTime())
         }
     }
 
     /// 设置音量
     @discardableResult
     open func setVolume(_ volume: Float) async throws -> Float {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             guard volume >= 0 && volume <= 1 else {
                 continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Value of volume should be between 0.0 to 1.0"]))
                 return
@@ -287,8 +288,9 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
     }
 
     /// 设置播放速度
-    open func setPlaybackSpeed(_ playbackSpeed: Float) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
+    @discardableResult
+    open func setPlaybackSpeed(_ playbackSpeed: Float) async throws -> Float {
+        try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.fw.mainAsync {
                 if self.audioPlayer == nil {
                     continuation.resume(throwing: NSError(domain: "AudioPlayerRecorder", code: 0, userInfo: [NSLocalizedDescriptionKey: "Player is null"]))
@@ -296,7 +298,7 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
                 }
 
                 self.audioPlayer.rate = playbackSpeed
-                continuation.resume()
+                continuation.resume(returning: self.audioPlayer.rate)
             }
         }
     }

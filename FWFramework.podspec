@@ -127,6 +127,11 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
+    ss.subspec 'Purchase' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Purchase/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
