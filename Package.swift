@@ -51,6 +51,10 @@ let package = Package(
             targets: ["FWPluginSpeech"]
         ),
         .library(
+            name: "FWPluginPurchase",
+            targets: ["FWPluginPurchase"]
+        ),
+        .library(
             name: "FWPluginMacros",
             targets: ["FWPluginMacros"]
         ),
@@ -172,6 +176,15 @@ let package = Package(
             name: "FWPluginSpeech",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Authorize/Speech",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginPurchase",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Purchase",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

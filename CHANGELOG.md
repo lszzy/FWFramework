@@ -1,5 +1,11 @@
 # Changelog
 
+## [8.1.0] - 2025-07-05
+
+### Added
+* Added the Purchase in-app payment plugin submodule
+* Synchronize SmartCodable to the latest version 5.0.14
+
 ## [8.0.0] - 2025-06-20
 
 ### Added

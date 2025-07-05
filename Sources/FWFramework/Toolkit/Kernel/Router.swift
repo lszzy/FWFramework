@@ -109,6 +109,7 @@ public class Router: NSObject, @unchecked Sendable {
             get { get(Self.routerSourceKey).string }
             set { set(newValue, for: Self.routerSourceKey) }
         }
+
         /// 路由信息选项，支持NavigationOptions
         open var routerOptions: NavigatorOptions? {
             get {
@@ -119,16 +120,19 @@ public class Router: NSObject, @unchecked Sendable {
                 set(newValue, for: Self.routerOptionsKey)
             }
         }
+
         /// 路由动画选项，仅open生效
         open var routerAnimated: Bool? {
             get { get(Self.routerAnimatedKey).bool }
             set { set(newValue, for: Self.routerAnimatedKey) }
         }
+
         /// 路由完成选项，仅open生效
         open var routerCompleted: Bool? {
             get { get(Self.routerCompletedKey).bool }
             set { set(newValue, for: Self.routerCompletedKey) }
         }
+
         /// 路由信息句柄，仅open生效
         open var routerHandler: (@convention(block) @MainActor @Sendable (Context, UIViewController) -> Void)? {
             get { get(Self.routerHandlerKey) }

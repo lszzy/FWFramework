@@ -813,7 +813,7 @@ public class PlayerCacheConfiguration: NSObject, NSCopying, NSSecureCoding, @unc
         configuration.addCacheFragment(range)
         configuration.save()
     }
-    
+
     private static func contentType(from fileExtension: String) -> String {
         if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension as CFString, nil)?.takeRetainedValue(),
            let contentType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeRetainedValue() {

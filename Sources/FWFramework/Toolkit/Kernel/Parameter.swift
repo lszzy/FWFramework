@@ -84,12 +84,15 @@ open class AbstractParameter: ObjectParameter {
     public required init(dictionaryValue: [AnyHashable: Any]) {
         self.dictionaryValue = dictionaryValue
     }
+
     public func get<T>(_ key: AnyHashable = #function, as type: T.Type = T.self) -> T? {
-        return dictionaryValue[key] as? T
+        dictionaryValue[key] as? T
     }
+
     public func get(_ key: AnyHashable = #function) -> Any? {
-        return dictionaryValue[key]
+        dictionaryValue[key]
     }
+
     public func set(_ value: Any?, for key: AnyHashable = #function) {
         dictionaryValue[key] = value
     }

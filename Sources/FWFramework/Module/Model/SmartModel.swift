@@ -785,8 +785,14 @@ extension SmartUpdater {
     ///   - dest: 目标字典
     ///   - src: 源字典
     fileprivate static func updateDict(_ dest: inout [String: Any], from src: [String: Any]) {
-        dest.merge(src) { _, new in
-            new
+        for (key, value) in src {
+            if let subDict = value as? [String: Any],
+               var existingSubDict = dest[key] as? [String: Any] {
+                updateDict(&existingSubDict, from: subDict)
+                dest[key] = existingSubDict
+            } else {
+                dest[key] = value
+            }
         }
     }
 }
@@ -4645,9 +4651,11 @@ extension JSONDecoderImpl.KeyedContainer {
 }
 
 extension JSONDecoderImpl.KeyedContainer {
-    fileprivate func _compatibleDecode<T>(forKey key: Key, needConvert: Bool = true) -> T? {
+    fileprivate func _compatibleDecode<T>(forKey key: Key, logIfKeyMissing: Bool = true, needConvert: Bool = true) -> T? {
         guard let value = getValue(forKey: key) else {
-            SmartSentinel.monitorLog(impl: impl, forKey: key, value: nil, type: T.self)
+            if logIfKeyMissing {
+                SmartSentinel.monitorLog(impl: impl, forKey: key, value: nil, type: T.self)
+            }
             return impl.cache.initialValueIfPresent(forKey: key)
         }
 
@@ -4704,73 +4712,122 @@ extension JSONDecoderImpl.KeyedContainer {
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeFixedWidthIntegerIfPresent<T: FixedWidthInteger>(key: Self.Key) -> T? {
-        guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self) else {
-            return _compatibleDecode(forKey: key)
+        guard let decoded: T = _decodeFixedWidthIntegerIfPresentCore(key: key) else {
+            return _compatibleDecode(forKey: key, logIfKeyMissing: false)
         }
         return decoded
     }
 
     @inline(__always) private func _decodeFixedWidthInteger<T: FixedWidthInteger>(key: Self.Key) throws -> T {
-        if let decoded: T = _decodeFixedWidthIntegerIfPresent(key: key) { return decoded }
+        if let decoded: T = _decodeFixedWidthIntegerIfPresentCore(key: key) { return decoded }
+        if let value: T = _compatibleDecode(forKey: key, logIfKeyMissing: true) {
+            return value
+        }
         return try Patcher<T>.defaultForType()
+    }
+
+    @inline(__always) private func _decodeFixedWidthIntegerIfPresentCore<T: FixedWidthInteger>(key: Self.Key) -> T? {
+        guard let value = getValue(forKey: key) else { return nil }
+        return impl.unwrapFixedWidthInteger(from: value, for: key, as: T.self)
     }
 }
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeFloatingPointIfPresent<T: LosslessStringConvertible & BinaryFloatingPoint>(key: K) -> T? {
-        guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = impl.unwrapFloatingPoint(from: value, for: key, as: T.self) else {
-            return _compatibleDecode(forKey: key)
+        guard let decoded: T = _decodeFloatingPointIfPresentCore(key: key) else {
+            return _compatibleDecode(forKey: key, logIfKeyMissing: false)
         }
         return decoded
     }
 
     @inline(__always) private func _decodeFloatingPoint<T: LosslessStringConvertible & BinaryFloatingPoint>(key: K) throws -> T {
-        if let decoded: T = _decodeFloatingPointIfPresent(key: key) { return decoded }
+        if let decoded: T = _decodeFloatingPointIfPresentCore(key: key) { return decoded }
+        if let value: T = _compatibleDecode(forKey: key, logIfKeyMissing: true) {
+            return value
+        }
         return try Patcher<T>.defaultForType()
+    }
+
+    @inline(__always) private func _decodeFloatingPointIfPresentCore<T: LosslessStringConvertible & BinaryFloatingPoint>(key: K) -> T? {
+        guard let value = getValue(forKey: key) else { return nil }
+        return impl.unwrapFloatingPoint(from: value, for: key, as: T.self)
     }
 }
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeBoolValueIfPresent(key: K) -> Bool? {
-        guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = impl.unwrapBoolValue(from: value, for: key) else {
-            return _compatibleDecode(forKey: key)
+        guard let decoded = _decodeBoolValueIfPresentCore(key: key) else {
+            return _compatibleDecode(forKey: key, logIfKeyMissing: false)
         }
         return decoded
     }
 
     @inline(__always) private func _decodeBoolValue(key: K) throws -> Bool {
-        if let decoded = _decodeBoolValueIfPresent(key: key) { return decoded }
+        if let decoded = _decodeBoolValueIfPresentCore(key: key) { return decoded }
+        if let value: Bool = _compatibleDecode(forKey: key, logIfKeyMissing: true) {
+            return value
+        }
         return try Patcher<Bool>.defaultForType()
+    }
+
+    @inline(__always) private func _decodeBoolValueIfPresentCore(key: K) -> Bool? {
+        guard let value = getValue(forKey: key) else { return nil }
+        return impl.unwrapBoolValue(from: value, for: key)
     }
 }
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeStringValueIfPresent(key: K) -> String? {
-        guard let value = getValue(forKey: key) else { return _compatibleDecode(forKey: key) }
-        guard let decoded = impl.unwrapStringValue(from: value, for: key) else {
-            return _compatibleDecode(forKey: key)
+        guard let decoded = _decodeStringValueIfPresentCore(key: key) else {
+            return _compatibleDecode(forKey: key, logIfKeyMissing: false)
         }
         return decoded
     }
 
     @inline(__always) private func _decodeStringValue(key: K) throws -> String {
-        if let decoded = _decodeStringValueIfPresent(key: key) { return decoded }
+        if let decoded = _decodeStringValueIfPresentCore(key: key) { return decoded }
+        if let value: String = _compatibleDecode(forKey: key, logIfKeyMissing: true) {
+            return value
+        }
         return try Patcher<String>.defaultForType()
+    }
+
+    @inline(__always) private func _decodeStringValueIfPresentCore(key: K) -> String? {
+        guard let value = getValue(forKey: key) else { return nil }
+        return impl.unwrapStringValue(from: value, for: key)
     }
 }
 
 extension JSONDecoderImpl.KeyedContainer {
     @inline(__always) private func _decodeDecodableIfPresent<T: Decodable>(_ type: T.Type, forKey key: K) -> T? {
+        guard let decoded = _decodeDecodableIfPresentCore(type, forKey: key) else {
+            if let value: T = _compatibleDecode(forKey: key, logIfKeyMissing: false) {
+                return didFinishMapping(value)
+            }
+            return nil
+        }
+        return didFinishMapping(decoded)
+    }
+
+    @inline(__always) private func _decodeDecodable<T: Decodable>(_ type: T.Type, forKey key: K) throws -> T {
+        guard let decoded = _decodeDecodableIfPresentCore(type, forKey: key) else {
+            if let value: T = _compatibleDecode(forKey: key, logIfKeyMissing: true) {
+                return didFinishMapping(value)
+            }
+            let value = try Patcher<T>.defaultForType()
+            return didFinishMapping(value)
+        }
+        return didFinishMapping(decoded)
+    }
+
+    @inline(__always) private func _decodeDecodableIfPresentCore<T: Decodable>(_ type: T.Type, forKey key: K) -> T? {
         // 检查是否有值转换器
         if let transformer = impl.cache.valueTransformer(for: key) {
             if let decoded = decodeWithTransformer(transformer, type: type, key: key) {
-                return didFinishMapping(decoded)
+                return decoded
             }
             if let decoded: T = _compatibleDecode(forKey: key, needConvert: false) {
-                return didFinishMapping(decoded)
+                return decoded
             }
             return nil
         }
@@ -4785,23 +4842,14 @@ extension JSONDecoderImpl.KeyedContainer {
         }
 
         guard let newDecoder = try? decoderForKeyCompatibleForJson(key, type: type) else {
-            return _compatibleDecode(forKey: key)
+            return nil
         }
 
         if let decoded = try? newDecoder.unwrap(as: type) {
-            return didFinishMapping(decoded)
+            return decoded
         }
 
-        if let decoded: T = _compatibleDecode(forKey: key) {
-            return didFinishMapping(decoded)
-        } else {
-            return nil
-        }
-    }
-
-    @inline(__always) private func _decodeDecodable<T: Decodable>(_ type: T.Type, forKey key: K) throws -> T {
-        if let decoded: T = _decodeDecodableIfPresent(type, forKey: key) { return decoded }
-        return try Patcher<T>.defaultForType()
+        return nil
     }
 }
 

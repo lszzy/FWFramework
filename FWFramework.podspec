@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '8.0.0'
+  s.version               = '8.1.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://wuyong.site'
   s.license               = 'MIT'
@@ -124,6 +124,11 @@ Pod::Spec.new do |s|
     
     ss.subspec 'Speech' do |sss|
       sss.source_files = 'Sources/FWPlugin/Authorize/Speech/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
+    ss.subspec 'Purchase' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Purchase/**/*.swift'
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     

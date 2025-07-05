@@ -654,7 +654,7 @@ public class AssetManager: @unchecked Sendable {
 
     /// 资源管理器临时文件存放目录，使用完成后需自行删除
     public static var cachePath: String {
-        return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager"])
+        FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "AssetManager"])
     }
 
     /// LivePhoto导出文件存放路径，使用完成后需自行删除
