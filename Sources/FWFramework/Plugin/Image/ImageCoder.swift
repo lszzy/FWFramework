@@ -553,6 +553,8 @@ open class ImageCoder: @unchecked Sendable {
             imageOrientation = .leftMirrored
         case .rightMirrored:
             imageOrientation = .rightMirrored
+        @unknown default:
+            break
         }
         return imageOrientation
     }
@@ -745,6 +747,7 @@ open class ImageCoder: @unchecked Sendable {
         let properties = CGImageSourceCopyPropertiesAtIndex(source, index, nil) as NSDictionary?
         let pixelWidth = properties?[kCGImagePropertyPixelWidth] as? Double ?? .zero
         let pixelHeight = properties?[kCGImagePropertyPixelHeight] as? Double ?? .zero
+        let orientation = properties?[kCGImagePropertyOrientation] as? UInt32 ?? 0
 
         var decodingOptions: [AnyHashable: Any] = [:]
         var imageRef: CGImage?
@@ -769,7 +772,8 @@ open class ImageCoder: @unchecked Sendable {
             return nil
         }
 
-        let image = UIImage(cgImage: imageRef, scale: scale, orientation: .up)
+        let imageOrientation = Self.imageOrientation(from: CGImagePropertyOrientation(rawValue: orientation) ?? .up)
+        let image = UIImage(cgImage: imageRef, scale: scale, orientation: imageOrientation)
         return image
     }
 
