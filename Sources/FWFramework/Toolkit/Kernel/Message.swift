@@ -354,6 +354,34 @@ extension Wrapper where Base: WrapperObject {
         get { property(forName: "notificationTargets") as? [NotificationTarget] ?? [] }
         set { setProperty(newValue, forName: "notificationTargets") }
     }
+    
+    // MARK: - Darwin
+    /// 发送跨进程darwin通知（比如主App和Extension）
+    public static func postDarwinNotification(_ name: Notification.Name) {
+        CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFNotificationName(name.rawValue as CFString), nil, nil, true)
+    }
+    
+    /// 监听跨进程darwin通知，无需手动移除监听
+    public static func observeDarwinNotification(_ name: Notification.Name, block: @escaping @Sendable (Notification.Name) -> Void) {
+        DarwinNotificationTarget.shared.observations[name.rawValue] = block
+        let callback: CFNotificationCallback = { _, _, name, _, _ in
+            guard let name = name?.rawValue as? String else { return }
+            DarwinNotificationTarget.shared.observations[name]?(Notification.Name(name))
+        }
+        
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), Unmanaged.passUnretained(DarwinNotificationTarget.shared).toOpaque(), callback, name.rawValue as CFString, nil, .deliverImmediately)
+    }
+    
+    /// 手动移除指定跨进程darwin通知监听
+    public static func unobserveDarwinNotification(_ name: Notification.Name) {
+        DarwinNotificationTarget.shared.observations.removeValue(forKey: name.rawValue)
+        CFNotificationCenterRemoveObserver(CFNotificationCenterGetDarwinNotifyCenter(), Unmanaged.passUnretained(DarwinNotificationTarget.shared).toOpaque(), CFNotificationName(name.rawValue as CFString), nil)
+    }
+    
+    /// 手动移除所有跨进程darwin通知监听
+    public static func unobserveAllDarwinNotifications() {
+        DarwinNotificationTarget.shared.removeObservers()
+    }
 }
 
 // MARK: - KVO
@@ -640,6 +668,23 @@ private class NotificationTarget: NSObject, @unchecked Sendable {
         if let target, let action, target.responds(to: action) {
             _ = target.perform(action, with: notification)
         }
+    }
+}
+
+// MARK: - DarwinNotificationTarget
+private class DarwinNotificationTarget: @unchecked Sendable {
+    static let shared = DarwinNotificationTarget()
+    var observations: [String: @Sendable (Notification.Name) -> Void] = [:]
+    
+    deinit {
+        if !observations.isEmpty {
+            removeObservers()
+        }
+    }
+    
+    func removeObservers() {
+        observations.removeAll()
+        CFNotificationCenterRemoveEveryObserver(CFNotificationCenterGetDarwinNotifyCenter(), Unmanaged.passUnretained(self).toOpaque())
     }
 }
 
