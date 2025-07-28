@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.2.0] - 2025-07-28
+
+### Added
+* Added methods for monitoring and sending Darwin cross-process notifications
+* Added hide method for GuideView
+* Modified the default path of database and file cache to Application Support directory
+
 ## [8.1.0] - 2025-07-05
 
 ### Added

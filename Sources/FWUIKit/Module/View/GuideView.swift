@@ -334,14 +334,24 @@ public class GuideViewManager {
     private static let dataKey = "FWGuideViewData"
 
     /// 是否应该显示指定key引导
-    public static func shouldShowGuide(for key: String) -> Bool {
+    public static func shouldShowGuide(for key: String, autoHide: Bool = true) -> Bool {
         var data = UserDefaults.standard.object(forKey: dataKey) as? [String: Bool] ?? [:]
         guard data.index(forKey: key) == nil else { return false }
 
+        if autoHide {
+            data[key] = true
+            UserDefaults.standard.set(data, forKey: dataKey)
+            UserDefaults.standard.synchronize()
+        }
+        return true
+    }
+    
+    /// 隐藏指定key引导
+    public static func hide(for key: String) {
+        var data = UserDefaults.standard.object(forKey: dataKey) as? [String: Bool] ?? [:]
         data[key] = true
         UserDefaults.standard.set(data, forKey: dataKey)
         UserDefaults.standard.synchronize()
-        return true
     }
 
     /// 重置指定key引导

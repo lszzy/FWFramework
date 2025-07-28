@@ -770,12 +770,17 @@ extension Wrapper where Base: FileManager {
         NSHomeDirectory()
     }
 
-    /// 文档路径，iTunes会同步备份
+    /// 文档路径，iTunes会同步备份，用户可见数据
     public static var pathDocument: String {
         pathSearch(.documentDirectory)
     }
+    
+    /// 应用支持路径，iTunes会同步备份，用户不可见数据
+    public static var pathApplicationSupport: String {
+        pathSearch(.applicationSupportDirectory)
+    }
 
-    /// 缓存路径，系统不会删除，iTunes会删除
+    /// 缓存路径，iTunes不会备份，可能会被系统清理
     public static var pathCaches: String {
         pathSearch(.cachesDirectory)
     }
@@ -783,11 +788,6 @@ extension Wrapper where Base: FileManager {
     /// Library路径
     public static var pathLibrary: String {
         pathSearch(.libraryDirectory)
-    }
-
-    /// 配置路径，配置文件保存位置
-    public static var pathPreference: String {
-        (pathLibrary as NSString).appendingPathComponent("Preference")
     }
 
     /// 临时路径，App退出后可能会删除

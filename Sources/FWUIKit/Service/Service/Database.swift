@@ -407,7 +407,7 @@ extension DatabaseManager {
             return customPath
         }
 
-        return FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "Database"])
+        return FileManager.fw.pathApplicationSupport.fw.appendingPath(["FWFramework", "Database"])
     }
 
     fileprivate static func removeModelFieldsCache(_ modelClass: AnyClass?) {

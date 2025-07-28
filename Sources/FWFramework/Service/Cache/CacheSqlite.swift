@@ -29,9 +29,9 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
         var dbPath: String
         if let path, (path as NSString).isAbsolutePath {
             dbPath = path
-            // 相对路径: Libray/Caches/FWFramework/CacheSqlite/path[shared.sqlite]
+            // 相对路径: Libray/Application Support/FWFramework/CacheSqlite/path[shared.sqlite]
         } else {
-            let cachePath = FileManager.fw.pathCaches.fw.appendingPath(["FWFramework", "CacheSqlite"])
+            let cachePath = FileManager.fw.pathApplicationSupport.fw.appendingPath(["FWFramework", "CacheSqlite"])
             let fileName = path ?? ""
             dbPath = cachePath.fw.appendingPath(!fileName.isEmpty ? fileName : "shared.sqlite")
         }
