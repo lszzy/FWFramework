@@ -55,12 +55,23 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
     }
 
     override open func clearAllCaches() {
-        let dict = userDefaults.dictionaryRepresentation()
-        for key in dict.keys {
+        let keys = userDefaults.dictionaryRepresentation().keys
+        for key in keys {
             if key.hasPrefix("FWCache.") {
                 userDefaults.removeObject(forKey: key)
             }
         }
         userDefaults.synchronize()
+    }
+    
+    override open func readCacheKeys() -> [String] {
+        var result: [String] = []
+        let keys = userDefaults.dictionaryRepresentation().keys
+        for key in keys {
+            if key.hasPrefix("FWCache."), !isExpireKey(key) {
+                result.append(String(key.suffix(from: key.index(key.startIndex, offsetBy: 8))))
+            }
+        }
+        return result
     }
 }

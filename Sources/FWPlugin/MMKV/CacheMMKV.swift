@@ -108,6 +108,17 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         }
         mmkv?.removeValues(forKeys: keys)
     }
+    
+    override open func readCacheKeys() -> [String] {
+        var result: [String] = []
+        let keys = mmkv?.allKeys() as? [String] ?? []
+        for key in keys {
+            if key.hasPrefix("FWCache."), !isExpireKey(key) {
+                result.append(String(key.suffix(from: key.index(key.startIndex, offsetBy: 8))))
+            }
+        }
+        return result
+    }
 }
 
 // MARK: - CacheMMKVCompatible

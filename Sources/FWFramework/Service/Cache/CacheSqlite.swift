@@ -141,4 +141,29 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
             }
         }
     }
+    
+    override open func readCacheKeys() -> [String] {
+        var keys: [String] = []
+        autoreleasepool {
+            if open() {
+                let sql = "SELECT key FROM FWCache"
+                var stmt: OpaquePointer?
+                if sqlite3_prepare_v2(database, sql, -1, &stmt, nil) == SQLITE_OK {
+                    while sqlite3_step(stmt) == SQLITE_ROW {
+                        let text = sqlite3_column_text(stmt, 0)
+                        if let text {
+                            let key = String(cString: UnsafePointer(text))
+                            if !isExpireKey(key) {
+                                keys.append(key)
+                            }
+                        }
+                    }
+                }
+                sqlite3_finalize(stmt)
+
+                close()
+            }
+        }
+        return keys
+    }
 }

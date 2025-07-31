@@ -14,6 +14,7 @@ open class CacheMemory: CacheEngine, @unchecked Sendable {
 
     private var cachePool = [String: Any]()
 
+    // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
         cachePool[key] as? T
     }
@@ -28,5 +29,9 @@ open class CacheMemory: CacheEngine, @unchecked Sendable {
 
     override open func clearAllCaches() {
         cachePool.removeAll()
+    }
+    
+    override open func readCacheKeys() -> [String] {
+        cachePool.keys.filter { !isExpireKey($0) }
     }
 }

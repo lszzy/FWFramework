@@ -14,6 +14,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
 
     private var group: String?
     private var service = "FWCache"
+    private let keysKey = "__KEYS__"
 
     override public init() {
         super.init()
@@ -35,14 +36,34 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
         setPasswordObject(object, forService: service, account: key)
+        
+        if !isExpireKey(key) {
+            var keys = readCacheKeys()
+            if !keys.contains(key) {
+                keys.append(key)
+                setPasswordObject(keys, forService: service, account: keysKey)
+            }
+        }
     }
 
     override open func clearCache(forKey key: String) {
         deletePassword(forService: service, account: key)
+        
+        if !isExpireKey(key) {
+            var keys = readCacheKeys()
+            if keys.contains(key) {
+                keys.removeAll { $0 == key }
+                setPasswordObject(keys, forService: service, account: keysKey)
+            }
+        }
     }
 
     override open func clearAllCaches() {
         deletePassword(forService: service, account: nil)
+    }
+    
+    override open func readCacheKeys() -> [String] {
+        readCache(forKey: keysKey) ?? []
     }
 
     // MARK: - Private
