@@ -96,6 +96,7 @@
 		2FF08B7728ADE7690074895A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B6D28ADE7690074895A /* HomeController.swift */; };
 		2FF08B7828ADE7690074895A /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7128ADE7690074895A /* TestController.swift */; };
 		2FF08B7928ADE7690074895A /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7528ADE7690074895A /* UserService.swift */; };
+		B8A567ED2E447AC300AFAC3C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A567EC2E447AC300AFAC3C /* SceneDelegate.swift */; };
 		B9719F10F5B17714B420B90A /* Pods_FWFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -203,6 +204,7 @@
 		894F9EFB46FE2777B54B5F13 /* Pods-FWFramework_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.debug.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		8EB5F58C73F2C8AFAAED3254 /* Pods-FWFramework_Example.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.staging.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.staging.xcconfig"; sourceTree = "<group>"; };
 		9A618471107F1D6CF1E47FF0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		B8A567EC2E447AC300AFAC3C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		D478E69E86FD0C491E56F20A /* Pods-FWFramework_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.release.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.release.xcconfig"; sourceTree = "<group>"; };
 		E91AE76AA686014704EDE554 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		EC90FC77F34167CC32F0CE6B /* FWFramework.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = FWFramework.podspec; path = ../FWFramework.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -425,6 +427,7 @@
 			isa = PBXGroup;
 			children = (
 				2FF08B5C28ADDD730074895A /* AppDelegate.swift */,
+				B8A567EC2E447AC300AFAC3C /* SceneDelegate.swift */,
 				2FF08B5928ADDD730074895A /* Config */,
 				2F6A411B28B5F80A003719E7 /* Router */,
 			);
@@ -769,6 +772,7 @@
 				2F49EE2228FFA25D00F229BB /* TestStatisticalController.swift in Sources */,
 				2F30926E2BF5B60200F64898 /* UserModel.swift in Sources */,
 				2F2D997E2A72685F005C81BB /* TestDatabaseController.swift in Sources */,
+				B8A567ED2E447AC300AFAC3C /* SceneDelegate.swift in Sources */,
 				2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */,
 				2FF08B7728ADE7690074895A /* HomeController.swift in Sources */,
 				2FDA141B28D2D42C00985FBD /* TestThemeController.swift in Sources */,

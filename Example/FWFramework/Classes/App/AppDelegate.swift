@@ -24,10 +24,6 @@ class AppDelegate: AppResponder {
     }
 
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = AppTheme.backgroundColor
-        window?.makeKeyAndVisible()
-
         Router.registerClass(AppRouter.self)
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
@@ -38,10 +34,6 @@ class AppDelegate: AppResponder {
         if let url = UIApplication.app.appLaunchURL(options) {
             APP.debug("launchURL: %@", url.absoluteString)
         }
-    }
-
-    override func setupController() {
-        window?.rootViewController = TabController()
     }
 
     override func setupService(options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
@@ -68,11 +60,6 @@ class AppDelegate: AppResponder {
                 Navigator.topViewController?.app.showAlert(title: "CRASH", message: message)
             }
         }
-    }
-
-    override func reloadController() {
-        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 0.5)
-        super.reloadController()
     }
 
     // MARK: - UIApplicationDelegate

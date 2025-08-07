@@ -140,7 +140,7 @@ extension SettingsController {
             }
 
             Bundle.app.localizedLanguage = language
-            AppDelegate.shared.reloadController()
+            SceneDelegate.shared.reloadController()
         }
     }
 
