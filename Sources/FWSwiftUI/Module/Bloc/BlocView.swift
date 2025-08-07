@@ -7,6 +7,9 @@
 
 import Combine
 import SwiftUI
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - Base
 /// A state managing base class.
@@ -162,7 +165,10 @@ open class BlocObserver {
     /**
      As a shared instance is used in **Cubit** and **Bloc** to make tracking of event/state changes via callbacks
      */
-    public static var shared = BlocObserver()
+    public static var shared: BlocObserver {
+        get { FrameworkConfiguration.sharedBlocObserver }
+        set { FrameworkConfiguration.sharedBlocObserver = newValue }
+    }
     /**
      BlocObserver constructor
      - parameter intialState: initial state.
@@ -180,7 +186,7 @@ open class BlocObserver {
      - parameter cubit: cubit or bloc.
      */
     open func onCreate<State>(base: Base<State>) {
-        logInfo("\(base)")
+        logInfo("onCreate - \(base)")
     }
 
     /**
@@ -189,7 +195,7 @@ open class BlocObserver {
      - parameter event: a new event.
      */
     open func onEvent<Event, State>(bloc: Bloc<Event, State>, event: Event) {
-        logInfo("\(bloc), \(event)")
+        logInfo("onEvent - \(bloc), \(event)")
     }
 
     /**
@@ -198,7 +204,7 @@ open class BlocObserver {
      - parameter change: a change to a new state.
      */
     open func onChange<State>(base: Base<State>, change: Change<State>) {
-        logInfo("\(base), \(change)")
+        logInfo("onChange - \(base), \(change)")
     }
 
     /**
@@ -207,7 +213,7 @@ open class BlocObserver {
      - parameter transition: a change to a new state.
      */
     open func onTransition<Event, State>(bloc: Bloc<Event, State>, transition: Transition<Event, State>) {
-        logInfo("\(bloc), \(transition)")
+        logInfo("onTransition - \(bloc), \(transition)")
     }
 
     /**
@@ -216,7 +222,7 @@ open class BlocObserver {
      - parameter error: a reported error.
      */
     open func onError<State>(base: Base<State>, error: Error) {
-        logError("\(base), \(error)")
+        logError("onError - \(base), \(error)")
     }
 
     /**
@@ -224,7 +230,7 @@ open class BlocObserver {
      - parameter base: base.
      */
     open func onClose<State>(base: Base<State>) {
-        logInfo("\(base)")
+        logInfo("onClose - \(base)")
     }
 
     /**
@@ -237,7 +243,7 @@ open class BlocObserver {
         line: Int = #line
     ) {
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "%@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message, function: function, file: file, line: line)
         #endif
     }
 
@@ -251,7 +257,7 @@ open class BlocObserver {
         line: Int = #line
     ) {
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "%@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message, function: function, file: file, line: line)
         #endif
     }
 }
@@ -416,4 +422,9 @@ extension View {
         action?(base)
         return self
     }
+}
+
+// MARK: - FrameworkConfiguration+BlocView
+extension FrameworkConfiguration {
+    fileprivate static var sharedBlocObserver: BlocObserver = BlocObserver()
 }
