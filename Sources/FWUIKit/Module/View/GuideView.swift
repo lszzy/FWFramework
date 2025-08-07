@@ -345,7 +345,7 @@ public class GuideViewManager {
         }
         return true
     }
-    
+
     /// 隐藏指定key引导
     public static func hide(for key: String) {
         var data = UserDefaults.standard.object(forKey: dataKey) as? [String: Bool] ?? [:]

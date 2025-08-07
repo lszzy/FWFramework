@@ -128,15 +128,15 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillTerminate(_:)), arguments: [application])
         }
     }
-    
+
     // MARK: - UIScene
     open func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         /*
          默认名称"Default Configuration"，子类可重写
          */
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+        UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-    
+
     open func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         /*
          清理scene资源

@@ -30,7 +30,7 @@ open class CacheMemory: CacheEngine, @unchecked Sendable {
     override open func clearAllCaches() {
         cachePool.removeAll()
     }
-    
+
     override open func readCacheKeys() -> [String] {
         cachePool.keys.filter { !isExpireKey($0) }
     }

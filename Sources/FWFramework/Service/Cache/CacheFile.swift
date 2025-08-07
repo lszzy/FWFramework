@@ -15,7 +15,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
 
     /// 缓存根目录路径
     public private(set) var cachePath: String = ""
-    
+
     private let keysKey = "__KEYS__"
 
     override public convenience init() {
@@ -40,7 +40,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
         let fileName = "\(key.fw.md5Encode).plist"
         return (cachePath as NSString).appendingPathComponent(fileName)
     }
-    
+
     private func writeCache<T>(_ object: T, to filePath: String) {
         guard let data = Data.fw.archivedData(object) else { return }
         try? data.write(to: URL(fileURLWithPath: filePath))
@@ -64,7 +64,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
             try? FileManager.default.createDirectory(atPath: fileDir, withIntermediateDirectories: true, attributes: nil)
         }
         writeCache(object, to: cacheFile)
-        
+
         if !isExpireKey(key) {
             var keys = readCacheKeys()
             if !keys.contains(key) {
@@ -77,7 +77,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
     override open func clearCache(forKey key: String) {
         let cacheFile = filePath(key)
         try? FileManager.default.removeItem(atPath: cacheFile)
-        
+
         if !isExpireKey(key) {
             var keys = readCacheKeys()
             if keys.contains(key) {
@@ -90,7 +90,7 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
     override open func clearAllCaches() {
         try? FileManager.default.removeItem(atPath: cachePath)
     }
-    
+
     override open func readCacheKeys() -> [String] {
         readCache(forKey: keysKey) ?? []
     }
