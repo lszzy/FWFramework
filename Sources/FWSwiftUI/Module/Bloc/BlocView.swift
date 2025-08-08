@@ -99,7 +99,6 @@ open class Bloc<Event, State>: Base<State> where State: Equatable, Event: Equata
      */
     deinit {
         cancellables.forEach { $0.cancel() }
-        observer.onClose(base: self)
     }
 
     /**
@@ -151,7 +150,9 @@ open class Bloc<Event, State>: Base<State> where State: Equatable, Event: Equata
                 emitted = true
                 return transition.nextState
             }
-            .assign(to: \.state, on: self)
+            .sink(receiveValue: { [unowned self] value in
+                self.state = value
+            })
             .store(in: &cancellables)
     }
 }
@@ -169,6 +170,7 @@ open class BlocObserver {
         get { FrameworkConfiguration.sharedBlocObserver }
         set { FrameworkConfiguration.sharedBlocObserver = newValue }
     }
+
     /**
      BlocObserver constructor
      - parameter intialState: initial state.
@@ -259,6 +261,46 @@ open class BlocObserver {
         #if DEBUG
         Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message, function: function, file: file, line: line)
         #endif
+    }
+}
+
+// MARK: - BlocTest
+/**
+ BlocTest
+ */
+public final class BlocTest<S: Equatable, B: Base<S>> {
+    /// Executes event - state testing
+    /// - Parameters:
+    ///   - build: the **Bloc** object closure
+    ///   - act: all potentially happening events should be described here
+    ///   - wait: a delay before listening to state change
+    ///   - expect: all expected states based on incoming events
+    ///   - verify: verify bloc for matching expectations of incoming events successfully mapped to expected states
+    public static func execute(
+        build: () -> B,
+        act: ((B) -> Void)?,
+        wait: TimeInterval? = 0,
+        expect: (() -> Any)?,
+        verify: (Bool, String) -> Void
+    ) {
+        var areEqual = false
+        var states = [S]()
+        let bloc = build()
+        let scheduler = ImmediateScheduler.shared
+        let cancellable = bloc.$state
+            .subscribe(on: scheduler)
+            .delay(for: .seconds(wait ?? 0), scheduler: scheduler)
+            .sink(receiveValue: { value in
+                states.append(value)
+            })
+        act?(bloc)
+        if expect != nil {
+            let expected = expect!()
+            areEqual = "\(states)" == "\(expected)"
+            let message = "State received: \(states). \nStates expected: \(expected)"
+            verify(areEqual, message)
+        }
+        cancellable.cancel()
     }
 }
 
@@ -426,5 +468,5 @@ extension View {
 
 // MARK: - FrameworkConfiguration+BlocView
 extension FrameworkConfiguration {
-    fileprivate static var sharedBlocObserver: BlocObserver = BlocObserver()
+    fileprivate static var sharedBlocObserver: BlocObserver = .init()
 }

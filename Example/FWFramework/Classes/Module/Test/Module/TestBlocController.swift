@@ -41,6 +41,7 @@ class CounterCubit: Cubit<Int> {
     func increment() {
         emit(state: state + 1)
     }
+
     func decrement() {
         emit(state: state - 1)
     }
@@ -48,7 +49,7 @@ class CounterCubit: Cubit<Int> {
 
 struct CubitContentView: View {
     var body: some View {
-        BlocView(builder: { (cubit)  in
+        BlocView(builder: { cubit in
             VStack {
                 Text("Cubit")
                 Button(action: {
@@ -98,7 +99,7 @@ class CounterBloc: Bloc<CounterEvent, CounterState> {
 
 struct BlocContentView: View {
     var body: some View {
-        BlocView(builder: { (bloc) in
+        BlocView(builder: { bloc in
             let isPresented = Binding.constant(bloc.state.count < -6)
             CounterView()
                 .alert(isPresented: isPresented) {
@@ -112,7 +113,7 @@ struct BlocContentView: View {
                         }
                     )
                 }
-        }, action: { (bloc) in
+        }, action: { bloc in
             print(bloc.state.count)
         }, base: CounterBloc())
     }
