@@ -35,15 +35,15 @@ struct TestBlocView: View {
 // MARK: - Cubit
 class CounterCubit: Cubit<Int> {
     init() {
-        super.init(state: 0)
+        super.init(0)
     }
 
     func increment() {
-        emit(state: state + 1)
+        emit(state + 1)
     }
 
     func decrement() {
-        emit(state: state - 1)
+        emit(state - 1)
     }
 }
 
@@ -64,7 +64,7 @@ struct CubitContentView: View {
                 })
                 Text("Count: \(cubit.state)")
             }
-        }, base: CounterCubit())
+        }, bloc: CounterCubit())
     }
 }
 
@@ -84,10 +84,10 @@ struct CounterState: Equatable {
 
 class CounterBloc: Bloc<CounterEvent, CounterState> {
     init() {
-        super.init(initialState: CounterState(count: 0))
+        super.init(CounterState(count: 0))
     }
 
-    override func mapEventToState(event: CounterEvent) -> CounterState {
+    override func mapEvent(_ event: CounterEvent) -> CounterState {
         switch event {
         case .increment:
             return state.copyWith(count: state.count + 1)
@@ -113,9 +113,9 @@ struct BlocContentView: View {
                         }
                     )
                 }
-        }, action: { bloc in
+        }, listener: { bloc in
             print(bloc.state.count)
-        }, base: CounterBloc())
+        }, bloc: CounterBloc())
     }
 }
 

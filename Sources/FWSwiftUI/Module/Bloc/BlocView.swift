@@ -11,170 +11,121 @@ import SwiftUI
 @_spi(FW) import FWFramework
 #endif
 
-// MARK: - Base
-/// A state managing base class.
+// MARK: - BlocBase
+/// Bloc基类
 ///
 /// [SwiftBloc](https://github.com/kvs-coder/SwiftBloc)
-open class Base<State>: ObservableObject where State: Equatable {
-    /**
-     Whenever a state will be changed, the instance of the **Cubit** wrapped in **ObservedObject** in your **View** structure will receive
-     a new value of state. Based on this you can set the strict dependency of how to build your views.
-     */
+open class BlocBase<State>: ObservableObject where State: Equatable {
+    /// 状态更新时触发View刷新
     @Published public internal(set) var state: State
-    /**
-     Additional variable to make sure that previously the cubit was not emitting any new states
-     */
+    
     var emitted = false
-    /**
-     Will return a shared instance of **BlocObserver** which will notify about changes and transitions of states
-     You may create a custom observer of **BlocObserver**
-     */
-    var observer: BlocObserver {
-        BlocObserver.shared
+    var observer: BlocObserver { BlocObserver.shared }
+
+    /// 初始化起始状态
+    public init(_ initialState: State) {
+        self.state = initialState
+        observer.onCreate(bloc: self)
     }
 
-    /**
-     Cubit constructor
-     - parameter state: initial state.
-     */
-    public init(state: State) {
-        self.state = state
-        observer.onCreate(base: self)
-    }
-
-    /**
-     Deinitializer which will trigger observer callback **onClose**
-     */
     deinit {
-        observer.onClose(base: self)
+        observer.onClose(bloc: self)
+    }
+    
+    /// 触发新状态
+    public func emit(_ state: State) {
+        if state == self.state && emitted { return }
+        onChange(Change(currentState: self.state, nextState: state))
+        self.state = state
+        emitted = true
+    }
+    
+    /// 报告错误，内部调用onError方法
+    public func addError(_ error: Error) {
+        onError(error)
+    }
+    
+    /// 监听改变，子类可重写，必须调用super方法
+    open func onChange(_ change: Change<State>) {
+        observer.onChange(bloc: self, change: change)
+    }
+    
+    /// 监听错误，子类可重写，必须调用super方法
+    open func onError(_ error: Error) {
+        observer.onError(bloc: self, error: error)
     }
 }
 
 // MARK: - Cubit
-/**
- A state managing class not dependent on incoming events.
- */
-open class Cubit<State>: Base<State> where State: Equatable {
-    /**
-     Emits a new state.
-     - parameter state: new state.
-     */
-    public func emit(state: State) {
-        if state == self.state && emitted {
-            observer.onError(base: self, error: CubitError.stateNotChanged)
-            return
-        }
-        let change = Change(currentState: self.state, nextState: state)
-        observer.onChange(base: self, change: change)
-        self.state = state
-        emitted = true
-    }
-}
+/// Cubit基类
+open class Cubit<State>: BlocBase<State> where State: Equatable {}
 
 // MARK: - Bloc
-/**
- A state managing class with lower level of abstraction and unlike **Cubit** it depends on incoming events.
- */
-open class Bloc<Event, State>: Base<State> where State: Equatable, Event: Equatable {
-    /**
-     Whenever a new event happens, the instance of the **Bloc** wrapped in **ObservedObject**  in your **View** structure will receive
-     a new value of event..
-     */
+/// Bloc基类，必须重写mapEvent方法
+open class Bloc<Event, State>: BlocBase<State> where State: Equatable, Event: Equatable {
+    /// 事件发生时传递View接收
     @Published public internal(set) var event: Event?
-    /**
-     A collector for **AnyCancellable**
-     */
+    
     private var cancellables = Set<AnyCancellable>()
-    /**
-     Bloc constructor
-     - parameter initialState: initial state.
-     */
-    public init(initialState: State) {
-        super.init(state: initialState)
-        bindEventsToStates()
+    
+    public override init(_ initialState: State) {
+        super.init(initialState)
+        bindEvents()
     }
 
-    /**
-     Deinitializer which will trigger observer callback **onClose** and remove all cancellables.
-     */
     deinit {
         cancellables.forEach { $0.cancel() }
     }
-
-    /**
-     Adds a new event.
-     - parameter event: new event.
-     */
-    public func add(event: Event) {
-        observer.onEvent(bloc: self, event: event)
-        self.event = event
-    }
-
-    /**
-     The mapping function which is responsible for creating states out of event.
-     The idea is to listen for the incoming event and based on that create an appropriate new state of the view
-     - parameter event: incoming event.
-     - returns: new state instance
-     - warning: The function should be overridden in a child class
-
-     # Notes: #
-     1. If not overridden, will fail with **preconditionFailure**
-     */
-    open func mapEventToState(event: Event) -> State {
+    
+    /// 处理事件并返回新的状态，子类必须重写，否则报错
+    open func mapEvent(_ event: Event) -> State {
         preconditionFailure("This method must be overridden")
     }
 
-    /**
-     Binds event to state. Function **mapEventToState** is the core of the transition creation
-     */
-    private func bindEventsToStates() {
+    /// 添加新事件
+    public func add(event: Event) {
+        onEvent(event)
+        self.event = event
+    }
+    
+    /// 监听新事件，子类可重写，必须调用super方法
+    open func onEvent(_ event: Event) {
+        observer.onEvent(bloc: self, event: event)
+    }
+    
+    /// 监听转换，子类可重写，必须调用super方法
+    open func onTransition(_ transition: Transition<Event, State>) {
+        observer.onTransition(bloc: self, transition: transition)
+    }
+    
+    private func bindEvents() {
         $event
             .compactMap { [unowned self] event -> Transition<Event, State>? in
-                guard let event else {
-                    observer.onError(base: self, error: BlocError.noEvent)
-                    return nil
-                }
-                let nextState = mapEventToState(event: event)
-                return Transition(
-                    currentState: state,
-                    event: event,
-                    nextState: nextState
-                )
+                guard let event else { return nil }
+                let nextState = mapEvent(event)
+                return Transition(currentState: state, event: event, nextState: nextState)
             }
             .map { [unowned self] transition -> State in
-                if transition.nextState == state && emitted {
-                    observer.onError(base: self, error: CubitError.stateNotChanged)
-                    return state
-                }
-                observer.onTransition(bloc: self, transition: transition)
-                emitted = true
+                if transition.nextState == state && emitted { return state }
+                onTransition(transition)
                 return transition.nextState
             }
             .sink(receiveValue: { [unowned self] value in
-                self.state = value
+                emit(value)
             })
             .store(in: &cancellables)
     }
 }
 
 // MARK: - BlocObserver
-/**
- An observer to observe emitted states or added events.
- You may create your own singleton observer class and set a new value for a **shared** property
- */
+/// Bloc监听器
 open class BlocObserver {
-    /**
-     As a shared instance is used in **Cubit** and **Bloc** to make tracking of event/state changes via callbacks
-     */
+    /// 全局监听器，可赋值为自定义监听器实现
     public static var shared: BlocObserver {
         get { FrameworkConfiguration.sharedBlocObserver }
         set { FrameworkConfiguration.sharedBlocObserver = newValue }
     }
 
-    /**
-     BlocObserver constructor
-     - parameter intialState: initial state.
-     */
     public init() {
         logInfo("BlocObserver init")
     }
@@ -183,99 +134,55 @@ open class BlocObserver {
         logInfo("BlocObserver deinit")
     }
 
-    /**
-     Called when **Bloc** or **Cubit** instance is created.
-     - parameter cubit: cubit or bloc.
-     */
-    open func onCreate<State>(base: Base<State>) {
-        logInfo("onCreate - \(base)")
+    /// 监听Bloc实例创建
+    open func onCreate<State>(bloc: BlocBase<State>) {
+        logInfo("\(bloc) onCreate")
     }
 
-    /**
-     Called when a new event is added to **Bloc** instance.
-     - parameter bloc: bloc.
-     - parameter event: a new event.
-     */
+    /// 监听Bloc事件发生
     open func onEvent<Event, State>(bloc: Bloc<Event, State>, event: Event) {
-        logInfo("onEvent - \(bloc), \(event)")
+        logInfo("\(bloc) onEvent \(event)")
     }
 
-    /**
-     Called when state changes in **Base** instance.
-     - parameter base: base.
-     - parameter change: a change to a new state.
-     */
-    open func onChange<State>(base: Base<State>, change: Change<State>) {
-        logInfo("onChange - \(base), \(change)")
+    /// 监听Bloc状态改变
+    open func onChange<State>(bloc: BlocBase<State>, change: Change<State>) {
+        logInfo("\(bloc) onChange \(change)")
     }
 
-    /**
-     Called when state based on the event changes in **Bloc** instance.
-     - parameter bloc: bloc.
-     - parameter transition: a change to a new state.
-     */
+    /// 监听Bloc事件转换
     open func onTransition<Event, State>(bloc: Bloc<Event, State>, transition: Transition<Event, State>) {
-        logInfo("onTransition - \(bloc), \(transition)")
+        logInfo("\(bloc) onTransition \(transition)")
     }
 
-    /**
-     Called if an error occurs in **Cubit** or **Bloc** instance.
-     - parameter base: cubit.
-     - parameter error: a reported error.
-     */
-    open func onError<State>(base: Base<State>, error: Error) {
-        logError("onError - \(base), \(error)")
+    /// 监听Bloc错误发生
+    open func onError<State>(bloc: BlocBase<State>, error: Error) {
+        logError("\(bloc) onError \(error)")
     }
 
-    /**
-     Called when **BlocBase** or **Bloc** instance is destroyed.
-     - parameter base: base.
-     */
-    open func onClose<State>(base: Base<State>) {
-        logInfo("onClose - \(base)")
+    /// 监听Bloc对象关闭
+    open func onClose<State>(bloc: BlocBase<State>) {
+        logInfo("\(bloc) onClose")
     }
 
-    /**
-     Log with info message.
-     */
-    open func logInfo(
-        _ message: String,
-        function: String = #function,
-        file: String = #file,
-        line: Int = #line
-    ) {
+    /// 记录消息日志，子类可重写
+    open func logInfo(_ message: String) {
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message)
         #endif
     }
 
-    /**
-     Log with error message.
-     */
-    open func logError(
-        _ message: String,
-        function: String = #function,
-        file: String = #file,
-        line: Int = #line
-    ) {
+    /// 记录错误日志，子类可重写
+    open func logError(_ message: String) {
         #if DEBUG
-        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message, function: function, file: file, line: line)
+        Logger.debug(group: Logger.fw.moduleName, "Bloc: %@", message)
         #endif
     }
 }
 
 // MARK: - BlocTest
-/**
- BlocTest
- */
-public final class BlocTest<S: Equatable, B: Base<S>> {
-    /// Executes event - state testing
-    /// - Parameters:
-    ///   - build: the **Bloc** object closure
-    ///   - act: all potentially happening events should be described here
-    ///   - wait: a delay before listening to state change
-    ///   - expect: all expected states based on incoming events
-    ///   - verify: verify bloc for matching expectations of incoming events successfully mapped to expected states
+/// Bloc测试基类
+public final class BlocTest<S: Equatable, B: BlocBase<S>> {
+    /// 执行Bloc测试
     public static func execute(
         build: () -> B,
         act: ((B) -> Void)?,
@@ -305,94 +212,55 @@ public final class BlocTest<S: Equatable, B: Base<S>> {
 }
 
 // MARK: - BlocView
-/**
- BlocViewBuilder
- - parameter state: current state.
- - returns: content view
- */
-public typealias BlocViewBuilder<B: Base<S>, S: Equatable, Content: View> = (_ base: B) -> Content
-/**
- BlocViewAction
- - parameter state: current state.
- */
-public typealias BlocViewAction<B: Base<S>, S: Equatable> = (_ base: B) -> Void
-/**
- A general protocol for the **BlocView** class.
- */
+/// BlocView创建句柄
+public typealias BlocViewBuilder<B: BlocBase<S>, S: Equatable, Content: View> = (_ bloc: B) -> Content
+
+/// BlocView监听句柄
+public typealias BlocViewListener<B: BlocBase<S>, S: Equatable> = (_ bloc: B) -> Void
+
+/// BlocView通用协议
 protocol BlocViewProtocol: View {
     associatedtype S where S: Equatable
-    associatedtype B where B: Base<S>
+    associatedtype B where B: BlocBase<S>
     associatedtype Content where Content: View
 
-    var base: B { get }
+    var bloc: B { get }
 
-    func build(base: B) -> Content
+    func build(bloc: B) -> Content
 }
 
-/**
- A wrapper for a **View** conforming view providing BloC instance as **EnvironmentObject**.
- Expects **Cubit** (**Bloc** as well) conforming BloC component with **Equatable** state object.
- */
-public struct BlocView<B: Base<S>, S: Equatable, Content: View>: BlocViewProtocol {
-    /**
-     A cubit/bloc property which holds the custom business logic
-     */
-    @ObservedObject var base: B
-    /**
-     Extract the current state from a cubit/bloc
-     */
-    private var state: S {
-        base.state
-    }
-
-    /**
-     @ViewBuilder callback. Builds views based on the state.
-     */
+/// Bloc视图
+public struct BlocView<B: BlocBase<S>, S: Equatable, Content: View>: BlocViewProtocol {
+    @ObservedObject var bloc: B
+    
+    private var state: S { bloc.state }
     private let builder: BlocViewBuilder<B, S, Content>
-    /**
-     (Optional) Custom action callback. Called every time the state is changed.
-     */
-    private let action: BlocViewAction<B, S>?
-    /**
-     Required property of View Protocol. Body will set the current cubit/bloc instance as **EnvironmentObject** if the instance
-     is wrapped in an **ObservedObject** property wrapper in your View.
-     */
+    private let listener: BlocViewListener<B, S>?
+    
     public var body: some View {
-        build(base: base)
-            .listen(base: base, action: action)
-            .environmentObject(base)
+        build(bloc: bloc)
+            .listen(bloc: bloc, listener: listener)
+            .environmentObject(bloc)
     }
 
-    /**
-     BlocView constructor
-     - parameter builder: builder callback.
-     - parameter action: custom action callback. Optional
-     - parameter cubit: cubit/bloc instance.
-     */
+    /// 构造函数
     public init(
         @ViewBuilder builder: @escaping BlocViewBuilder<B, S, Content>,
-        action: BlocViewAction<B, S>? = nil,
-        base: B
+        listener: BlocViewListener<B, S>? = nil,
+        bloc: B
     ) {
         self.builder = builder
-        self.action = action
-        self.base = base
+        self.listener = listener
+        self.bloc = bloc
     }
 
-    /**
-     Builds the view **Content** based on the state
-     - parameter base: the **Bloc** or **Cubit** object.
-     - returns: content view
-     */
-    func build(base: B) -> Content {
-        builder(base)
+    func build(bloc: B) -> Content {
+        builder(bloc)
     }
 }
 
 // MARK: - Change
-/**
- Change class for tracking state changes
- */
+/// 状态改变对象
 public class Change<State> {
     public let currentState: State
     public let nextState: State
@@ -414,9 +282,7 @@ extension Change: Equatable where State: Equatable {
 }
 
 // MARK: - Transition
-/**
- A transition which tracks states based on incoming events
- */
+/// 状态转换对象
 public class Transition<Event, State>: Change<State> {
     public let event: Event
 
@@ -440,28 +306,13 @@ extension Transition where State: Equatable, Event: Equatable {
     }
 }
 
-// MARK: - BlocError
-/**
- Bloc errors
- */
-public enum BlocError: Error {
-    case noEvent
-}
-
-/**
- Cubit (more abstract) errors
- */
-public enum CubitError: Error {
-    case stateNotChanged
-}
-
 // MARK: - View+BlocView
 extension View {
-    func listen<B: Base<S>, S: Equatable>(
-        base: B,
-        action: BlocViewAction<B, S>?
+    func listen<B: BlocBase<S>, S: Equatable>(
+        bloc: B,
+        listener: BlocViewListener<B, S>?
     ) -> some View {
-        action?(base)
+        listener?(bloc)
         return self
     }
 }
