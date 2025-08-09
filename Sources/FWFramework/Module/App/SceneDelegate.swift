@@ -18,6 +18,12 @@ open class SceneResponder: UIResponder, UIWindowSceneDelegate {
     open var window: UIWindow?
 
     // MARK: - Override
+    /// 初始化场景
+    open func setupScene(_ windowScene: UIWindowScene) {
+        window = UIWindow(windowScene: windowScene)
+        window?.makeKeyAndVisible()
+    }
+    
     /// 初始化根控制器，子类重写
     open func setupController() {
         /*
@@ -33,9 +39,8 @@ open class SceneResponder: UIResponder, UIWindowSceneDelegate {
     // MARK: - UIWindowSceneDelegate
     open func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
-
-        window = UIWindow(windowScene: windowScene)
-        window?.makeKeyAndVisible()
+        
+        setupScene(windowScene)
         setupController()
     }
 

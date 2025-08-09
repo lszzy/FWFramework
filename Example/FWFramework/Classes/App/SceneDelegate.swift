@@ -9,8 +9,12 @@
 import FWFramework
 
 class SceneDelegate: SceneResponder {
-    override func setupController() {
+    override func setupScene(_ windowScene: UIWindowScene) {
+        super.setupScene(windowScene)
         window?.backgroundColor = AppTheme.backgroundColor
+    }
+    
+    override func setupController() {
         window?.rootViewController = TabController()
     }
 
