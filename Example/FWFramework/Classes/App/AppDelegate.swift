@@ -36,7 +36,7 @@ class AppDelegate: AppResponder {
         }
     }
 
-    override func setupService(options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
+    override func sceneDidConnect(_ windowScene: UIWindowScene) {
         app.observeNotification(.ErrorCaptured) { [weak self] notification in
             guard let error = notification.object as? NSError else { return }
 

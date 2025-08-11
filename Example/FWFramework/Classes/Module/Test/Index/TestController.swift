@@ -75,6 +75,7 @@ class TestController: UIViewController {
             ["SegmentedControl", "TestSegmentController"],
             ["Statistical", "TestStatisticalController"],
             ["SkeletonView", "TestSkeletonController"],
+            ["Combine", "TestCombineController"],
             ["SwiftUI", "TestSwiftUIController"],
             ["SwiftUIRecorder", "TestSwiftUIRecorderController"]
         ]]

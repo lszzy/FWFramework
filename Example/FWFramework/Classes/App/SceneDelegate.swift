@@ -13,7 +13,7 @@ class SceneDelegate: SceneResponder {
         window?.backgroundColor = AppTheme.backgroundColor
         window?.rootViewController = TabController()
     }
-    
+
     override func reloadController() {
         window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 0.5)
         super.reloadController()
