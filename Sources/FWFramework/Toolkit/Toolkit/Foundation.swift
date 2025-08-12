@@ -774,7 +774,7 @@ extension Wrapper where Base: FileManager {
     public static var pathDocument: String {
         pathSearch(.documentDirectory)
     }
-    
+
     /// 应用支持路径，iTunes会同步备份，用户不可见数据
     public static var pathApplicationSupport: String {
         pathSearch(.applicationSupportDirectory)

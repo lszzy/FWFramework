@@ -60,7 +60,7 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         semaphore.signal()
         return expire
     }
-    
+
     /// 判断指定key是否为有效期key，子类使用
     open func isExpireKey(_ key: String) -> Bool {
         key.hasSuffix(".__EXPIRE__")
@@ -134,7 +134,7 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         clearAllCaches()
         semaphore.signal()
     }
-    
+
     open func allObjectKeys() -> [String] {
         semaphore.wait()
         let keys = readCacheKeys()
@@ -158,7 +158,7 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
     open func clearAllCaches() {
         fatalError("clearAllCaches() has not been implemented")
     }
-    
+
     open func readCacheKeys() -> [String] {
         fatalError("readCacheKeys() has not been implemented")
     }

@@ -42,7 +42,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
 
     // MARK: - Subviews
     var stateView: some View {
-        StateView { view in
+        StateView<Void> { view in
             LoadingPluginView()
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {

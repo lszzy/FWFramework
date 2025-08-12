@@ -2091,14 +2091,14 @@ extension UINavigationController {
 
 // MARK: - ViewLoadingState
 /// 视图加载状态枚举，兼容UIKit和SwiftUI
-public enum ViewLoadingState: Equatable {
+public enum ViewLoadingState<Object>: Equatable {
     case ready
     case loading
-    case success(Any? = nil)
+    case success(Object? = nil)
     case failure(Error? = nil)
 
     /// 获取成功状态的对象，其他状态返回nil
-    public var object: Any? {
+    public var object: Object? {
         if case let .success(object) = self {
             return object
         }
@@ -2114,7 +2114,7 @@ public enum ViewLoadingState: Equatable {
     }
 
     /// 实现Equatable协议方法，仅比较状态，不比较值
-    public static func ==(lhs: ViewLoadingState, rhs: ViewLoadingState) -> Bool {
+    public static func ==(lhs: ViewLoadingState<Object>, rhs: ViewLoadingState<Object>) -> Bool {
         switch lhs {
         case .ready:
             if case .ready = rhs { return true }

@@ -100,7 +100,7 @@ class TestSwiftController: UIViewController, TableViewControllerProtocol {
 }
 
 class SwiftTestViewController: UIViewController, ViewControllerProtocol {
-    var state: ViewLoadingState = .ready {
+    var state: ViewLoadingState<String> = .ready {
         didSet {
             setupSubviews()
         }
@@ -123,7 +123,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
                 }
             }
         case let .success(object):
-            view.app.showEmptyView(text: object as? String)
+            view.app.showEmptyView(text: object)
         case let .failure(error):
             view.app.showEmptyView(text: error?.localizedDescription, detail: nil, image: nil, action: "重新加载") { [weak self] _ in
                 self?.view.app.hideEmptyView()

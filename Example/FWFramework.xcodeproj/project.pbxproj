@@ -96,7 +96,7 @@
 		2FF08B7728ADE7690074895A /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B6D28ADE7690074895A /* HomeController.swift */; };
 		2FF08B7828ADE7690074895A /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7128ADE7690074895A /* TestController.swift */; };
 		2FF08B7928ADE7690074895A /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF08B7528ADE7690074895A /* UserService.swift */; };
-		2FF6A75A2E4A400C00B3615F /* TestCombineController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF6A7592E4A400C00B3615F /* TestCombineController.swift */; };
+		2FF6A75A2E4A400C00B3615F /* TestBlocConsumerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF6A7592E4A400C00B3615F /* TestBlocConsumerController.swift */; };
 		B8A567ED2E447AC300AFAC3C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A567EC2E447AC300AFAC3C /* SceneDelegate.swift */; };
 		B9719F10F5B17714B420B90A /* Pods_FWFramework_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F82F6D7DFD5759C81B36F2BB /* Pods_FWFramework_Example.framework */; };
 /* End PBXBuildFile section */
@@ -199,7 +199,7 @@
 		2FF08B6D28ADE7690074895A /* HomeController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		2FF08B7128ADE7690074895A /* TestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		2FF08B7528ADE7690074895A /* UserService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
-		2FF6A7592E4A400C00B3615F /* TestCombineController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCombineController.swift; sourceTree = "<group>"; };
+		2FF6A7592E4A400C00B3615F /* TestBlocConsumerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBlocConsumerController.swift; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* FWFramework_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FWFramework_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A72EA107313090F52B58E48 /* Pods-FWFramework_Example.testing.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FWFramework_Example.testing.xcconfig"; path = "Target Support Files/Pods-FWFramework_Example/Pods-FWFramework_Example.testing.xcconfig"; sourceTree = "<group>"; };
@@ -324,7 +324,7 @@
 				2F6A412828B62207003719E7 /* TestSwiftUIController.swift */,
 				2FD9454029EF8248002C48F2 /* TestSwiftUIListController.swift */,
 				2F3849302DFB466300546F5E /* TestSwiftUIRecorderController.swift */,
-				2FF6A7592E4A400C00B3615F /* TestCombineController.swift */,
+				2FF6A7592E4A400C00B3615F /* TestBlocConsumerController.swift */,
 				2F6A417428B72F7B003719E7 /* TestTabbarController.swift */,
 				2F336D4829D71E5200553F48 /* TestTabbarViewController.swift */,
 				2FB11F0828E5325B00DCB965 /* TestToolbarController.swift */,
@@ -770,7 +770,7 @@
 				2F49EE1E28FE7B6E00F229BB /* TestPagingController.swift in Sources */,
 				2FB11EF128DAE16500DCB965 /* TestAnimationController.swift in Sources */,
 				2FB11EFB28E2999C00DCB965 /* TestCollectionController.swift in Sources */,
-				2FF6A75A2E4A400C00B3615F /* TestCombineController.swift in Sources */,
+				2FF6A75A2E4A400C00B3615F /* TestBlocConsumerController.swift in Sources */,
 				2FB11F0128E2FB0000DCB965 /* TestQrcodeController.swift in Sources */,
 				2F06D15F28D805DE007E53EC /* TestRefreshController.swift in Sources */,
 				2F49EE2228FFA25D00F229BB /* TestStatisticalController.swift in Sources */,

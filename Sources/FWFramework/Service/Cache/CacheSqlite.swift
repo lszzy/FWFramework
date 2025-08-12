@@ -141,7 +141,7 @@ open class CacheSqlite: CacheEngine, @unchecked Sendable {
             }
         }
     }
-    
+
     override open func readCacheKeys() -> [String] {
         var keys: [String] = []
         autoreleasepool {

@@ -63,7 +63,7 @@ open class CacheUserDefaults: CacheEngine, @unchecked Sendable {
         }
         userDefaults.synchronize()
     }
-    
+
     override open func readCacheKeys() -> [String] {
         var result: [String] = []
         let keys = userDefaults.dictionaryRepresentation().keys

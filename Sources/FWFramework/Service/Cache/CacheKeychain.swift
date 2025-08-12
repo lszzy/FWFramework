@@ -36,7 +36,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
         setPasswordObject(object, forService: service, account: key)
-        
+
         if !isExpireKey(key) {
             var keys = readCacheKeys()
             if !keys.contains(key) {
@@ -48,7 +48,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
 
     override open func clearCache(forKey key: String) {
         deletePassword(forService: service, account: key)
-        
+
         if !isExpireKey(key) {
             var keys = readCacheKeys()
             if keys.contains(key) {
@@ -61,7 +61,7 @@ open class CacheKeychain: CacheEngine, @unchecked Sendable {
     override open func clearAllCaches() {
         deletePassword(forService: service, account: nil)
     }
-    
+
     override open func readCacheKeys() -> [String] {
         readCache(forKey: keysKey) ?? []
     }

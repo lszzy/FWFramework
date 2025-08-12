@@ -15,7 +15,7 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
     var transactions: [Transaction] = []
 
     func setupNavbar() {
-        PurchaseManager.shared.startListening { [weak self] transaction in
+        PurchaseManager.shared.startListening { [weak self] _ in
             self?.reloadData()
         }
 
@@ -60,14 +60,14 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
             do {
                 let productIds: [String] = ["pro_lifetime", "pro_consumable", "pro_monthly", "pro_yearly"]
                 self.products = try await PurchaseManager.shared.products(productIds)
-                
+
                 self.reloadData()
             } catch {
                 self.app.showMessage(error: error)
             }
         }
     }
-    
+
     func reloadData() {
         Task { @MainActor in
             self.transactions = await PurchaseManager.shared.purchasedTransactions()

@@ -27,7 +27,7 @@ public class PurchaseManager: @unchecked Sendable {
     deinit {
         stopListening()
     }
-    
+
     /// 是否允许交易
     public var canMakePayments: Bool {
         AppStore.canMakePayments
@@ -91,7 +91,7 @@ public class PurchaseManager: @unchecked Sendable {
             return result
         }
     }
-    
+
     /// 完成指定产品ID最近一次交易，消耗型商品完成后不能退款且不再返回
     @discardableResult
     public func finish(_ productIdentifier: String) async -> Transaction? {
@@ -99,7 +99,7 @@ public class PurchaseManager: @unchecked Sendable {
         await transaction.finish()
         return transaction
     }
-    
+
     /// 完成指定交易，消耗型商品完成后不能退款且不再返回
     public func finish(_ transaction: Transaction) async {
         await transaction.finish()
@@ -120,7 +120,7 @@ public class PurchaseManager: @unchecked Sendable {
         await transaction.finish()
         return true
     }
-    
+
     /// 获取所有已支付未退款的交易列表，按支付时间倒序排列（进行中，同一商品有未完成的交易不能再次购买）
     public func purchasedTransactions() async -> [Transaction] {
         var transactions: [Transaction] = []
@@ -140,7 +140,7 @@ public class PurchaseManager: @unchecked Sendable {
         let latestTransaction = await Transaction.latest(for: productIdentifier)
         return verifiedTransaction(latestTransaction, includingRefunds: includingRefunds)
     }
-    
+
     /// 获取已验证的支付结果，默认未包含已退款订单
     public func verifiedTransaction(
         _ verificationResult: VerificationResult<Transaction>?,
@@ -197,7 +197,7 @@ public class PurchaseManager: @unchecked Sendable {
     public func refund(_ transaction: Transaction) async throws -> Transaction.RefundRequestStatus {
         try await transaction.beginRefundRequest(in: UIWindow.fw.mainScene!)
     }
-    
+
     /// 指定交易ID退款
     @discardableResult
     @MainActor public func refund(_ transactionId: UInt64) async throws -> Transaction.RefundRequestStatus {

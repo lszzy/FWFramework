@@ -47,14 +47,14 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
          定制应用服务、初始化三方SDK等
           */
     }
-    
+
     /// 场景已连接，优先级4，场景window及根控制器创建完成后自动调用
     open func sceneDidConnect(_ windowScene: UIWindowScene) {
         /*
          界面已初始化后的处理、检查App更新、预加载启动广告等
           */
     }
-    
+
     /// 场景已断开，场景断开连接时自动调用
     open func sceneDidDisconnect(_ windowScene: UIWindowScene) {
         /**
