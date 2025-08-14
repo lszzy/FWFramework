@@ -2113,17 +2113,20 @@ public enum ViewLoadingState<Object>: Equatable {
         return nil
     }
 
-    /// 实现Equatable协议方法，仅比较状态，不比较值
     public static func ==(lhs: ViewLoadingState<Object>, rhs: ViewLoadingState<Object>) -> Bool {
         switch lhs {
         case .ready:
             if case .ready = rhs { return true }
         case .loading:
             if case .loading = rhs { return true }
-        case .success:
-            if case .success = rhs { return true }
-        case .failure:
-            if case .failure = rhs { return true }
+        case .success(let lhsObj):
+            if case .success(let rhsObj) = rhs {
+                return String.fw.stringEquals(lhsObj, rhsObj)
+            }
+        case .failure(let lhsErr):
+            if case .failure(let rhsErr) = rhs {
+                return String.fw.stringEquals(lhsErr, rhsErr)
+            }
         }
         return false
     }

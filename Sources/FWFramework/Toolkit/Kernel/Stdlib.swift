@@ -13,6 +13,11 @@ extension WrapperGlobal {
     public static func safeString(_ value: Any?) -> String {
         String.fw.safeString(value)
     }
+    
+    /// 转换为字符串并比较类型和值，兼容大部分场景
+    public static func stringEquals(_ lhs: Any?, _ rhs: Any?) -> Bool {
+        String.fw.stringEquals(lhs, rhs)
+    }
 
     /// 安全数字，不为nil
     public static func safeNumber(_ value: Any?) -> NSNumber {
@@ -98,6 +103,14 @@ extension Wrapper where Base == String {
         if let proto = value as? Protocol { return NSStringFromProtocol(proto) }
         if let type = value as? Any.Type { return String(describing: type as AnyObject) }
         return String(describing: value)
+    }
+    
+    /// 转换为字符串并比较类型和值，兼容大部分场景
+    public static func stringEquals(_ lhs: Any?, _ rhs: Any?) -> Bool {
+        guard let lhs, let rhs else { return lhs == nil && rhs == nil }
+        let lhsType = String(describing: type(of: lhs) as AnyObject)
+        let rhsType = String(describing: type(of: rhs) as AnyObject)
+        return lhsType == rhsType && safeString(lhs) == safeString(rhs)
     }
 
     /// 去掉首尾空白字符
