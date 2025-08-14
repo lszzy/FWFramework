@@ -78,32 +78,35 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable, Sendable
     public static let all: ProgressViewStyle = .init(999)
 
     // MARK: - Config
+    nonisolated(unsafe) private static var progressViewSizes: [Int: CGSize] = [:]
+    nonisolated(unsafe) private static var progressViewColors: [Int: UIColor] = [:]
+    
     /// 自定义样式尺寸
     public static func setIndicatorSize(_ size: CGSize, for style: ProgressViewStyle) {
-        FrameworkConfiguration.progressViewSizes[style.rawValue] = size
+        progressViewSizes[style.rawValue] = size
     }
 
     /// 自定义样式颜色
     public static func setIndicatorColor(_ color: UIColor?, for style: ProgressViewStyle) {
-        FrameworkConfiguration.progressViewColors[style.rawValue] = color
+        progressViewColors[style.rawValue] = color
     }
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = FrameworkConfiguration.progressViewSizes[rawValue] {
+        if let indicatorSize = ProgressViewStyle.progressViewSizes[rawValue] {
             return indicatorSize
         }
 
-        return FrameworkConfiguration.progressViewSizes[ProgressViewStyle.all.rawValue]
+        return ProgressViewStyle.progressViewSizes[ProgressViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = FrameworkConfiguration.progressViewColors[rawValue] {
+        if let indicatorColor = ProgressViewStyle.progressViewColors[rawValue] {
             return indicatorColor
         }
 
-        return FrameworkConfiguration.progressViewColors[ProgressViewStyle.all.rawValue]
+        return ProgressViewStyle.progressViewColors[ProgressViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle
@@ -159,32 +162,35 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable, Sendabl
     public static let all: IndicatorViewStyle = .init(999)
 
     // MARK: - Config
+    nonisolated(unsafe) private static var indicatorViewSizes: [Int: CGSize] = [:]
+    nonisolated(unsafe) private static var indicatorViewColors: [Int: UIColor] = [:]
+    
     /// 自定义样式尺寸，默认nil
     public static func setIndicatorSize(_ size: CGSize, for style: IndicatorViewStyle) {
-        FrameworkConfiguration.indicatorViewSizes[style.rawValue] = size
+        indicatorViewSizes[style.rawValue] = size
     }
 
     /// 自定义样式颜色，默认nil
     public static func setIndicatorColor(_ color: UIColor?, for style: IndicatorViewStyle) {
-        FrameworkConfiguration.indicatorViewColors[style.rawValue] = color
+        indicatorViewColors[style.rawValue] = color
     }
 
     /// 获取自定义样式尺寸，默认nil
     public var indicatorSize: CGSize? {
-        if let indicatorSize = FrameworkConfiguration.indicatorViewSizes[rawValue] {
+        if let indicatorSize = IndicatorViewStyle.indicatorViewSizes[rawValue] {
             return indicatorSize
         }
 
-        return FrameworkConfiguration.indicatorViewSizes[IndicatorViewStyle.all.rawValue]
+        return IndicatorViewStyle.indicatorViewSizes[IndicatorViewStyle.all.rawValue]
     }
 
     /// 获取自定义样式颜色，默认nil
     public var indicatorColor: UIColor? {
-        if let indicatorColor = FrameworkConfiguration.indicatorViewColors[rawValue] {
+        if let indicatorColor = IndicatorViewStyle.indicatorViewColors[rawValue] {
             return indicatorColor
         }
 
-        return FrameworkConfiguration.indicatorViewColors[IndicatorViewStyle.all.rawValue]
+        return IndicatorViewStyle.indicatorViewColors[IndicatorViewStyle.all.rawValue]
     }
 
     // MARK: - Lifecycle
@@ -284,12 +290,4 @@ extension ViewPlugin {
             }
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+ViewPlugin
-extension FrameworkConfiguration {
-    fileprivate static var progressViewSizes: [Int: CGSize] = [:]
-    fileprivate static var progressViewColors: [Int: UIColor] = [:]
-    fileprivate static var indicatorViewSizes: [Int: CGSize] = [:]
-    fileprivate static var indicatorViewColors: [Int: UIColor] = [:]
 }

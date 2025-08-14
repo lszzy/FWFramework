@@ -534,10 +534,10 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         var cellTracked = false
         if let cell = collectionView.cellForItem(at: indexPath) {
-            cellTracked = FrameworkConfiguration.trackClickBlock?(cell, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = cell.fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
         }
         if !cellTracked {
-            cellTracked = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: index, section: 0)) ?? false
+            cellTracked = self.fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
         }
     }
 
@@ -575,7 +575,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         let itemIndex = flowLayout.currentPage ?? 0
         // 快速滚动时不计曝光次数
-        FrameworkConfiguration.trackExposureBlock?(self)
+        self.fw.statisticalCheckExposure()
 
         if infiniteLoop {
             if itemIndex == totalItemsCount - 1 {
@@ -601,7 +601,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         scrollToPageControlIndex(currentIndex, animated: animated)
 
         if !animated, currentIndex != previousIndex {
-            FrameworkConfiguration.trackExposureBlock?(self)
+            self.fw.statisticalCheckExposure()
         }
 
         if autoScroll {
@@ -1095,10 +1095,4 @@ open class BannerViewCell: UICollectionViewCell {
             titleLabel.frame = CGRect(x: titleLabelInset.left, y: insetView.frame.size.height - titleLabelHeight + titleLabelInset.top - titleLabelInset.bottom, width: insetView.frame.size.width - titleLabelInset.left - titleLabelInset.right, height: titleLabelHeight)
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+BannerView
-extension FrameworkConfiguration {
-    static var trackClickBlock: (@MainActor @Sendable (UIView, IndexPath?) -> Bool)?
-    static var trackExposureBlock: (@MainActor @Sendable (UIView) -> Void)?
 }

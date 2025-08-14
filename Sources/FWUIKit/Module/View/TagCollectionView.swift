@@ -176,7 +176,7 @@ open class TagCollectionView: UIView {
         setNeedsLayoutTagViews()
         layoutTagViews()
 
-        FrameworkConfiguration.trackExposureBlock?(self)
+        self.fw.statisticalCheckExposure()
     }
 
     open func indexOfTagAt(_ point: CGPoint) -> Int? {
@@ -211,11 +211,11 @@ open class TagCollectionView: UIView {
                 if let shouldSelect = delegate.tagCollectionView?(self, shouldSelectTag: tagView, at: i) {
                     if shouldSelect {
                         delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                        _ = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: i, section: 0))
+                        self.fw.statisticalTrackClick(indexPath: IndexPath(row: i, section: 0))
                     }
                 } else {
                     delegate.tagCollectionView?(self, didSelectTag: tagView, at: i)
-                    _ = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: i, section: 0))
+                    self.fw.statisticalTrackClick(indexPath: IndexPath(row: i, section: 0))
                 }
             }
         }
@@ -848,7 +848,7 @@ open class TextTagCollectionView: UIView, TagCollectionViewDataSource, TagCollec
         delegate?.textTagCollectionView?(self, didTapTag: label.label.text ?? "", at: index, selected: label.selected, tagConfig: label.config)
         onTapTag?(label.label.text ?? "", index, label.selected)
 
-        _ = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: index, section: 0))
+        self.fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
     }
 
     open func tagCollectionView(_ tagCollectionView: TagCollectionView, sizeForTagAt index: Int) -> CGSize {

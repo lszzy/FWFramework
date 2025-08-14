@@ -23,6 +23,8 @@ open class ModuleBundle: NSObject {
         var colors: [String: Any] = [:]
         var strings: [String: [String: [String: String]]] = [:]
     }
+    
+    @_spi(FW) nonisolated(unsafe) public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
 
     /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {
@@ -38,7 +40,7 @@ open class ModuleBundle: NSObject {
 
     /// 获取当前模块图片
     open class func imageNamed(_ name: String) -> UIImage? {
-        if let image = FrameworkConfiguration.imageNamedBlock?(name, bundle()) {
+        if let image = imageNamedBlock?(name, bundle()) {
             return image
         } else if let image = UIImage(named: name, in: bundle(), compatibleWith: nil) {
             return image
@@ -413,9 +415,4 @@ public class FrameworkBundle: ModuleBundle {
             "fw.biometryReason": "Authenticate"
         ])
     }
-}
-
-// MARK: - FrameworkConfiguration+Bundle
-extension FrameworkConfiguration {
-    public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
 }

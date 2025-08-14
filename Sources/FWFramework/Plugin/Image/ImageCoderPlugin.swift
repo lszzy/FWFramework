@@ -173,11 +173,11 @@ extension ImageCoderPlugin {
 // MARK: - FrameworkAutoloader+ImagePlugin
 extension FrameworkAutoloader {
     @objc static func loadPlugin_ImagePlugin() {
-        FrameworkConfiguration.imageNamedBlock = { name, bundle in
+        ModuleBundle.imageNamedBlock = { name, bundle in
             UIImage.fw.imageNamed(name, bundle: bundle)
         }
 
-        FrameworkConfiguration.imageDecodeBlock = { data, scale, options in
+        ImageResponseSerializer.imageDecodeBlock = { data, scale, options in
             UIImage.fw.image(data: data, scale: scale, options: options)
         }
     }

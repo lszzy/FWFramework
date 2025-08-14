@@ -1337,16 +1337,3 @@ extension TextTagCollectionView {
         tagCollectionView.statisticalViewVisibleIndexPaths()
     }
 }
-
-// MARK: - FrameworkAutoloader+StatisticalView
-extension FrameworkAutoloader {
-    @objc static func loadToolkit_StatisticalView() {
-        FrameworkConfiguration.trackClickBlock = { view, indexPath in
-            view.fw.statisticalTrackClick(indexPath: indexPath)
-        }
-
-        FrameworkConfiguration.trackExposureBlock = { view in
-            view.fw.statisticalCheckExposure()
-        }
-    }
-}
