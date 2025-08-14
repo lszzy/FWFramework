@@ -537,7 +537,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
             cellTracked = cell.fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
         }
         if !cellTracked {
-            cellTracked = self.fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
+            cellTracked = fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
         }
     }
 
@@ -575,7 +575,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
 
         let itemIndex = flowLayout.currentPage ?? 0
         // 快速滚动时不计曝光次数
-        self.fw.statisticalCheckExposure()
+        fw.statisticalCheckExposure()
 
         if infiniteLoop {
             if itemIndex == totalItemsCount - 1 {
@@ -601,7 +601,7 @@ open class BannerView: UIView, UICollectionViewDataSource, UICollectionViewDeleg
         scrollToPageControlIndex(currentIndex, animated: animated)
 
         if !animated, currentIndex != previousIndex {
-            self.fw.statisticalCheckExposure()
+            fw.statisticalCheckExposure()
         }
 
         if autoScroll {

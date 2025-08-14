@@ -83,8 +83,8 @@ extension AuthorizeProtocol {
 /// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWPlugin/Contacts']
 /// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
 public class AuthorizeManager {
-    nonisolated(unsafe) private static var authorizeBlocks: [AuthorizeType: @Sendable () -> AuthorizeProtocol] = [:]
-    
+    private nonisolated(unsafe) static var authorizeBlocks: [AuthorizeType: @Sendable () -> AuthorizeProtocol] = [:]
+
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
     public static func registerAuthorize(_ type: AuthorizeType, block: @escaping @Sendable () -> AuthorizeProtocol) {
         authorizeBlocks[type] = block

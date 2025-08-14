@@ -206,7 +206,7 @@ public struct LogLevel: RawRepresentable, Equatable, Hashable, Sendable {
 @objc(ObjCLogger)
 public class Logger: NSObject {
     /// 全局日志级别，默认调试为All，正式为Off
-    nonisolated(unsafe) public static var level: LogLevel = {
+    public nonisolated(unsafe) static var level: LogLevel = {
         #if DEBUG
         .all
         #else

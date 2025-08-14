@@ -278,14 +278,14 @@ extension Color {
 
         return UIColor.fw.color(hexString: hexString.trimmingCharacters(in: .newlines))
     }
-    
-    nonisolated(unsafe) private static var viewColorCaches: [Color: UIColor] = [:]
+
+    private nonisolated(unsafe) static var viewColorCaches: [Color: UIColor] = [:]
 }
 
 // MARK: - Font+Toolkit
 extension Font {
     /// 全局自定义字体句柄，优先调用
-    nonisolated(unsafe) public static var fontBlock: (@Sendable (CGFloat, Font.Weight) -> Font?)?
+    public nonisolated(unsafe) static var fontBlock: (@Sendable (CGFloat, Font.Weight) -> Font?)?
 
     /// 返回系统Thin字体，自动等比例缩放
     public static func thinFont(size: CGFloat, autoScale: Bool? = nil) -> Font {
@@ -354,16 +354,16 @@ extension Font {
 /// 修改分割线颜色使用background方法即可，示例：background(Color.gray)
 extension Divider {
     /// 分割线默认尺寸配置，未自定义时1像素，仅影响Divider和Rectangle的dividerStyle方法
-    nonisolated(unsafe) public static var defaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
+    public nonisolated(unsafe) static var defaultSize: CGFloat = 1.0 / UIScreen.fw.screenScale
 
     /// 分割线默认颜色，未自定义时为灰色，仅影响Divider和Rectangle的dividerStyle方法
-    nonisolated public static var defaultColor: Color {
+    public nonisolated static var defaultColor: Color {
         defaultColorConfiguration?() ??
             Color(red: 222.0 / 255.0, green: 224.0 / 255.0, blue: 226.0 / 255.0)
     }
 
     /// 自定义分割线默认颜色配置句柄，默认nil
-    nonisolated(unsafe) public static var defaultColorConfiguration: (@Sendable () -> Color)?
+    public nonisolated(unsafe) static var defaultColorConfiguration: (@Sendable () -> Color)?
 
     /// 自定义分割线尺寸，使用scale实现，参数nil时为Divider默认配置
     public func dividerStyle(size: CGFloat? = nil, color: Color? = nil) -> some View {

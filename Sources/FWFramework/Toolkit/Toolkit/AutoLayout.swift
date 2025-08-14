@@ -1938,7 +1938,7 @@ extension UIView {
     fileprivate static var autoScaleBlock: ((CGFloat) -> CGFloat)?
     fileprivate static var autoFlatLayout = false
 
-    nonisolated(unsafe) fileprivate static var autoLayoutDebug: Bool = {
+    fileprivate nonisolated(unsafe) static var autoLayoutDebug: Bool = {
         #if DEBUG
         true
         #else
@@ -1989,8 +1989,8 @@ extension UIView {
 
 // MARK: - FrameworkAutoloader+AutoLayout
 extension FrameworkAutoloader {
-    nonisolated(unsafe) fileprivate static var autoLayoutDebugSwizzled = false
-    
+    fileprivate nonisolated(unsafe) static var autoLayoutDebugSwizzled = false
+
     @objc static func loadToolkit_AutoLayout() {
         swizzleAutoLayoutView()
 

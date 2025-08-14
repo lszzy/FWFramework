@@ -317,8 +317,8 @@ private class FullscreenPopGestureRecognizerDelegate: NSObject, UIGestureRecogni
 
 // MARK: - FrameworkAutoloader+NavigationController
 extension FrameworkAutoloader {
-    nonisolated(unsafe) fileprivate static var barTransitionSwizzled = false
-    
+    fileprivate nonisolated(unsafe) static var barTransitionSwizzled = false
+
     @objc static func loadModule_NavigationController() {
         swizzleNavigationController()
 

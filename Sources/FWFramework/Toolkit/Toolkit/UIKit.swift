@@ -3446,20 +3446,20 @@ extension UICollectionView {
 
 // MARK: - UIButton+UIKit
 extension UIButton {
-    nonisolated(unsafe) fileprivate static var innerHighlightedAlpha: CGFloat = 0.5
-    nonisolated(unsafe) fileprivate static var innerDisabledAlpha: CGFloat = 0.3
+    fileprivate nonisolated(unsafe) static var innerHighlightedAlpha: CGFloat = 0.5
+    fileprivate nonisolated(unsafe) static var innerDisabledAlpha: CGFloat = 0.3
 }
 
 // MARK: - UIDevice+UIKit
 extension UIDevice {
-    nonisolated(unsafe) fileprivate static var innerDeviceIDFV: String?
-    nonisolated(unsafe) fileprivate static var innerDeviceUUID: String?
-    nonisolated(unsafe) fileprivate static var innerNetworkInfo = CTTelephonyNetworkInfo()
+    fileprivate nonisolated(unsafe) static var innerDeviceIDFV: String?
+    fileprivate nonisolated(unsafe) static var innerDeviceUUID: String?
+    fileprivate nonisolated(unsafe) static var innerNetworkInfo = CTTelephonyNetworkInfo()
 }
 
 // MARK: - UIImageView+UIKit
 extension UIImageView {
-    nonisolated(unsafe) fileprivate static var innerFaceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+    fileprivate nonisolated(unsafe) static var innerFaceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
 }
 
 // MARK: - SaturationGrayView
@@ -3566,9 +3566,9 @@ private class SaturationGrayView: UIView {
 
 // MARK: - FrameworkAutoloader+UIKit
 extension FrameworkAutoloader {
-    nonisolated(unsafe) private static var uikitScrollViewSwizzled = false
-    nonisolated(unsafe) private static var uikitTableViewCellSwizzled = false
-    
+    private nonisolated(unsafe) static var uikitScrollViewSwizzled = false
+    private nonisolated(unsafe) static var uikitTableViewCellSwizzled = false
+
     @objc static func loadToolkit_UIKit() {
         swizzleUIKitView()
         swizzleUIKitLabel()

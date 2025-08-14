@@ -948,15 +948,15 @@ extension UIDevice {
         }
     }
 
-    nonisolated(unsafe) private static var cachedCurrentDevice: UIDevice?
-    nonisolated(unsafe) fileprivate static var innerDeviceWidth: CGFloat?
-    nonisolated(unsafe) fileprivate static var innerDeviceHeight: CGFloat?
-    nonisolated(unsafe) fileprivate static var innerDeviceModel: String?
+    private nonisolated(unsafe) static var cachedCurrentDevice: UIDevice?
+    fileprivate nonisolated(unsafe) static var innerDeviceWidth: CGFloat?
+    fileprivate nonisolated(unsafe) static var innerDeviceHeight: CGFloat?
+    fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
 }
 
 // MARK: - UIScreen+Adaptive
 extension UIScreen {
-    nonisolated(unsafe) fileprivate static var innerMainScreen: UIScreen? {
+    fileprivate nonisolated(unsafe) static var innerMainScreen: UIScreen? {
         get {
             if let mainScreen = cachedMainScreen { return mainScreen }
 
@@ -973,11 +973,11 @@ extension UIScreen {
         }
     }
 
-    nonisolated(unsafe) private static var cachedMainScreen: UIScreen?
-    nonisolated(unsafe) fileprivate static var innerScreenScale: CGFloat?
-    nonisolated(unsafe) fileprivate static var innerReferenceSize = CGSize(width: 375, height: 812)
-    nonisolated(unsafe) fileprivate static var innerRelativeScaleBlock: (@Sendable () -> CGFloat)?
-    nonisolated(unsafe) fileprivate static var innerRelativeHeightScaleBlock: (@Sendable () -> CGFloat)?
+    private nonisolated(unsafe) static var cachedMainScreen: UIScreen?
+    fileprivate nonisolated(unsafe) static var innerScreenScale: CGFloat?
+    fileprivate nonisolated(unsafe) static var innerReferenceSize = CGSize(width: 375, height: 812)
+    fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (@Sendable () -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var innerRelativeHeightScaleBlock: (@Sendable () -> CGFloat)?
     fileprivate static var innerMainWindow: UIWindow?
     fileprivate static var customStatusBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate static var customNavigationBarHeights: [UIInterfaceOrientation: CGFloat] = [:]

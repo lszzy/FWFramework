@@ -17,8 +17,8 @@ public enum SwiftSpeech {
     public struct ViewModifiers {}
     public struct Demos {}
     struct EnvironmentKeys {}
-    
-    nonisolated(unsafe) public static var defaultAnimation: Animation = .interactiveSpring()
+
+    public nonisolated(unsafe) static var defaultAnimation: Animation = .interactiveSpring()
 }
 
 extension SwiftSpeech {
@@ -444,7 +444,7 @@ extension SwiftSpeech.Session {
 }
 
 public class SpeechRecognizer {
-    nonisolated(unsafe) static var instances: [SpeechRecognizer] = [SpeechRecognizer]()
+    nonisolated(unsafe) static var instances: [SpeechRecognizer] = .init()
 
     public typealias ID = UUID
 

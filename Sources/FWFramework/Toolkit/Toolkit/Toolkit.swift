@@ -2091,19 +2091,19 @@ extension UINavigationController {
 
 // MARK: - UIApplication+Toolkit
 extension UIApplication {
-    nonisolated(unsafe) fileprivate static var customAppVersion: String?
+    fileprivate nonisolated(unsafe) static var customAppVersion: String?
 }
 
 // MARK: - UIColor+Toolkit
 extension UIColor {
-    nonisolated(unsafe) fileprivate static var colorStandardARGB = false
+    fileprivate nonisolated(unsafe) static var colorStandardARGB = false
 }
 
 // MARK: - UIFont+Toolkit
 extension UIFont {
-    nonisolated(unsafe) fileprivate static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
-    nonisolated(unsafe) fileprivate static var autoFlatFont = false
-    nonisolated(unsafe) fileprivate static var customFontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)?
+    fileprivate nonisolated(unsafe) static var autoScaleBlock: (@Sendable (CGFloat) -> CGFloat)?
+    fileprivate nonisolated(unsafe) static var autoFlatFont = false
+    fileprivate nonisolated(unsafe) static var customFontBlock: (@Sendable (CGFloat, UIFont.Weight) -> UIFont?)?
     fileprivate static let fontWeightSuffixes: [UIFont.Weight: String] = [
         .ultraLight: "-Ultralight",
         .thin: "-Thin",
@@ -2147,12 +2147,12 @@ public enum ViewLoadingState<Object>: Equatable {
             if case .ready = rhs { return true }
         case .loading:
             if case .loading = rhs { return true }
-        case .success(let lhsObj):
-            if case .success(let rhsObj) = rhs {
+        case let .success(lhsObj):
+            if case let .success(rhsObj) = rhs {
                 return String.fw.stringEquals(lhsObj, rhsObj)
             }
-        case .failure(let lhsErr):
-            if case .failure(let rhsErr) = rhs {
+        case let .failure(lhsErr):
+            if case let .failure(rhsErr) = rhs {
                 return String.fw.stringEquals(lhsErr, rhsErr)
             }
         }
@@ -2359,8 +2359,8 @@ private class SafariViewControllerDelegate: NSObject, @unchecked Sendable, SFSaf
 
 // MARK: - FrameworkAutoloader+Toolkit
 extension FrameworkAutoloader {
-    nonisolated(unsafe) private static var toolkitNavigationControllerSwizzled = false
-    
+    private nonisolated(unsafe) static var toolkitNavigationControllerSwizzled = false
+
     @objc static func loadToolkit_Toolkit() {
         swizzleToolkitViewController()
         swizzleToolkitTitleView()

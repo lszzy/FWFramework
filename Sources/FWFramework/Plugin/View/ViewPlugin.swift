@@ -78,9 +78,9 @@ public struct ProgressViewStyle: RawRepresentable, Equatable, Hashable, Sendable
     public static let all: ProgressViewStyle = .init(999)
 
     // MARK: - Config
-    nonisolated(unsafe) private static var progressViewSizes: [Int: CGSize] = [:]
-    nonisolated(unsafe) private static var progressViewColors: [Int: UIColor] = [:]
-    
+    private nonisolated(unsafe) static var progressViewSizes: [Int: CGSize] = [:]
+    private nonisolated(unsafe) static var progressViewColors: [Int: UIColor] = [:]
+
     /// 自定义样式尺寸
     public static func setIndicatorSize(_ size: CGSize, for style: ProgressViewStyle) {
         progressViewSizes[style.rawValue] = size
@@ -162,9 +162,9 @@ public struct IndicatorViewStyle: RawRepresentable, Equatable, Hashable, Sendabl
     public static let all: IndicatorViewStyle = .init(999)
 
     // MARK: - Config
-    nonisolated(unsafe) private static var indicatorViewSizes: [Int: CGSize] = [:]
-    nonisolated(unsafe) private static var indicatorViewColors: [Int: UIColor] = [:]
-    
+    private nonisolated(unsafe) static var indicatorViewSizes: [Int: CGSize] = [:]
+    private nonisolated(unsafe) static var indicatorViewColors: [Int: UIColor] = [:]
+
     /// 自定义样式尺寸，默认nil
     public static func setIndicatorSize(_ size: CGSize, for style: IndicatorViewStyle) {
         indicatorViewSizes[style.rawValue] = size

@@ -1408,29 +1408,29 @@ extension Wrapper where Base: UserDefaults {
 
 // MARK: - URLSession+Foundation
 extension URLSession {
-    nonisolated(unsafe) fileprivate static var httpProxyDisabled = false
+    fileprivate nonisolated(unsafe) static var httpProxyDisabled = false
 }
 
 // MARK: - NSObject+Foundation
 extension NSObject {
-    nonisolated(unsafe) fileprivate static var dispatchOnceTokens = [AnyHashable]()
-    nonisolated(unsafe) fileprivate static var performTaskPool = NSMutableDictionary()
-    nonisolated(unsafe) fileprivate static var performTaskSemaphore = DispatchSemaphore(value: 1)
+    fileprivate nonisolated(unsafe) static var dispatchOnceTokens = [AnyHashable]()
+    fileprivate nonisolated(unsafe) static var performTaskPool = NSMutableDictionary()
+    fileprivate nonisolated(unsafe) static var performTaskSemaphore = DispatchSemaphore(value: 1)
 }
 
 // MARK: - Date+Foundation
 extension Date {
-    nonisolated(unsafe) fileprivate static var currentBaseTime: TimeInterval = 0
-    nonisolated(unsafe) fileprivate static var localBaseTime: TimeInterval = 0
+    fileprivate nonisolated(unsafe) static var currentBaseTime: TimeInterval = 0
+    fileprivate nonisolated(unsafe) static var localBaseTime: TimeInterval = 0
 
-    nonisolated(unsafe) fileprivate static var defaultDateFormatter: DateFormatter = {
+    fileprivate nonisolated(unsafe) static var defaultDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.calendar = Calendar(identifier: .gregorian)
         return formatter
     }()
 
-    nonisolated(unsafe) fileprivate static var serverDateFormatter: DateFormatter = {
+    fileprivate nonisolated(unsafe) static var serverDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeZone = TimeZone(abbreviation: "GMT")
         formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
@@ -1441,8 +1441,8 @@ extension Date {
 
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
-    nonisolated(unsafe) private static var httpProxySwizzled = false
-    
+    private nonisolated(unsafe) static var httpProxySwizzled = false
+
     fileprivate static func swizzleHttpProxy() {
         guard !httpProxySwizzled else { return }
         httpProxySwizzled = true

@@ -23,8 +23,8 @@ open class ModuleBundle: NSObject {
         var colors: [String: Any] = [:]
         var strings: [String: [String: [String: String]]] = [:]
     }
-    
-    @_spi(FW) nonisolated(unsafe) public static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
+
+    @_spi(FW) public nonisolated(unsafe) static var imageNamedBlock: (@Sendable (_ name: String, _ bundle: Bundle?) -> UIImage?)?
 
     /// 获取当前模块Bundle并缓存，initializeBundle为空时默认主Bundle
     open class func bundle() -> Bundle {

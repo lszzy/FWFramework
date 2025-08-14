@@ -40,10 +40,10 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    nonisolated(unsafe) public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
+    public nonisolated(unsafe) static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
 
     /// 默认条形码类型，可自定义
-    nonisolated(unsafe) public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+    public nonisolated(unsafe) static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
         .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
     ]
 

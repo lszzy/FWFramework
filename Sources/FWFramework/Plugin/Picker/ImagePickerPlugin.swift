@@ -758,5 +758,5 @@ extension PHPickerViewController {
 
 // MARK: - UIImagePickerController+ImagePickerPlugin
 extension UIImagePickerController {
-    @_spi(FW) nonisolated(unsafe) public static var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
+    @_spi(FW) public nonisolated(unsafe) static var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
 }

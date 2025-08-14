@@ -128,7 +128,7 @@ public protocol AnyDecoder {
 }
 
 extension JSONDecoder: AnyDecoder {
-    nonisolated(unsafe) fileprivate static var codableDecodingConverters: [CodableDecodingConverter] = []
+    fileprivate nonisolated(unsafe) static var codableDecodingConverters: [CodableDecodingConverter] = []
 }
 
 #if canImport(ObjectiveC) || swift(>=5.1)

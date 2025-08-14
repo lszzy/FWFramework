@@ -39,8 +39,8 @@ extension Wrapper where Base: NSObject {
 /// 注意：Swift只有标记\@objc dynamic的属性才支持UIAppearance
 /// [QMUI_iOS](https://github.com/Tencent/QMUI_iOS)
 public class Appearance {
-    nonisolated(unsafe) private static var classAppearances: [String: AnyObject] = [:]
-    
+    private nonisolated(unsafe) static var classAppearances: [String: AnyObject] = [:]
+
     /// 获取指定 Class 的 appearance 对象，每个 Class 全局只会存在一个 appearance 对象
     public static func appearance(for aClass: AnyClass) -> AnyObject? {
         let className = NSStringFromClass(aClass)

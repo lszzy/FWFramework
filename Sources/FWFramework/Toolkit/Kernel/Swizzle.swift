@@ -456,5 +456,5 @@ public class SwizzleStore<MethodSignature, SwizzleSignature>: @unchecked Sendabl
 
 // MARK: - NSObject+Swizzle
 extension NSObject {
-    nonisolated(unsafe) fileprivate static var innerSwizzleIdentifiers = NSMutableSet()
+    fileprivate nonisolated(unsafe) static var innerSwizzleIdentifiers = NSMutableSet()
 }

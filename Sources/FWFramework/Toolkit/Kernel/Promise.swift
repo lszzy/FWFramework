@@ -32,13 +32,13 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 public class Promise: @unchecked Sendable {
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
-    nonisolated(unsafe) public static var failedError: Error = PromiseError.failed
+    public nonisolated(unsafe) static var failedError: Error = PromiseError.failed
 
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    nonisolated(unsafe) public static var validationError: Error = PromiseError.validation
+    public nonisolated(unsafe) static var validationError: Error = PromiseError.validation
 
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    nonisolated(unsafe) public static var timeoutError: Error = PromiseError.timeout
+    public nonisolated(unsafe) static var timeoutError: Error = PromiseError.timeout
 
     /// 约定进度值
     private struct ProgressValue: Sendable { var value: Double }

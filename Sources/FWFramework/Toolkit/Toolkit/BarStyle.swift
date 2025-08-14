@@ -307,9 +307,9 @@ public struct NavigationBarStyle: RawRepresentable, Equatable, Hashable, Sendabl
 
 /// 导航栏样式配置
 open class NavigationBarAppearance {
-    @_spi(FW) nonisolated(unsafe) public static var appearanceChanged: (@MainActor @Sendable (UIViewController) -> Void)?
-    nonisolated(unsafe) private static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
-    
+    @_spi(FW) public nonisolated(unsafe) static var appearanceChanged: (@MainActor @Sendable (UIViewController) -> Void)?
+    private nonisolated(unsafe) static var appearances = [NavigationBarStyle: NavigationBarAppearance]()
+
     /// 根据style获取全局appearance对象
     public static func appearance(for style: NavigationBarStyle) -> NavigationBarAppearance? {
         appearances[style]

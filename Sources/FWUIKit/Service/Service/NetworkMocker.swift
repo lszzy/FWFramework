@@ -267,13 +267,13 @@ public struct NetworkMocker {
     }
 
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
-    nonisolated(unsafe) public static var mode: Mode = .optout
+    public nonisolated(unsafe) static var mode: Mode = .optout
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
-    nonisolated(unsafe) static var shared: NetworkMocker = NetworkMocker()
+    nonisolated(unsafe) static var shared: NetworkMocker = .init()
 
     /// The HTTP Version to use in the mocked response.
-    nonisolated(unsafe) public static var httpVersion: HTTPVersion = .http1_1
+    public nonisolated(unsafe) static var httpVersion: HTTPVersion = .http1_1
 
     /// The registrated mocks.
     private(set) var mocks: [NetworkMock] = []

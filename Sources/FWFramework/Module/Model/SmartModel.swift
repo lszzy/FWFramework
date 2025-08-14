@@ -849,7 +849,7 @@ extension SmartAssociatedEnumerable {
 public enum SmartSentinel {
     /// Set debugging mode, default is none.
     /// Note: When not debugging, set to none to reduce overhead.
-    nonisolated(unsafe) public static var debugMode: Level = .none
+    public nonisolated(unsafe) static var debugMode: Level = .none
 
     /// 设置回调方法，传递解析完成时的日志记录
     public static func onLogGenerated(handler: @escaping (String) -> Void) {
@@ -873,10 +873,10 @@ public enum SmartSentinel {
         debugMode != .none
     }
 
-    nonisolated(unsafe) private static var cache = LogCache()
+    private nonisolated(unsafe) static var cache = LogCache()
 
     /// 回调闭包，用于在解析完成时传递日志
-    nonisolated(unsafe) private static var logsHandler: ((String) -> Void)?
+    private nonisolated(unsafe) static var logsHandler: ((String) -> Void)?
 
     /// 用于同步访问 logsHandler 的队列Add commentMore actions
     private static let handlerQueue = DispatchQueue(label: "com.smartcodable.handler", qos: .utility)
@@ -2476,7 +2476,7 @@ public enum SmartCoding {
     ///     - .rounded:  Returns 3 (rounds to nearest)
     ///
     /// - Note: This only affects decoding process
-    nonisolated(unsafe) public static var numberConversionStrategy: NumberConversionStrategy = .strict
+    public nonisolated(unsafe) static var numberConversionStrategy: NumberConversionStrategy = .strict
 
     /// Numeric type conversion strategy
     public enum NumberConversionStrategy {
@@ -4295,8 +4295,8 @@ struct JSONDecoderImpl {
         self.options = options
         self.cache = DecodingCache()
     }
-    
-    nonisolated(unsafe) fileprivate static let smartModelFormatter: ISO8601DateFormatter = {
+
+    fileprivate nonisolated(unsafe) static let smartModelFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = .withInternetDateTime
         return formatter

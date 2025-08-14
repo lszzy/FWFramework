@@ -223,6 +223,6 @@ extension FrameworkAutoloader {
 
 // MARK: - Bundle+Language
 extension Bundle {
-    nonisolated(unsafe) fileprivate static var innerSystemLanguage: String?
-    nonisolated(unsafe) fileprivate static var innerLocalizedLanguage: String?
+    fileprivate nonisolated(unsafe) static var innerSystemLanguage: String?
+    fileprivate nonisolated(unsafe) static var innerLocalizedLanguage: String?
 }

@@ -23,9 +23,9 @@ extension CacheType {
 open class CacheMMKV: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheMMKV()
-    
-    nonisolated(unsafe) private static var mmkvInitialized = false
-    nonisolated(unsafe) private static var mmkvCryptKey: Data?
+
+    private nonisolated(unsafe) static var mmkvInitialized = false
+    private nonisolated(unsafe) static var mmkvCryptKey: Data?
 
     /// 主线程初始化MMKV，仅第一次生效，参数cryptKey仅对默认MMKV生效
     public static func initializeMMKV(

@@ -165,9 +165,9 @@ open class PropertyListResponseSerializer: HTTPResponseSerializer {
 }
 
 open class ImageResponseSerializer: HTTPResponseSerializer {
-    @_spi(FW) nonisolated(unsafe) public static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
-    nonisolated(unsafe) private static var imageDecodeLock = NSLock()
-    
+    @_spi(FW) public nonisolated(unsafe) static var imageDecodeBlock: (@Sendable (_ data: Data, _ scale: CGFloat, _ options: [ImageCoderOptions: Any]?) -> UIImage?)?
+    private nonisolated(unsafe) static var imageDecodeLock = NSLock()
+
     open var imageScale: CGFloat = UIScreen.fw.screenScale
     open var automaticallyInflatesResponseImage = true
     open var shouldCacheResponseData = false

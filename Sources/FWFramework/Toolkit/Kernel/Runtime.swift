@@ -726,5 +726,5 @@ extension Wrapper where Base: NSObject {
 
 // MARK: - NSObject+Runtime
 extension NSObject {
-    nonisolated(unsafe) fileprivate static var runtimeClassCaches: [String: [String]] = [:]
+    fileprivate nonisolated(unsafe) static var runtimeClassCaches: [String: [String]] = [:]
 }

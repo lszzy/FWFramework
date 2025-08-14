@@ -154,8 +154,8 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     }
 
     // MARK: - Register
-    nonisolated(unsafe) private static var archiveRegisteredTypes: [String: AnyArchivable.Type] = [:]
-    
+    private nonisolated(unsafe) static var archiveRegisteredTypes: [String: AnyArchivable.Type] = [:]
+
     /// 当识别不出类型时需先注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
     public static func registerType<T: AnyArchivable>(_ type: T.Type) {
         let key = String(describing: type as AnyObject)
