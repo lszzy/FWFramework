@@ -849,10 +849,7 @@ extension SmartAssociatedEnumerable {
 public enum SmartSentinel {
     /// Set debugging mode, default is none.
     /// Note: When not debugging, set to none to reduce overhead.
-    public static var debugMode: Level {
-        get { FrameworkConfiguration.smartModelMode }
-        set { FrameworkConfiguration.smartModelMode = newValue }
-    }
+    nonisolated(unsafe) public static var debugMode: Level = .none
 
     /// 设置回调方法，传递解析完成时的日志记录
     public static func onLogGenerated(handler: @escaping (String) -> Void) {
@@ -876,16 +873,10 @@ public enum SmartSentinel {
         debugMode != .none
     }
 
-    private static var cache: LogCache {
-        get { FrameworkConfiguration.smartModelCache }
-        set { FrameworkConfiguration.smartModelCache = newValue }
-    }
+    nonisolated(unsafe) private static var cache = LogCache()
 
     /// 回调闭包，用于在解析完成时传递日志
-    private static var logsHandler: ((String) -> Void)? {
-        get { FrameworkConfiguration.smartModelHandler }
-        set { FrameworkConfiguration.smartModelHandler = newValue }
-    }
+    nonisolated(unsafe) private static var logsHandler: ((String) -> Void)?
 
     /// 用于同步访问 logsHandler 的队列Add commentMore actions
     private static let handlerQueue = DispatchQueue(label: "com.smartcodable.handler", qos: .utility)
@@ -2485,10 +2476,7 @@ public enum SmartCoding {
     ///     - .rounded:  Returns 3 (rounds to nearest)
     ///
     /// - Note: This only affects decoding process
-    public static var numberConversionStrategy: NumberConversionStrategy {
-        get { FrameworkConfiguration.smartModelStrategy }
-        set { FrameworkConfiguration.smartModelStrategy = newValue }
-    }
+    nonisolated(unsafe) public static var numberConversionStrategy: NumberConversionStrategy = .strict
 
     /// Numeric type conversion strategy
     public enum NumberConversionStrategy {
@@ -4307,6 +4295,12 @@ struct JSONDecoderImpl {
         self.options = options
         self.cache = DecodingCache()
     }
+    
+    nonisolated(unsafe) fileprivate static let smartModelFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = .withInternetDateTime
+        return formatter
+    }()
 }
 
 // Regarding the generation of containers, there is no need for compatibility,
@@ -5564,7 +5558,7 @@ extension JSONDecoderImpl {
 
             case .iso8601:
                 let string = try container.decode(String.self)
-                guard let date = FrameworkConfiguration.smartModelFormatter.date(from: string) else {
+                guard let date = JSONDecoderImpl.smartModelFormatter.date(from: string) else {
                     throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
                 }
                 return date
@@ -6927,7 +6921,7 @@ extension _SpecialTreatmentEncoder {
             return .number((date.timeIntervalSince1970 * 1000).description)
 
         case .iso8601:
-            return .string(FrameworkConfiguration.smartModelFormatter.string(from: date))
+            return .string(JSONDecoderImpl.smartModelFormatter.string(from: date))
 
         case let .formatted(formatter):
             return .string(formatter.string(from: date))
@@ -7014,17 +7008,4 @@ extension _SpecialTreatmentEncoder {
             return newKey
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+SmartModel
-extension FrameworkConfiguration {
-    fileprivate static var smartModelMode = SmartSentinel.Level.none
-    fileprivate static var smartModelCache = LogCache()
-    fileprivate static var smartModelHandler: ((String) -> Void)?
-    fileprivate static var smartModelStrategy = SmartCoding.NumberConversionStrategy.strict
-    fileprivate static let smartModelFormatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = .withInternetDateTime
-        return formatter
-    }()
 }

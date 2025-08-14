@@ -157,6 +157,10 @@ open class RequestAccessory: RequestAccessoryProtocol {
 
 /// 默认请求上下文配件，用于处理加载条和显示错误等
 open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
+    @_spi(FW) nonisolated(unsafe) public static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
+    @_spi(FW) nonisolated(unsafe) public static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    @_spi(FW) nonisolated(unsafe) public static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
+    
     /// 自定义显示错误方法，主线程优先调用，默认nil
     open var showErrorBlock: HTTPRequest.Completion?
     /// 自定义显示加载条方法，主线程优先调用，默认nil
@@ -247,7 +251,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
         }
 
         DispatchQueue.fw.mainAsync {
-            FrameworkConfiguration.showErrorBlock?(request.context, error)
+            RequestContextAccessory.showErrorBlock?(request.context, error)
         }
     }
 
@@ -264,7 +268,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            FrameworkConfiguration.showLoadingBlock?(request.context)
+            RequestContextAccessory.showLoadingBlock?(request.context)
         }
     }
 
@@ -279,7 +283,7 @@ open class RequestContextAccessory: RequestAccessory, @unchecked Sendable {
 
         guard request.context != nil else { return }
         DispatchQueue.fw.mainAsync {
-            FrameworkConfiguration.hideLoadingBlock?(request.context)
+            RequestContextAccessory.hideLoadingBlock?(request.context)
         }
     }
 }
@@ -537,11 +541,4 @@ public class RequestCacheMetadata: NSObject, NSSecureCoding {
         aCoder.encode(creationDate, forKey: "creationDate")
         aCoder.encode(appVersionString, forKey: "appVersionString")
     }
-}
-
-// MARK: - FrameworkConfiguration+RequestConfig
-extension FrameworkConfiguration {
-    public static var showErrorBlock: (@MainActor @Sendable (_ context: AnyObject?, _ error: Error) -> Void)?
-    public static var showLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
-    public static var hideLoadingBlock: (@MainActor @Sendable (_ context: AnyObject?) -> Void)?
 }

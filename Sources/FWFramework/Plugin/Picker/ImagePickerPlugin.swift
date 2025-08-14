@@ -352,7 +352,7 @@ import UIKit
     ) -> UIImagePickerController? {
         let pickerController = UIImagePickerController.fw.pickerController(sourceType: sourceType, filterType: .image, allowsEditing: false, shouldDismiss: false) { picker, object, info, cancel in
             let originalImage = cancel ? nil : (object as? UIImage)
-            let cropControllerBlock = cropControllerBlock ?? FrameworkConfiguration.cropControllerBlock
+            let cropControllerBlock = cropControllerBlock ?? UIImagePickerController.cropControllerBlock
             if let originalImage, let cropControllerBlock {
                 let cropController = cropControllerBlock(originalImage)
                 cropController.onDidCropToImage = { image, _, _ in
@@ -458,7 +458,7 @@ import UIKit
         completion: @escaping @MainActor @Sendable ([UIImage], [PHPickerResult], Bool) -> Void
     ) -> PHPickerViewController {
         let pickerController = PHPickerViewController.fw.pickerController(filterType: .image, selectionLimit: selectionLimit, shouldDismiss: false) { picker, objects, results, cancel in
-            let cropControllerBlock = cropControllerBlock ?? FrameworkConfiguration.cropControllerBlock
+            let cropControllerBlock = cropControllerBlock ?? UIImagePickerController.cropControllerBlock
             if objects.count == 1, let originalImage = objects.first as? UIImage, let cropControllerBlock {
                 let cropController = cropControllerBlock(originalImage)
                 cropController.onDidCropToImage = { image, _, _ in
@@ -756,7 +756,7 @@ extension PHPickerViewController {
     fileprivate static var innerPickerConfigurationBlock: (() -> PHPickerConfiguration)?
 }
 
-// MARK: - FrameworkConfiguration+ImagePickerPlugin
-extension FrameworkConfiguration {
-    public static var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
+// MARK: - UIImagePickerController+ImagePickerPlugin
+extension UIImagePickerController {
+    @_spi(FW) nonisolated(unsafe) public static var cropControllerBlock: (@MainActor @Sendable (UIImage) -> UIViewController & ImageCropControllerProtocol)?
 }

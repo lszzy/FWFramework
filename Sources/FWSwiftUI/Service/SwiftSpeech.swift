@@ -17,11 +17,8 @@ public enum SwiftSpeech {
     public struct ViewModifiers {}
     public struct Demos {}
     struct EnvironmentKeys {}
-
-    public static var defaultAnimation: Animation {
-        get { FrameworkConfiguration.speechDefaultAnimation }
-        set { FrameworkConfiguration.speechDefaultAnimation = newValue }
-    }
+    
+    nonisolated(unsafe) public static var defaultAnimation: Animation = .interactiveSpring()
 }
 
 extension SwiftSpeech {
@@ -447,10 +444,7 @@ extension SwiftSpeech.Session {
 }
 
 public class SpeechRecognizer {
-    static var instances: [SpeechRecognizer] {
-        get { FrameworkConfiguration.speechRecognizerInstances }
-        set { FrameworkConfiguration.speechRecognizerInstances = newValue }
-    }
+    nonisolated(unsafe) static var instances: [SpeechRecognizer] = [SpeechRecognizer]()
 
     public typealias ID = UUID
 
@@ -813,10 +807,4 @@ extension SwiftSpeech.ViewModifiers {
             }
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+SwiftSpeech
-extension FrameworkConfiguration {
-    fileprivate static var speechDefaultAnimation: Animation = .interactiveSpring()
-    fileprivate static var speechRecognizerInstances = [SpeechRecognizer]()
 }

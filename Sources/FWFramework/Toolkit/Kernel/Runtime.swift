@@ -356,7 +356,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 方法列表
     public static func classMethods(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "M")
-        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
+        if let cacheNames = NSObject.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -381,7 +381,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
+        NSObject.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -391,7 +391,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: 属性列表
     public static func classProperties(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "P")
-        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
+        if let cacheNames = NSObject.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -416,7 +416,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
+        NSObject.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -426,7 +426,7 @@ extension Wrapper where Base: NSObject {
     /// - Returns: Ivar列表
     public static func classIvars(_ clazz: AnyClass) -> [String] {
         let cacheKey = classCacheKey(clazz, type: "V")
-        if let cacheNames = FrameworkConfiguration.runtimeClassCaches[cacheKey] {
+        if let cacheNames = NSObject.runtimeClassCaches[cacheKey] {
             return cacheNames
         }
 
@@ -452,7 +452,7 @@ extension Wrapper where Base: NSObject {
             }
         }
 
-        FrameworkConfiguration.runtimeClassCaches[cacheKey] = resultNames
+        NSObject.runtimeClassCaches[cacheKey] = resultNames
         return resultNames
     }
 
@@ -724,7 +724,7 @@ extension Wrapper where Base: NSObject {
     }
 }
 
-// MARK: - FrameworkConfiguration+Runtime
-extension FrameworkConfiguration {
-    fileprivate static var runtimeClassCaches: [String: [String]] = [:]
+// MARK: - NSObject+Runtime
+extension NSObject {
+    nonisolated(unsafe) fileprivate static var runtimeClassCaches: [String: [String]] = [:]
 }

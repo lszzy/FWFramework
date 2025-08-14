@@ -83,22 +83,24 @@ extension AuthorizeProtocol {
 /// 1. Pod项目添加pod时指定子模块：pod 'FWFramework', :subspecs => ['FWPlugin/Contacts']
 /// 2. SPM项目勾选并引入指定子模块：import FWPluginContacts
 public class AuthorizeManager {
+    nonisolated(unsafe) private static var authorizeBlocks: [AuthorizeType: @Sendable () -> AuthorizeProtocol] = [:]
+    
     /// 注册指定类型的权限管理器创建句柄，用于动态扩展权限类型
     public static func registerAuthorize(_ type: AuthorizeType, block: @escaping @Sendable () -> AuthorizeProtocol) {
-        FrameworkConfiguration.authorizeBlocks[type] = block
+        authorizeBlocks[type] = block
     }
 
     /// 预置指定类型的权限管理器创建句柄，已注册时不生效，用于动态扩展权限类型
     @discardableResult
     public static func presetAuthorize(_ type: AuthorizeType, block: @escaping @Sendable () -> AuthorizeProtocol) -> Bool {
-        guard FrameworkConfiguration.authorizeBlocks[type] == nil else { return false }
-        FrameworkConfiguration.authorizeBlocks[type] = block
+        guard authorizeBlocks[type] == nil else { return false }
+        authorizeBlocks[type] = block
         return true
     }
 
     /// 获取指定类型的权限管理器单例，部分权限未启用时返回nil
     public static func manager(type: AuthorizeType) -> AuthorizeProtocol? {
-        if let block = FrameworkConfiguration.authorizeBlocks[type] {
+        if let block = authorizeBlocks[type] {
             return block()
         }
 
@@ -400,9 +402,4 @@ extension AuthorizeProtocol {
             }
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+Authorize
-extension FrameworkConfiguration {
-    fileprivate static var authorizeBlocks: [AuthorizeType: @Sendable () -> AuthorizeProtocol] = [:]
 }
