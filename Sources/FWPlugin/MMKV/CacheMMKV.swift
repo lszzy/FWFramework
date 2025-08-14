@@ -24,8 +24,8 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
     /// 单例模式
     public static let shared = CacheMMKV()
 
-    private nonisolated(unsafe) static var mmkvInitialized = false
-    private nonisolated(unsafe) static var mmkvCryptKey: Data?
+    private nonisolated(unsafe) static var initialized = false
+    private nonisolated(unsafe) static var defaultCryptKey: Data?
 
     /// 主线程初始化MMKV，仅第一次生效，参数cryptKey仅对默认MMKV生效
     public static func initializeMMKV(
@@ -35,9 +35,9 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         logLevel: MMKVLogLevel = .info,
         handler: MMKVHandler? = nil
     ) {
-        guard !mmkvInitialized else { return }
-        mmkvInitialized = true
-        mmkvCryptKey = cryptKey
+        guard !initialized else { return }
+        initialized = true
+        defaultCryptKey = cryptKey
         if let groupDir {
             MMKV.initialize(rootDir: rootDir, groupDir: groupDir, logLevel: logLevel, handler: handler)
         } else {
@@ -50,8 +50,8 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
 
     /// 初始化默认MMKV缓存
     override public init() {
-        if !CacheMMKV.mmkvInitialized { Self.initializeMMKV() }
-        if let cryptKey = CacheMMKV.mmkvCryptKey {
+        if !CacheMMKV.initialized { Self.initializeMMKV() }
+        if let cryptKey = CacheMMKV.defaultCryptKey {
             self.mmkv = MMKV.defaultMMKV(withCryptKey: cryptKey)
         } else {
             self.mmkv = MMKV.default()
@@ -66,7 +66,7 @@ open class CacheMMKV: CacheEngine, @unchecked Sendable {
         rootPath: String? = nil,
         mode: MMKVMode = .singleProcess
     ) {
-        if !CacheMMKV.mmkvInitialized { Self.initializeMMKV() }
+        if !CacheMMKV.initialized { Self.initializeMMKV() }
         self.mmkv = MMKV(mmapID: mmapID, cryptKey: cryptKey, rootPath: rootPath, mode: mode, expectedCapacity: 0)
         super.init()
     }

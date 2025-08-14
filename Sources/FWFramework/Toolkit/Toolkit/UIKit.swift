@@ -3566,8 +3566,8 @@ private class SaturationGrayView: UIView {
 
 // MARK: - FrameworkAutoloader+UIKit
 extension FrameworkAutoloader {
-    private nonisolated(unsafe) static var uikitScrollViewSwizzled = false
-    private nonisolated(unsafe) static var uikitTableViewCellSwizzled = false
+    private nonisolated(unsafe) static var scrollViewUIKitSwizzled = false
+    private nonisolated(unsafe) static var tableViewCellUIKitSwizzled = false
 
     @objc static func loadToolkit_UIKit() {
         swizzleUIKitView()
@@ -3965,8 +3965,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitScrollView() {
-        guard !uikitScrollViewSwizzled else { return }
-        uikitScrollViewSwizzled = true
+        guard !scrollViewUIKitSwizzled else { return }
+        scrollViewUIKitSwizzled = true
 
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizerShouldBegin(_:)))
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
@@ -3975,8 +3975,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitTableViewCell() {
-        guard !uikitTableViewCellSwizzled else { return }
-        uikitTableViewCellSwizzled = true
+        guard !tableViewCellUIKitSwizzled else { return }
+        tableViewCellUIKitSwizzled = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,

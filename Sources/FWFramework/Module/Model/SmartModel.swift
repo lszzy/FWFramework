@@ -4296,7 +4296,7 @@ struct JSONDecoderImpl {
         self.cache = DecodingCache()
     }
 
-    fileprivate nonisolated(unsafe) static let smartModelFormatter: ISO8601DateFormatter = {
+    fileprivate nonisolated(unsafe) static let dateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = .withInternetDateTime
         return formatter
@@ -5558,7 +5558,7 @@ extension JSONDecoderImpl {
 
             case .iso8601:
                 let string = try container.decode(String.self)
-                guard let date = JSONDecoderImpl.smartModelFormatter.date(from: string) else {
+                guard let date = JSONDecoderImpl.dateFormatter.date(from: string) else {
                     throw DecodingError.dataCorrupted(DecodingError.Context(codingPath: codingPath, debugDescription: "Expected date string to be ISO8601-formatted."))
                 }
                 return date
@@ -6921,7 +6921,7 @@ extension _SpecialTreatmentEncoder {
             return .number((date.timeIntervalSince1970 * 1000).description)
 
         case .iso8601:
-            return .string(JSONDecoderImpl.smartModelFormatter.string(from: date))
+            return .string(JSONDecoderImpl.dateFormatter.string(from: date))
 
         case let .formatted(formatter):
             return .string(formatter.string(from: date))

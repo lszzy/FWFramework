@@ -247,7 +247,7 @@ extension UIView {
         builder: @escaping (B, S) -> Void,
         listener: ((B) -> Void)? = nil
     ) {
-        let key = String(describing: B.self as AnyObject)
+        let key = "bloc_" + String(describing: B.self as AnyObject)
         fw.setProperty(bloc, forName: key)
         bloc.sink { [weak self] state in
             guard let bloc = self?.fw.property(forName: key) as? B else { return }
@@ -258,7 +258,7 @@ extension UIView {
 
     /// 子视图读取父视图Bloc对象
     public func blocConsumer<B: BlocBase<S>, S: Equatable>(of type: B.Type = B.self) -> B? {
-        let key = String(describing: B.self as AnyObject)
+        let key = "bloc_" + String(describing: B.self as AnyObject)
         var superview: UIView? = self
         while superview != nil {
             if let bloc = superview?.fw.property(forName: key) as? B {

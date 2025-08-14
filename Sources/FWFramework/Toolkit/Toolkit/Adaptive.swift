@@ -933,22 +933,22 @@ extension UIEdgeInsets {
 extension UIDevice {
     nonisolated(unsafe) static var innerCurrentDevice: UIDevice? {
         get {
-            if let currentDevice = cachedCurrentDevice { return currentDevice }
+            if let currentDevice = innerCachedCurrentDevice { return currentDevice }
 
             let currentDevice = DispatchQueue.fw.mainSyncIf {
                 UIDevice.current
             } otherwise: {
                 UIDevice.perform(#selector(getter: UIDevice.current))?.takeUnretainedValue() as? UIDevice
             }
-            cachedCurrentDevice = currentDevice
+            innerCachedCurrentDevice = currentDevice
             return currentDevice
         }
         set {
-            cachedCurrentDevice = newValue
+            innerCachedCurrentDevice = newValue
         }
     }
 
-    private nonisolated(unsafe) static var cachedCurrentDevice: UIDevice?
+    private nonisolated(unsafe) static var innerCachedCurrentDevice: UIDevice?
     fileprivate nonisolated(unsafe) static var innerDeviceWidth: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceHeight: CGFloat?
     fileprivate nonisolated(unsafe) static var innerDeviceModel: String?
@@ -958,22 +958,22 @@ extension UIDevice {
 extension UIScreen {
     fileprivate nonisolated(unsafe) static var innerMainScreen: UIScreen? {
         get {
-            if let mainScreen = cachedMainScreen { return mainScreen }
+            if let mainScreen = innerCachedMainScreen { return mainScreen }
 
             let mainScreen = DispatchQueue.fw.mainSyncIf {
                 UIScreen.main
             } otherwise: {
                 UIScreen.perform(#selector(getter: UIScreen.main))?.takeUnretainedValue() as? UIScreen
             }
-            cachedMainScreen = mainScreen
+            innerCachedMainScreen = mainScreen
             return mainScreen
         }
         set {
-            cachedMainScreen = newValue
+            innerCachedMainScreen = newValue
         }
     }
 
-    private nonisolated(unsafe) static var cachedMainScreen: UIScreen?
+    private nonisolated(unsafe) static var innerCachedMainScreen: UIScreen?
     fileprivate nonisolated(unsafe) static var innerScreenScale: CGFloat?
     fileprivate nonisolated(unsafe) static var innerReferenceSize = CGSize(width: 375, height: 812)
     fileprivate nonisolated(unsafe) static var innerRelativeScaleBlock: (@Sendable () -> CGFloat)?

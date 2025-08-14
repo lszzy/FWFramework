@@ -24,8 +24,8 @@ import UIKit
     /// 如果项目兼容阿拉伯语等，需要启用RTL从右向左布局，开启此开关即可，无需修改布局代码
     /// 手工切换视图左右布局方法：[UIView appearance].semanticContentAttribute = UISemanticContentAttributeForceRightToLeft;
     public static var autoLayoutRTL: Bool {
-        get { UIView.autoLayoutRTL }
-        set { UIView.autoLayoutRTL = newValue }
+        get { UIView.innerAutoLayoutRTL }
+        set { UIView.innerAutoLayoutRTL = newValue }
     }
 
     /// 自定义全局自动等比例缩放适配句柄，默认nil
@@ -37,8 +37,8 @@ import UIKit
     /// 2. 只会对offset值生效，其他属性不受影响
     /// 3. 某个视图如需固定offset值，可指定autoScaleLayout为false关闭该功能
     public static var autoScaleBlock: ((CGFloat) -> CGFloat)? {
-        get { UIView.autoScaleBlock }
-        set { UIView.autoScaleBlock = newValue }
+        get { UIView.innerAutoScaleBlock }
+        set { UIView.innerAutoScaleBlock = newValue }
     }
 
     /// 快捷启用全局自动等比例缩放布局，自动设置默认autoScaleBlock
@@ -57,8 +57,8 @@ import UIKit
 
     /// 是否启用全局自动像素取整布局，默认false
     public static var autoFlatLayout: Bool {
-        get { UIView.autoFlatLayout }
-        set { UIView.autoFlatLayout = newValue }
+        get { UIView.innerAutoFlatLayout }
+        set { UIView.innerAutoFlatLayout = newValue }
     }
 
     /// 当前视图是否自动等比例缩放布局，默认未设置时检查autoScaleBlock
@@ -70,7 +70,7 @@ import UIKit
             if let number = propertyNumber(forName: "autoScaleLayout") {
                 return number.boolValue
             }
-            return UIView.autoScaleBlock != nil
+            return UIView.innerAutoScaleBlock != nil
         }
         set {
             setPropertyNumber(NSNumber(value: newValue), forName: "autoScaleLayout")
@@ -768,7 +768,7 @@ import UIKit
     public func constraint(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, relation: NSLayoutConstraint.Relation = .equal) -> NSLayoutConstraint? {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
-        if UIView.autoLayoutRTL {
+        if UIView.innerAutoLayoutRTL {
             switch attribute {
             case .left:
                 targetAttribute = .leading
@@ -858,7 +858,7 @@ import UIKit
     private func constrainAttribute(_ attribute: NSLayoutConstraint.Attribute, toAttribute: NSLayoutConstraint.Attribute, ofView: Any?, multiplier: CGFloat, offset: CGFloat, relation: NSLayoutConstraint.Relation, priority: UILayoutPriority, isOpposite: Bool, autoScale: Bool?) -> NSLayoutConstraint {
         var targetAttribute = attribute
         var targetToAttribute = toAttribute
-        if UIView.autoLayoutRTL {
+        if UIView.innerAutoLayoutRTL {
             switch attribute {
             case .left:
                 targetAttribute = .leading
@@ -926,10 +926,10 @@ import UIKit
     /// 自动布局调试开关，默认调试打开，正式关闭
     public static var autoLayoutDebug: Bool {
         get {
-            UIView.autoLayoutDebug
+            UIView.innerAutoLayoutDebug
         }
         set {
-            UIView.autoLayoutDebug = newValue
+            UIView.innerAutoLayoutDebug = newValue
             if newValue { FrameworkAutoloader.swizzleAutoLayoutDebug() }
         }
     }
@@ -978,7 +978,7 @@ import UIKit
 
             var offset = newValue
             if autoScaleLayout {
-                offset = UIView.autoScaleBlock?(newValue) ?? UIScreen.fw.relativeValue(newValue, flat: UIView.autoFlatLayout)
+                offset = UIView.innerAutoScaleBlock?(newValue) ?? UIScreen.fw.relativeValue(newValue, flat: UIView.innerAutoFlatLayout)
             }
             base.constant = isOpposite ? -offset : offset
         }
@@ -1110,14 +1110,14 @@ import UIKit
             description += String(format: " %@", NSLayoutConstraint.fw.layoutDescription(firstItem))
         }
         if base.firstAttribute != .notAnAttribute {
-            description += String(format: ".%@", UIView.layoutAttributeDescriptions[base.firstAttribute] ?? NSNumber(value: base.firstAttribute.rawValue))
+            description += String(format: ".%@", UIView.innerLayoutAttributeDescriptions[base.firstAttribute] ?? NSNumber(value: base.firstAttribute.rawValue))
         }
-        description += String(format: " %@", UIView.layoutRelationDescriptions[base.relation] ?? NSNumber(value: base.relation.rawValue))
+        description += String(format: " %@", UIView.innerLayoutRelationDescriptions[base.relation] ?? NSNumber(value: base.relation.rawValue))
         if let secondItem = base.secondItem {
             description += String(format: " %@", NSLayoutConstraint.fw.layoutDescription(secondItem))
         }
         if base.secondAttribute != .notAnAttribute {
-            description += String(format: ".%@", UIView.layoutAttributeDescriptions[base.secondAttribute] ?? NSNumber(value: base.secondAttribute.rawValue))
+            description += String(format: ".%@", UIView.innerLayoutAttributeDescriptions[base.secondAttribute] ?? NSNumber(value: base.secondAttribute.rawValue))
         }
         if base.multiplier != 1 {
             description += String(format: " * %g", base.multiplier)
@@ -1130,7 +1130,7 @@ import UIKit
             }
         }
         if base.priority != .required {
-            description += String(format: " ^%@", UIView.layoutPriorityDescriptions[base.priority] ?? NSNumber(value: base.priority.rawValue))
+            description += String(format: " ^%@", UIView.innerLayoutPriorityDescriptions[base.priority] ?? NSNumber(value: base.priority.rawValue))
         }
         description += ">"
         return description
@@ -1934,11 +1934,11 @@ extension UIView {
 
 // MARK: - UIView+AutoLayout
 extension UIView {
-    fileprivate static var autoLayoutRTL = false
-    fileprivate static var autoScaleBlock: ((CGFloat) -> CGFloat)?
-    fileprivate static var autoFlatLayout = false
+    fileprivate static var innerAutoLayoutRTL = false
+    fileprivate static var innerAutoScaleBlock: ((CGFloat) -> CGFloat)?
+    fileprivate static var innerAutoFlatLayout = false
 
-    fileprivate nonisolated(unsafe) static var autoLayoutDebug: Bool = {
+    fileprivate nonisolated(unsafe) static var innerAutoLayoutDebug: Bool = {
         #if DEBUG
         true
         #else
@@ -1946,13 +1946,13 @@ extension UIView {
         #endif
     }()
 
-    fileprivate static let layoutRelationDescriptions: [NSLayoutConstraint.Relation: String] = [
+    fileprivate static let innerLayoutRelationDescriptions: [NSLayoutConstraint.Relation: String] = [
         .equal: "==",
         .greaterThanOrEqual: ">=",
         .lessThanOrEqual: "<="
     ]
 
-    fileprivate static let layoutAttributeDescriptions: [NSLayoutConstraint.Attribute: String] = [
+    fileprivate static let innerLayoutAttributeDescriptions: [NSLayoutConstraint.Attribute: String] = [
         .top: "top",
         .left: "left",
         .bottom: "bottom",
@@ -1976,7 +1976,7 @@ extension UIView {
         .notAnAttribute: "notAnAttribute"
     ]
 
-    fileprivate static let layoutPriorityDescriptions: [UILayoutPriority: String] = [
+    fileprivate static let innerLayoutPriorityDescriptions: [UILayoutPriority: String] = [
         .required: "required",
         .defaultHigh: "defaultHigh",
         .defaultLow: "defaultLow",
@@ -1994,7 +1994,7 @@ extension FrameworkAutoloader {
     @objc static func loadToolkit_AutoLayout() {
         swizzleAutoLayoutView()
 
-        if UIView.autoLayoutDebug {
+        if UIView.innerAutoLayoutDebug {
             swizzleAutoLayoutDebug()
         }
     }
@@ -2053,7 +2053,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (NSLayoutConstraint, Selector) -> String).self,
             swizzleSignature: (@convention(block) @MainActor (NSLayoutConstraint) -> String).self
         ) { store in { selfObject in
-            guard UIView.autoLayoutDebug else {
+            guard UIView.innerAutoLayoutDebug else {
                 return store.original(selfObject, store.selector)
             }
 
