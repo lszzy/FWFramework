@@ -632,7 +632,7 @@ extension SwiftSpeech.ViewModifiers {
         var gesture: some Gesture {
             let longPress = LongPressGesture(minimumDuration: 0)
                 .onEnded { _ in
-                    try? withAnimation(animation, startRecording)
+                    withAnimation(animation, startRecording)
                     viewComponentState = .recording
                 }
 
@@ -648,9 +648,9 @@ extension SwiftSpeech.ViewModifiers {
                 }
                 .onEnded { value in
                     if value.translation.height < -distanceToCancel {
-                        try? withAnimation(animation, cancelRecording)
+                        withAnimation(animation, cancelRecording)
                     } else {
-                        try? withAnimation(animation, endRecording)
+                        withAnimation(animation, endRecording)
                     }
                 }
 
