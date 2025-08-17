@@ -1,5 +1,20 @@
 # 更新日志
 
+## [9.0.0] - 2025-08-18
+
+### Added
+* 兼容Xcode 26，最低兼容Swift 5.10
+* 适配UISceneDelegate，需迁移升级
+* AppDelegate和SceneDelegate生命周期调整
+* 新增Bloc模式组件BlocConsumer
+* Cache组件新增获取所有缓存key方法
+* 同步SmartCodable到最新版本
+
+### Migrate
+1. 由于Xcode 26要求，应用需适配UISceneDelegate，需迁移升级
+2. 如使用AppResponder和SceneResponder，需迁移升级至新生命周期方法
+3. 迁移IgnoredKey为SmartIgnored，如遇其他错误请参考Example项目
+
 ## [8.2.0] - 2025-07-28
 
 ### Added
