@@ -452,9 +452,11 @@ extension EmptyViewDelegate {
 
 // MARK: - FrameworkAutoloader+EmptyPlugin
 extension FrameworkAutoloader {
+    private nonisolated(unsafe) static var emptyPluginSwizzled = false
+
     fileprivate static func swizzleEmptyPlugin() {
-        guard !FrameworkConfiguration.swizzleEmptyPlugin else { return }
-        FrameworkConfiguration.swizzleEmptyPlugin = true
+        guard !emptyPluginSwizzled else { return }
+        emptyPluginSwizzled = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableView.self,
@@ -486,9 +488,4 @@ extension FrameworkAutoloader {
             store.original(selfObject, store.selector)
         }}
     }
-}
-
-// MARK: - FrameworkConfiguration+EmptyPlugin
-extension FrameworkConfiguration {
-    fileprivate static var swizzleEmptyPlugin = false
 }

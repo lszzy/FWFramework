@@ -12,7 +12,7 @@ extension WrapperGlobal {
     /// 注册自定义Codable解码转换器
     /// - Parameter decodingConverter: 解码转换器
     public static func register(_ decodingConverter: CodableDecodingConverter) {
-        FrameworkConfiguration.codableDecodingConverters.append(decodingConverter)
+        JSONDecoder.codableDecodingConverters.append(decodingConverter)
     }
 }
 
@@ -127,7 +127,9 @@ public protocol AnyDecoder {
     func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T
 }
 
-extension JSONDecoder: AnyDecoder {}
+extension JSONDecoder: AnyDecoder {
+    fileprivate nonisolated(unsafe) static var codableDecodingConverters: [CodableDecodingConverter] = []
+}
 
 #if canImport(ObjectiveC) || swift(>=5.1)
 extension PropertyListDecoder: AnyDecoder {}
@@ -848,7 +850,7 @@ extension KeyedDecodingContainer {
             else if let double = try? decodeIfPresent(Double.self, forKey: codingKey) { return String(describing: double) as? T }
         }
 
-        for converter in FrameworkConfiguration.codableDecodingConverters {
+        for converter in JSONDecoder.codableDecodingConverters {
             if let value = try? converter.decode(self, codingKey: codingKey, as: type) {
                 return value
             }
@@ -878,9 +880,4 @@ extension DefaultCaseCodable where Self.RawValue: Decodable {
         let rawValue = try container.decode(RawValue.self)
         self = Self(rawValue: rawValue) ?? Self.defaultCase
     }
-}
-
-// MARK: - FrameworkConfiguration+Codable
-extension FrameworkConfiguration {
-    fileprivate static var codableDecodingConverters: [CodableDecodingConverter] = []
 }

@@ -950,7 +950,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         scrollView.scrollRectToVisible(rectToScrollTo, animated: animated)
 
         if !animated {
-            FrameworkConfiguration.trackExposureBlock?(self)
+            fw.statisticalCheckExposure()
         }
     }
 
@@ -1031,7 +1031,7 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
         }
 
         indexChangedBlock?(index)
-        _ = FrameworkConfiguration.trackClickBlock?(self, IndexPath(row: index, section: 0))
+        fw.statisticalTrackClick(indexPath: IndexPath(row: index, section: 0))
     }
 
     private func resultingTitleTextAttributes() -> [NSAttributedString.Key: Any] {
@@ -1068,16 +1068,16 @@ open class SegmentedControl: UIControl, UIScrollViewDelegate, SegmentedAccessibi
 
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {
-            FrameworkConfiguration.trackExposureBlock?(self)
+            fw.statisticalCheckExposure()
         }
     }
 
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        FrameworkConfiguration.trackExposureBlock?(self)
+        fw.statisticalCheckExposure()
     }
 
     open func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        FrameworkConfiguration.trackExposureBlock?(self)
+        fw.statisticalCheckExposure()
     }
 
     // MARK: - SegmentedAccessibilityDelegate

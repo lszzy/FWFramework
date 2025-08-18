@@ -267,22 +267,13 @@ public struct NetworkMocker {
     }
 
     /// The mode defines how unknown URLs are handled. Defaults to `optout` which means requests without a mock will fail.
-    public static var mode: Mode {
-        get { FrameworkConfiguration.mockerMode }
-        set { FrameworkConfiguration.mockerMode = newValue }
-    }
+    public nonisolated(unsafe) static var mode: Mode = .optout
 
     /// The shared instance of the Mocker, can be used to register and return mocks.
-    static var shared: NetworkMocker {
-        get { FrameworkConfiguration.mockerShared }
-        set { FrameworkConfiguration.mockerShared = newValue }
-    }
+    nonisolated(unsafe) static var shared: NetworkMocker = .init()
 
     /// The HTTP Version to use in the mocked response.
-    public static var httpVersion: HTTPVersion {
-        get { FrameworkConfiguration.mockerHttpVersion }
-        set { FrameworkConfiguration.mockerHttpVersion = newValue }
-    }
+    public nonisolated(unsafe) static var httpVersion: HTTPVersion = .http1_1
 
     /// The registrated mocks.
     private(set) var mocks: [NetworkMock] = []
@@ -630,13 +621,6 @@ extension URL {
         guard let scheme, let host else { return nil }
         return scheme + "://" + host + path
     }
-}
-
-// MARK: - FrameworkConfiguration+NetworkMocker
-extension FrameworkConfiguration {
-    fileprivate static var mockerShared = NetworkMocker()
-    fileprivate static var mockerMode: NetworkMocker.Mode = .optout
-    fileprivate static var mockerHttpVersion: NetworkMocker.HTTPVersion = .http1_1
 }
 
 #endif

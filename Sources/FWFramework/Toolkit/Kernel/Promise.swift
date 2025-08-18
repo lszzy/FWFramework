@@ -32,22 +32,13 @@ public enum PromiseError: Int, Swift.Error, CustomNSError {
 public class Promise: @unchecked Sendable {
     // MARK: - Accessor
     /// 约定失败错误，约定失败时默认使用，可用于错误判断，支持自定义
-    public static var failedError: Error {
-        get { FrameworkConfiguration.promiseFailedError }
-        set { FrameworkConfiguration.promiseFailedError = newValue }
-    }
+    public nonisolated(unsafe) static var failedError: Error = PromiseError.failed
 
     /// 约定验证错误，验证失败时默认使用，可用于错误判断，支持自定义
-    public static var validationError: Error {
-        get { FrameworkConfiguration.promiseValidationError }
-        set { FrameworkConfiguration.promiseValidationError = newValue }
-    }
+    public nonisolated(unsafe) static var validationError: Error = PromiseError.validation
 
     /// 约定超时错误，约定超时时默认使用，可用于错误判断，支持自定义
-    public static var timeoutError: Error {
-        get { FrameworkConfiguration.promiseTimeoutError }
-        set { FrameworkConfiguration.promiseTimeoutError = newValue }
-    }
+    public nonisolated(unsafe) static var timeoutError: Error = PromiseError.timeout
 
     /// 约定进度值
     private struct ProgressValue: Sendable { var value: Double }
@@ -369,11 +360,4 @@ extension Promise {
         }
         return value
     }
-}
-
-// MARK: - FrameworkConfiguration+Promise
-extension FrameworkConfiguration {
-    fileprivate static var promiseFailedError: Error = PromiseError.failed
-    fileprivate static var promiseValidationError: Error = PromiseError.validation
-    fileprivate static var promiseTimeoutError: Error = PromiseError.timeout
 }

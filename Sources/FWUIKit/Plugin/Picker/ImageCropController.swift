@@ -2804,7 +2804,7 @@ open class ImageCropView: UIView, UIScrollViewDelegate, UIGestureRecognizerDeleg
 // MARK: - FrameworkAutoloader+ImagePickerPlugin
 extension FrameworkAutoloader {
     @objc static func loadPlugin_ImagePickerPlugin() {
-        FrameworkConfiguration.cropControllerBlock = { image in
+        UIImagePickerController.cropControllerBlock = { image in
             let cropController = ImageCropController(image: image)
             cropController.aspectRatioPreset = .presetSquare
             cropController.aspectRatioLockEnabled = true

@@ -16,6 +16,8 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
     /// 缓存根目录路径
     public private(set) var cachePath: String = ""
 
+    private let keysKey = "__KEYS__"
+
     override public convenience init() {
         self.init(path: nil)
     }
@@ -39,33 +41,57 @@ open class CacheFile: CacheEngine, @unchecked Sendable {
         return (cachePath as NSString).appendingPathComponent(fileName)
     }
 
+    private func writeCache<T>(_ object: T, to filePath: String) {
+        guard let data = Data.fw.archivedData(object) else { return }
+        try? data.write(to: URL(fileURLWithPath: filePath))
+    }
+
     // MARK: - CacheEngineProtocol
     override open func readCache<T>(forKey key: String) -> T? {
-        let filePath = filePath(key)
-        if FileManager.default.fileExists(atPath: filePath) {
-            guard let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) else { return nil }
+        let cacheFile = filePath(key)
+        if FileManager.default.fileExists(atPath: cacheFile) {
+            guard let data = try? Data(contentsOf: URL(fileURLWithPath: cacheFile)) else { return nil }
             return data.fw.unarchivedObject(as: T.self)
         }
         return nil
     }
 
     override open func writeCache<T>(_ object: T, forKey key: String) {
-        let filePath = filePath(key)
+        let cacheFile = filePath(key)
         // 自动创建目录
-        let fileDir = (filePath as NSString).deletingLastPathComponent
+        let fileDir = (cacheFile as NSString).deletingLastPathComponent
         if !FileManager.default.fileExists(atPath: fileDir) {
             try? FileManager.default.createDirectory(atPath: fileDir, withIntermediateDirectories: true, attributes: nil)
         }
-        guard let data = Data.fw.archivedData(object) else { return }
-        try? data.write(to: URL(fileURLWithPath: filePath))
+        writeCache(object, to: cacheFile)
+
+        if !isExpireKey(key) {
+            var keys = readCacheKeys()
+            if !keys.contains(key) {
+                keys.append(key)
+                writeCache(keys, to: filePath(keysKey))
+            }
+        }
     }
 
     override open func clearCache(forKey key: String) {
-        let filePath = filePath(key)
-        try? FileManager.default.removeItem(atPath: filePath)
+        let cacheFile = filePath(key)
+        try? FileManager.default.removeItem(atPath: cacheFile)
+
+        if !isExpireKey(key) {
+            var keys = readCacheKeys()
+            if keys.contains(key) {
+                keys.removeAll { $0 == key }
+                writeCache(keys, to: filePath(keysKey))
+            }
+        }
     }
 
     override open func clearAllCaches() {
         try? FileManager.default.removeItem(atPath: cachePath)
+    }
+
+    override open func readCacheKeys() -> [String] {
+        readCache(forKey: keysKey) ?? []
     }
 }

@@ -52,6 +52,12 @@ public struct SmartSubclassMacro: MemberMacro {
                 continue
             }
 
+            // 跳过 lazy 属性
+            let isLazy = varDecl.modifiers.contains { $0.name.text == "lazy" }
+            if isLazy {
+                continue
+            }
+
             // 遍历所有绑定
             for binding in varDecl.bindings {
                 // 确保有标识符和类型注解

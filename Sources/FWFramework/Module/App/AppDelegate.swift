@@ -14,9 +14,6 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         UIApplication.shared.delegate as? Self
     }
 
-    /// 应用主window
-    open var window: UIWindow?
-
     // MARK: - Override
     /// 初始化应用环境，优先级1，willFinishLaunching子模块之前调用，子类重写
     open func setupEnvironment() {
@@ -28,11 +25,6 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
 
     /// 初始化应用配置，优先级2，didFinishLaunching子模块之前调用，子类重写
     open func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
-        /*
-         window = UIWindow(frame: UIScreen.main.bounds)
-         window?.makeKeyAndVisible()
-          */
-
         /*
          NotificationManager.shared.clearNotificationBadges()
          if let remoteNotification = options?[.remoteNotification] {
@@ -49,30 +41,25 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
           */
     }
 
-    /// 初始化根控制器，优先级3，didFinishLaunching子模块之前调用，子类重写
-    open func setupController() {
-        /*
-         window?.rootViewController = TabBarController()
-          */
-    }
-
-    /// 初始化应用服务，优先级4，didFinishLaunching子模块之前调用，子类重写
+    /// 初始化应用服务，优先级3，didFinishLaunching子模块之后调用，子类重写
     open func setupService(options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
         /*
          定制应用服务、初始化三方SDK等
           */
     }
 
-    /// 初始化应用业务，优先级5，didFinishLaunching子模块之后调用，子类可重写
-    open func setupBusiness() {
+    /// 场景已连接，优先级4，场景window及根控制器创建完成后自动调用
+    open func sceneDidConnect(_ windowScene: UIWindowScene) {
         /*
-         检查App更新、预加载启动广告等
+         界面已初始化后的处理、检查App更新、预加载启动广告等
           */
     }
 
-    /// 重新加载根控制器，优先级6，按需使用，子类可重写
-    open func reloadController() {
-        setupController()
+    /// 场景已断开，场景断开连接时自动调用
+    open func sceneDidDisconnect(_ windowScene: UIWindowScene) {
+        /**
+         释放场景资源等
+         */
     }
 
     // MARK: - UIApplicationDelegate
@@ -93,8 +80,6 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
     @discardableResult
     open func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         setupApplication(application, options: launchOptions)
-        setupController()
-        setupService(options: launchOptions)
 
         if Mediator.multicastDelegateEnabled {
             Mediator.checkAllModules { _ = $0.application?(application, didFinishLaunchingWithOptions: launchOptions) }
@@ -102,7 +87,7 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)), arguments: [application, launchOptions ?? NSNull()])
         }
 
-        setupBusiness()
+        setupService(options: launchOptions)
         return true
     }
 
@@ -148,6 +133,20 @@ open class AppResponder: UIResponder, UIApplicationDelegate {
         } else {
             Mediator.checkAllModules(selector: #selector(UIApplicationDelegate.applicationWillTerminate(_:)), arguments: [application])
         }
+    }
+
+    // MARK: - UIScene
+    open func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        /*
+         默认名称"Default Configuration"，子类可重写
+         */
+        UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
+    open func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        /*
+         清理scene资源
+          */
     }
 
     // MARK: - Notification

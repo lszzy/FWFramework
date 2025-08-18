@@ -175,36 +175,36 @@ extension Wrapper where Base: UIBezierPath {
 
     /// 获取设备IDFV(内部使用)，同账号应用全删除后会改变，可通过keychain持久化
     public nonisolated static var deviceIDFV: String? {
-        if let deviceIDFV = FrameworkConfiguration.deviceIDFV { return deviceIDFV }
+        if let deviceIDFV = UIDevice.innerDeviceIDFV { return deviceIDFV }
 
         let identifier = DispatchQueue.fw.mainSyncIf {
             UIDevice.current.identifierForVendor
         } otherwise: {
-            FrameworkConfiguration.currentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
+            UIDevice.innerCurrentDevice?.fw.value(forKey: "identifierForVendor") as? UUID
         }
-        FrameworkConfiguration.deviceIDFV = identifier?.uuidString
-        return FrameworkConfiguration.deviceIDFV
+        UIDevice.innerDeviceIDFV = identifier?.uuidString
+        return UIDevice.innerDeviceIDFV
     }
 
     /// 获取或设置设备UUID，自动keychain持久化。默认获取IDFV(未使用IDFA，避免额外权限)，失败则随机生成一个
     public nonisolated static var deviceUUID: String {
         get {
-            if let deviceUUID = FrameworkConfiguration.deviceUUID {
+            if let deviceUUID = UIDevice.innerDeviceUUID {
                 return deviceUUID
             }
 
             if let deviceUUID = KeychainManager.shared.password(forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier) {
-                FrameworkConfiguration.deviceUUID = deviceUUID
+                UIDevice.innerDeviceUUID = deviceUUID
                 return deviceUUID
             }
 
             let deviceUUID = deviceIDFV ?? UUID().uuidString
-            FrameworkConfiguration.deviceUUID = deviceUUID
+            UIDevice.innerDeviceUUID = deviceUUID
             KeychainManager.shared.setPassword(deviceUUID, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
             return deviceUUID
         }
         set {
-            FrameworkConfiguration.deviceUUID = newValue
+            UIDevice.innerDeviceUUID = newValue
             KeychainManager.shared.setPassword(newValue, forService: "FWDeviceUUID", account: Bundle.main.bundleIdentifier)
         }
     }
@@ -308,7 +308,7 @@ extension Wrapper where Base: UIBezierPath {
 
     /// 手机蜂窝网络类型列表，仅区分2G|3G|4G|5G
     public nonisolated static var networkTypes: [String]? {
-        guard let currentRadio = FrameworkConfiguration.networkInfo.serviceCurrentRadioAccessTechnology else {
+        guard let currentRadio = UIDevice.innerNetworkInfo.serviceCurrentRadioAccessTechnology else {
             return nil
         }
 
@@ -944,7 +944,7 @@ extension Wrapper where Base: UIBezierPath {
 
             if let ciImage,
                let cgImage = image.cgImage,
-               let features = FrameworkConfiguration.imageFaceDetector?.features(in: ciImage),
+               let features = UIImageView.innerFaceDetector?.features(in: ciImage),
                !features.isEmpty {
                 DispatchQueue.main.async { [weak base] in
                     base?.fw.faceMark(features, size: CGSize(width: cgImage.width, height: cgImage.height))
@@ -1563,14 +1563,14 @@ extension Wrapper where Base: UIBezierPath {
 @MainActor extension Wrapper where Base: UIButton {
     /// 全局自定义按钮高亮时的alpha配置，默认0.5
     public nonisolated static var highlightedAlpha: CGFloat {
-        get { FrameworkConfiguration.buttonHighlightedAlpha }
-        set { FrameworkConfiguration.buttonHighlightedAlpha = newValue }
+        get { UIButton.innerHighlightedAlpha }
+        set { UIButton.innerHighlightedAlpha = newValue }
     }
 
     /// 全局自定义按钮禁用时的alpha配置，默认0.3
     public nonisolated static var disabledAlpha: CGFloat {
-        get { FrameworkConfiguration.buttonDisabledAlpha }
-        set { FrameworkConfiguration.buttonDisabledAlpha = newValue }
+        get { UIButton.innerDisabledAlpha }
+        set { UIButton.innerDisabledAlpha = newValue }
     }
 
     /// 自定义按钮禁用时的alpha，如0.3，默认0不生效
@@ -3444,6 +3444,24 @@ extension UICollectionView {
     }
 }
 
+// MARK: - UIButton+UIKit
+extension UIButton {
+    fileprivate nonisolated(unsafe) static var innerHighlightedAlpha: CGFloat = 0.5
+    fileprivate nonisolated(unsafe) static var innerDisabledAlpha: CGFloat = 0.3
+}
+
+// MARK: - UIDevice+UIKit
+extension UIDevice {
+    fileprivate nonisolated(unsafe) static var innerDeviceIDFV: String?
+    fileprivate nonisolated(unsafe) static var innerDeviceUUID: String?
+    fileprivate nonisolated(unsafe) static var innerNetworkInfo = CTTelephonyNetworkInfo()
+}
+
+// MARK: - UIImageView+UIKit
+extension UIImageView {
+    fileprivate nonisolated(unsafe) static var innerFaceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+}
+
 // MARK: - SaturationGrayView
 private class SaturationGrayView: UIView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -3548,6 +3566,9 @@ private class SaturationGrayView: UIView {
 
 // MARK: - FrameworkAutoloader+UIKit
 extension FrameworkAutoloader {
+    private nonisolated(unsafe) static var scrollViewUIKitSwizzled = false
+    private nonisolated(unsafe) static var tableViewCellUIKitSwizzled = false
+
     @objc static func loadToolkit_UIKit() {
         swizzleUIKitView()
         swizzleUIKitLabel()
@@ -3944,8 +3965,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitScrollView() {
-        guard !FrameworkConfiguration.swizzleUIKitScrollView else { return }
-        FrameworkConfiguration.swizzleUIKitScrollView = true
+        guard !scrollViewUIKitSwizzled else { return }
+        scrollViewUIKitSwizzled = true
 
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizerShouldBegin(_:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizerShouldBegin(_:)))
         NSObject.fw.exchangeInstanceMethod(UIScrollView.self, originalSelector: #selector(UIGestureRecognizerDelegate.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)), swizzleSelector: #selector(UIScrollView.innerSwizzleGestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)))
@@ -3954,8 +3975,8 @@ extension FrameworkAutoloader {
     }
 
     fileprivate static func swizzleUIKitTableViewCell() {
-        guard !FrameworkConfiguration.swizzleUIKitTableViewCell else { return }
-        FrameworkConfiguration.swizzleUIKitTableViewCell = true
+        guard !tableViewCellUIKitSwizzled else { return }
+        tableViewCellUIKitSwizzled = true
 
         NSObject.fw.swizzleInstanceMethod(
             UITableViewCell.self,
@@ -4033,19 +4054,4 @@ extension FrameworkAutoloader {
             }
         }}
     }
-}
-
-// MARK: - FrameworkConfiguration+UIKit
-extension FrameworkConfiguration {
-    fileprivate static var buttonHighlightedAlpha: CGFloat = 0.5
-    fileprivate static var buttonDisabledAlpha: CGFloat = 0.3
-
-    fileprivate static var deviceIDFV: String?
-    fileprivate static var deviceUUID: String?
-    fileprivate static var networkInfo = CTTelephonyNetworkInfo()
-
-    fileprivate static var imageFaceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
-
-    fileprivate static var swizzleUIKitScrollView = false
-    fileprivate static var swizzleUIKitTableViewCell = false
 }

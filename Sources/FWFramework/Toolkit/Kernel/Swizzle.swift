@@ -312,12 +312,12 @@ extension Wrapper where Base: NSObject {
             return swizzleClass(originalClass, selector: selector, block: block)
         }
 
-        objc_sync_enter(FrameworkConfiguration.swizzleIdentifiers)
-        defer { objc_sync_exit(FrameworkConfiguration.swizzleIdentifiers) }
+        objc_sync_enter(NSObject.innerSwizzleIdentifiers)
+        defer { objc_sync_exit(NSObject.innerSwizzleIdentifiers) }
 
         let swizzleIdentifier = String(format: "%@%@%@-%@", NSStringFromClass(originalClass), class_isMetaClass(originalClass) ? "+" : "-", NSStringFromSelector(selector), identifier)
-        if !FrameworkConfiguration.swizzleIdentifiers.contains(swizzleIdentifier) {
-            FrameworkConfiguration.swizzleIdentifiers.add(swizzleIdentifier)
+        if !NSObject.innerSwizzleIdentifiers.contains(swizzleIdentifier) {
+            NSObject.innerSwizzleIdentifiers.add(swizzleIdentifier)
             return swizzleClass(originalClass, selector: selector, block: block)
         }
         return false
@@ -454,7 +454,7 @@ public class SwizzleStore<MethodSignature, SwizzleSignature>: @unchecked Sendabl
     }
 }
 
-// MARK: - FrameworkConfiguration+Swizzle
-extension FrameworkConfiguration {
-    fileprivate static var swizzleIdentifiers = NSMutableSet()
+// MARK: - NSObject+Swizzle
+extension NSObject {
+    fileprivate nonisolated(unsafe) static var innerSwizzleIdentifiers = NSMutableSet()
 }

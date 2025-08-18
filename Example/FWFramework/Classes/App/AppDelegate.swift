@@ -24,10 +24,6 @@ class AppDelegate: AppResponder {
     }
 
     override func setupApplication(_ application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.backgroundColor = AppTheme.backgroundColor
-        window?.makeKeyAndVisible()
-
         Router.registerClass(AppRouter.self)
         MaterialIcons.setupIcon()
         AppTheme.setupTheme()
@@ -40,11 +36,7 @@ class AppDelegate: AppResponder {
         }
     }
 
-    override func setupController() {
-        window?.rootViewController = TabController()
-    }
-
-    override func setupService(options: [UIApplication.LaunchOptionsKey: Any]? = nil) {
+    override func sceneDidConnect(_ windowScene: UIWindowScene) {
         app.observeNotification(.ErrorCaptured) { [weak self] notification in
             guard let error = notification.object as? NSError else { return }
 
@@ -68,11 +60,6 @@ class AppDelegate: AppResponder {
                 Navigator.topViewController?.app.showAlert(title: "CRASH", message: message)
             }
         }
-    }
-
-    override func reloadController() {
-        window?.app.addTransition(type: .init(rawValue: "oglFlip"), subtype: .fromLeft, timingFunction: .init(name: .easeInEaseOut), duration: 0.5)
-        super.reloadController()
     }
 
     // MARK: - UIApplicationDelegate

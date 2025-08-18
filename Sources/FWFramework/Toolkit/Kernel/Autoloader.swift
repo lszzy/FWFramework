@@ -148,7 +148,3 @@ public class Autoloader: NSObject, AutoloadProtocol, @unchecked Sendable {
         return String(format: "\n========== FRAMEWORK ==========\n%@========== FRAMEWORK ==========", debugDescription)
     }
 }
-
-// MARK: - FrameworkConfiguration
-/// 框架内部静态配置，用于扩展兼容Swift 6静态属性
-@_spi(FW) public actor FrameworkConfiguration {}

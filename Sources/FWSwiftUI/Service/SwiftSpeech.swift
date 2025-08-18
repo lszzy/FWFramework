@@ -18,10 +18,7 @@ public enum SwiftSpeech {
     public struct Demos {}
     struct EnvironmentKeys {}
 
-    public static var defaultAnimation: Animation {
-        get { FrameworkConfiguration.speechDefaultAnimation }
-        set { FrameworkConfiguration.speechDefaultAnimation = newValue }
-    }
+    public nonisolated(unsafe) static var defaultAnimation: Animation = .interactiveSpring()
 }
 
 extension SwiftSpeech {
@@ -447,10 +444,7 @@ extension SwiftSpeech.Session {
 }
 
 public class SpeechRecognizer {
-    static var instances: [SpeechRecognizer] {
-        get { FrameworkConfiguration.speechRecognizerInstances }
-        set { FrameworkConfiguration.speechRecognizerInstances = newValue }
-    }
+    nonisolated(unsafe) static var instances: [SpeechRecognizer] = .init()
 
     public typealias ID = UUID
 
@@ -638,7 +632,7 @@ extension SwiftSpeech.ViewModifiers {
         var gesture: some Gesture {
             let longPress = LongPressGesture(minimumDuration: 0)
                 .onEnded { _ in
-                    try? withAnimation(animation, startRecording)
+                    withAnimation(animation, startRecording)
                     viewComponentState = .recording
                 }
 
@@ -654,9 +648,9 @@ extension SwiftSpeech.ViewModifiers {
                 }
                 .onEnded { value in
                     if value.translation.height < -distanceToCancel {
-                        try? withAnimation(animation, cancelRecording)
+                        withAnimation(animation, cancelRecording)
                     } else {
-                        try? withAnimation(animation, endRecording)
+                        withAnimation(animation, endRecording)
                     }
                 }
 
@@ -813,10 +807,4 @@ extension SwiftSpeech.ViewModifiers {
             }
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+SwiftSpeech
-extension FrameworkConfiguration {
-    fileprivate static var speechDefaultAnimation: Animation = .interactiveSpring()
-    fileprivate static var speechRecognizerInstances = [SpeechRecognizer]()
 }

@@ -45,7 +45,6 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable
             return .denied
         case .authorized:
             return .authorized
-        #if swift(>=5.9)
         case .fullAccess:
             return .authorized
         case .writeOnly:
@@ -55,7 +54,6 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable
                 }
             }
             return .authorized
-        #endif
         default:
             return .notDetermined
         }
@@ -71,7 +69,6 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable
             }
         }
 
-        #if swift(>=5.9)
         if #available(iOS 17.0, *) {
             let eventStore = EKEventStore()
             if type == .event {
@@ -85,7 +82,6 @@ public class AuthorizeCalendar: NSObject, AuthorizeProtocol, @unchecked Sendable
             }
             return
         }
-        #endif
 
         let eventStore = EKEventStore()
         eventStore.requestAccess(to: type, completion: completionHandler)

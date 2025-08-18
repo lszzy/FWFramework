@@ -197,8 +197,8 @@ extension Wrapper where Base: NSObject {
         objc_sync_enter(NSObject.self)
         defer { objc_sync_exit(NSObject.self) }
 
-        guard !FrameworkConfiguration.dispatchOnceTokens.contains(token) else { return }
-        FrameworkConfiguration.dispatchOnceTokens.append(token)
+        guard !NSObject.dispatchOnceTokens.contains(token) else { return }
+        NSObject.dispatchOnceTokens.append(token)
         closure()
     }
 
@@ -310,10 +310,10 @@ extension Wrapper where Base: NSObject {
         let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
         timer.schedule(deadline: .now() + start, repeating: interval, leeway: .seconds(0))
 
-        FrameworkConfiguration.performTaskSemaphore.wait()
-        let taskId = "\(FrameworkConfiguration.performTaskPool.count)"
-        FrameworkConfiguration.performTaskPool[taskId] = timer
-        FrameworkConfiguration.performTaskSemaphore.signal()
+        NSObject.performTaskSemaphore.wait()
+        let taskId = "\(NSObject.performTaskPool.count)"
+        NSObject.performTaskPool[taskId] = timer
+        NSObject.performTaskSemaphore.signal()
 
         timer.setEventHandler {
             task()
@@ -328,12 +328,12 @@ extension Wrapper where Base: NSObject {
     /// 指定任务Id取消轮询任务
     public static func cancelTask(_ taskId: String?) {
         guard let taskId, !taskId.isEmpty else { return }
-        FrameworkConfiguration.performTaskSemaphore.wait()
-        if let timer = FrameworkConfiguration.performTaskPool[taskId] as? DispatchSourceTimer {
+        NSObject.performTaskSemaphore.wait()
+        if let timer = NSObject.performTaskPool[taskId] as? DispatchSourceTimer {
             timer.cancel()
-            FrameworkConfiguration.performTaskPool.removeObject(forKey: taskId)
+            NSObject.performTaskPool.removeObject(forKey: taskId)
         }
-        FrameworkConfiguration.performTaskSemaphore.signal()
+        NSObject.performTaskSemaphore.signal()
     }
 }
 
@@ -343,7 +343,7 @@ extension Wrapper where Base == Date {
     public static var currentTime: TimeInterval {
         get {
             // 没有同步过返回本地时间
-            if FrameworkConfiguration.currentBaseTime == 0 {
+            if Date.currentBaseTime == 0 {
                 // 是否本地有服务器时间
                 let preCurrentTime = UserDefaults.standard.object(forKey: "FWCurrentTime") as? NSNumber
                 let preLocalTime = UserDefaults.standard.object(forKey: "FWLocalTime") as? NSNumber
@@ -357,14 +357,14 @@ extension Wrapper where Base == Date {
                 }
                 // 同步过计算当前服务器时间
             } else {
-                let offsetTime = systemUptime - FrameworkConfiguration.localBaseTime
-                return FrameworkConfiguration.currentBaseTime + offsetTime
+                let offsetTime = systemUptime - Date.localBaseTime
+                return Date.currentBaseTime + offsetTime
             }
         }
         set {
-            FrameworkConfiguration.currentBaseTime = newValue
+            Date.currentBaseTime = newValue
             // 取运行时间，调整系统时间不会影响
-            FrameworkConfiguration.localBaseTime = systemUptime
+            Date.localBaseTime = systemUptime
 
             // 保存当前服务器时间到本地
             UserDefaults.standard.set(NSNumber(value: newValue), forKey: "FWCurrentTime")
@@ -393,13 +393,13 @@ extension Wrapper where Base == Date {
 
     /// 通用DateFormatter对象，默认系统时区，使用时需先指定dateFormat，可自定义
     public static var dateFormatter: DateFormatter {
-        get { FrameworkConfiguration.defaultDateFormatter }
-        set { FrameworkConfiguration.defaultDateFormatter = newValue }
+        get { Date.defaultDateFormatter }
+        set { Date.defaultDateFormatter = newValue }
     }
 
     /// 从字符串初始化日期，自定义格式(默认yyyy-MM-dd HH:mm:ss)
     public static func date(string: String, format: String = "yyyy-MM-dd HH:mm:ss") -> Date? {
-        let formatter = FrameworkConfiguration.defaultDateFormatter
+        let formatter = Date.defaultDateFormatter
         formatter.dateFormat = format
         let date = formatter.date(from: string)
         return date
@@ -412,7 +412,7 @@ extension Wrapper where Base == Date {
 
     /// 转化为字符串，自定义格式
     public func string(format: String) -> String {
-        let formatter = FrameworkConfiguration.defaultDateFormatter
+        let formatter = Date.defaultDateFormatter
         formatter.dateFormat = format
         let string = formatter.string(from: base)
         return string
@@ -448,7 +448,7 @@ extension Wrapper where Base == Date {
 
     /// 解析服务器时间戳，参数为接口响应Header的Date字段，解析失败返回0
     public static func formatServerDate(_ dateString: String) -> TimeInterval {
-        let dateFormatter = FrameworkConfiguration.serverDateFormatter
+        let dateFormatter = Date.serverDateFormatter
         let date = dateFormatter.date(from: dateString)
         return date?.timeIntervalSince1970 ?? 0
     }
@@ -774,7 +774,7 @@ extension Wrapper where Base: FileManager {
     public static var pathDocument: String {
         pathSearch(.documentDirectory)
     }
-    
+
     /// 应用支持路径，iTunes会同步备份，用户不可见数据
     public static var pathApplicationSupport: String {
         pathSearch(.applicationSupportDirectory)
@@ -1310,10 +1310,10 @@ extension Wrapper where Base: URLSession {
     /// 是否禁止网络代理抓包，不影响App请求，默认false
     public static var httpProxyDisabled: Bool {
         get {
-            FrameworkConfiguration.httpProxyDisabled
+            URLSession.httpProxyDisabled
         }
         set {
-            FrameworkConfiguration.httpProxyDisabled = newValue
+            URLSession.httpProxyDisabled = newValue
             if newValue { FrameworkAutoloader.swizzleHttpProxy() }
         }
     }
@@ -1406,11 +1406,46 @@ extension Wrapper where Base: UserDefaults {
     }
 }
 
+// MARK: - URLSession+Foundation
+extension URLSession {
+    fileprivate nonisolated(unsafe) static var httpProxyDisabled = false
+}
+
+// MARK: - NSObject+Foundation
+extension NSObject {
+    fileprivate nonisolated(unsafe) static var dispatchOnceTokens = [AnyHashable]()
+    fileprivate nonisolated(unsafe) static var performTaskPool = NSMutableDictionary()
+    fileprivate nonisolated(unsafe) static var performTaskSemaphore = DispatchSemaphore(value: 1)
+}
+
+// MARK: - Date+Foundation
+extension Date {
+    fileprivate nonisolated(unsafe) static var currentBaseTime: TimeInterval = 0
+    fileprivate nonisolated(unsafe) static var localBaseTime: TimeInterval = 0
+
+    fileprivate nonisolated(unsafe) static var defaultDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        return formatter
+    }()
+
+    fileprivate nonisolated(unsafe) static var serverDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(abbreviation: "GMT")
+        formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
+        formatter.locale = Locale(identifier: "en_US")
+        return formatter
+    }()
+}
+
 // MARK: - FrameworkAutoloader+Foundation
 extension FrameworkAutoloader {
+    private nonisolated(unsafe) static var httpProxySwizzled = false
+
     fileprivate static func swizzleHttpProxy() {
-        guard !FrameworkConfiguration.swizzleHttpProxy else { return }
-        FrameworkConfiguration.swizzleHttpProxy = true
+        guard !httpProxySwizzled else { return }
+        httpProxySwizzled = true
 
         NSObject.fw.swizzleClassMethod(
             URLSession.self,
@@ -1418,7 +1453,7 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration) -> URLSession).self
         ) { store in { selfObject, configuration in
-            if FrameworkConfiguration.httpProxyDisabled {
+            if URLSession.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration)
@@ -1430,39 +1465,10 @@ extension FrameworkAutoloader {
             methodSignature: (@convention(c) (URLSession, Selector, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self,
             swizzleSignature: (@convention(block) (URLSession, URLSessionConfiguration, URLSessionDelegate?, OperationQueue?) -> URLSession).self
         ) { store in { selfObject, configuration, delegate, delegateQueue in
-            if FrameworkConfiguration.httpProxyDisabled {
+            if URLSession.httpProxyDisabled {
                 configuration.connectionProxyDictionary = [:]
             }
             return store.original(selfObject, store.selector, configuration, delegate, delegateQueue)
         }}
     }
-}
-
-// MARK: - FrameworkConfiguration+Foundation
-extension FrameworkConfiguration {
-    fileprivate static var dispatchOnceTokens = [AnyHashable]()
-    fileprivate static var performTaskPool = NSMutableDictionary()
-    fileprivate static var performTaskSemaphore = DispatchSemaphore(value: 1)
-
-    fileprivate static var currentBaseTime: TimeInterval = 0
-    fileprivate static var localBaseTime: TimeInterval = 0
-
-    fileprivate static var defaultDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.calendar = Calendar(identifier: .gregorian)
-        return formatter
-    }()
-
-    fileprivate static var serverDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.timeZone = TimeZone(abbreviation: "GMT")
-        formatter.dateFormat = "EEE',' dd MMM yyyy HH':'mm':'ss 'GMT'"
-        formatter.locale = Locale(identifier: "en_US")
-        return formatter
-    }()
-
-    fileprivate static var httpProxyDisabled = false
-
-    fileprivate static var swizzleHttpProxy = false
 }

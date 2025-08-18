@@ -40,16 +40,12 @@ public protocol ScanCodeSampleBufferDelegate: AnyObject {
 open class ScanCode: NSObject, AVCaptureMetadataOutputObjectsDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     // MARK: - Accessor
     /// 默认二维码类型，可自定义
-    public static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] {
-        get { FrameworkConfiguration.metadataObjectTypesQRCode }
-        set { FrameworkConfiguration.metadataObjectTypesQRCode = newValue }
-    }
+    public nonisolated(unsafe) static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
 
     /// 默认条形码类型，可自定义
-    public static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] {
-        get { FrameworkConfiguration.metadataObjectTypesBarcode }
-        set { FrameworkConfiguration.metadataObjectTypesBarcode = newValue }
-    }
+    public nonisolated(unsafe) static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
+        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
+    ]
 
     /// 预览视图，必须设置（传外界控制器视图）
     @MainActor open var preview: UIView? {
@@ -946,12 +942,4 @@ open class ScanView: UIView {
             pinchScaleBlock?(gesture.scale)
         }
     }
-}
-
-// MARK: - FrameworkConfiguration+ScanView
-extension FrameworkConfiguration {
-    fileprivate static var metadataObjectTypesQRCode: [AVMetadataObject.ObjectType] = [.qr]
-    fileprivate static var metadataObjectTypesBarcode: [AVMetadataObject.ObjectType] = [
-        .code39, .code39Mod43, .code93, .code128, .ean8, .ean13, .upce, .interleaved2of5
-    ]
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [9.0.0] - 2025-08-18
+
+### Added
+* Compatible with Xcode 26, minimum compatibility with Swift 5.10
+* Adapted to UISceneDelegate, migration and upgrade required
+* AppDelegate and SceneDelegate lifecycle adjustments
+* Added BlocConsumer component for Bloc mode
+* Added a method to retrieve all cache keys in the Cache component
+* Synchronized SmartCodable to the latest version
+
+### Migrate
+1. Due to Xcode 26 requirements, apps must adapt to UISceneDelegate and must be migrated and upgraded.
+2. If using AppResponder and SceneResponder, migrate and upgrade to the new lifecycle methods.
+3. Migrated IgnoredKey to SmartIgnored. If you encounter other errors, please refer to the Example project.
+
 ## [8.2.0] - 2025-07-28
 
 ### Added

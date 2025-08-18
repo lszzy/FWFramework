@@ -291,7 +291,7 @@ struct TestSmartModel: SmartModel {
     var age: Int?
     var amount: Float = 0
     var alias: String = ""
-    @IgnoredKey
+    @SmartIgnored
     var except: String = ""
     var camelName: String = ""
     @SmartAny

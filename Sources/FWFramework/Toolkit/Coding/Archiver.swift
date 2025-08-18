@@ -154,10 +154,12 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
     }
 
     // MARK: - Register
+    private nonisolated(unsafe) static var archiveRegisteredTypes: [String: AnyArchivable.Type] = [:]
+
     /// 当识别不出类型时需先注册struct归档类型，如果为class则无需注册(NSClassFromString自动处理)
     public static func registerType<T: AnyArchivable>(_ type: T.Type) {
         let key = String(describing: type as AnyObject)
-        FrameworkConfiguration.archiveRegisteredTypes[key] = type
+        archiveRegisteredTypes[key] = type
     }
 
     /// 归档类型加载器，加载未注册类型时会尝试调用并注册，block返回值为registerType方法type参数
@@ -190,7 +192,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
                 archiveType = String(archiveType.dropFirst().dropLast())
                 isArray = true
             }
-            var objectType = FrameworkConfiguration.archiveRegisteredTypes[archiveType]
+            var objectType = ArchiveCoder.archiveRegisteredTypes[archiveType]
             if objectType == nil {
                 if let loadType = try? ArchiveCoder.sharedLoader.load(archiveType) {
                     ArchiveCoder.registerType(loadType)
@@ -247,7 +249,7 @@ public class ArchiveCoder: NSObject, NSSecureCoding {
             archiveType = isArray ? "[\(className)]" : className
         } else if let objectType {
             let typeName = String(describing: objectType as AnyObject)
-            if FrameworkConfiguration.archiveRegisteredTypes[typeName] == nil {
+            if ArchiveCoder.archiveRegisteredTypes[typeName] == nil {
                 ArchiveCoder.registerType(objectType)
             }
             archiveType = isArray ? "[\(typeName)]" : typeName
@@ -334,9 +336,4 @@ extension Array where Element: AnyArchivable {
     public func archiveEncode() -> Data? {
         ArchiveCoder.encodeObjects(self)
     }
-}
-
-// MARK: - FrameworkConfiguration+Archiver
-extension FrameworkConfiguration {
-    fileprivate static var archiveRegisteredTypes: [String: AnyArchivable.Type] = [:]
 }

@@ -20,6 +20,8 @@ public protocol CacheProtocol {
     func removeObject(forKey key: String)
     /// 清空所有缓存
     func removeAllObjects()
+    /// 获取所有缓存key
+    func allObjectKeys() -> [String]
 }
 
 // MARK: - CacheEngineProtocol
@@ -33,6 +35,8 @@ public protocol CacheEngineProtocol {
     func clearCache(forKey key: String)
     /// 从引擎清空所有缓存，内部方法，必须实现
     func clearAllCaches()
+    /// 从引擎读取所有缓存key，内部方法，必须实现
+    func readCacheKeys() -> [String]
 }
 
 // MARK: - CacheEngine
@@ -55,6 +59,11 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         }
         semaphore.signal()
         return expire
+    }
+
+    /// 判断指定key是否为有效期key，子类使用
+    open func isExpireKey(_ key: String) -> Bool {
+        key.hasSuffix(".__EXPIRE__")
     }
 
     private func expireKey(_ key: String) -> String {
@@ -126,6 +135,13 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
         semaphore.signal()
     }
 
+    open func allObjectKeys() -> [String] {
+        semaphore.wait()
+        let keys = readCacheKeys()
+        semaphore.signal()
+        return keys
+    }
+
     // MARK: - CacheEngineProtocol
     open func readCache<T>(forKey key: String) -> T? {
         fatalError("readCache(forKey:) has not been implemented")
@@ -141,5 +157,9 @@ open class CacheEngine: NSObject, CacheProtocol, CacheEngineProtocol {
 
     open func clearAllCaches() {
         fatalError("clearAllCaches() has not been implemented")
+    }
+
+    open func readCacheKeys() -> [String] {
+        fatalError("readCacheKeys() has not been implemented")
     }
 }
