@@ -556,3 +556,75 @@ extension FrameworkAutoloader {
         }
     }
 }
+
+// MARK: - Concurrency+ToastPlugin
+@MainActor extension Wrapper where Base: UIView {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showToast(error: Error?) async {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                self.showMessage(error: error) {
+                    continuation.resume()
+                }
+            }
+        } onCancel: {
+            DispatchQueue.fw.mainAsync {
+                self.hideMessage()
+            }
+        }
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public func showToast(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                self.showMessage(text: text, detail: detail, style: style, completion: {
+                    continuation.resume()
+                }, customBlock: customBlock)
+            }
+        } onCancel: {
+            DispatchQueue.fw.mainAsync {
+                self.hideMessage()
+            }
+        }
+    }
+}
+
+@MainActor extension Wrapper where Base: UIViewController {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showToast(error: Error?) async {
+        await toastContainer.fw.showToast(error: error)
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public func showToast(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await toastContainer.fw.showToast(text: text, detail: detail, style: style, customBlock: customBlock)
+    }
+}
+
+@MainActor extension Wrapper where Base: UIWindow {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showToast(error: Error?) async {
+        await UIWindow.fw.main?.fw.showToast(error: error)
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public static func showToast(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await UIWindow.fw.main?.fw.showToast(text: text, detail: detail, style: style, customBlock: customBlock)
+    }
+}

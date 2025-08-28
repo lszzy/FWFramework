@@ -46,7 +46,8 @@ class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
             ["Authorize(Location)", "onAuthorizeLocation"],
             ["Authorize(Biometry)", "onAuthorizeBiometry"],
             ["Toolkit(Safari)", "onToolkitSafari"],
-            ["Toolkit(App)", "onToolkitApp"]
+            ["Toolkit(App)", "onToolkitApp"],
+            ["Toast(Message)", "onToastMessage"],
         ])
     }
 }
@@ -293,6 +294,13 @@ extension TestConcurrencyController {
             DispatchQueue.app.mainAsync {
                 self.app.showAlert(title: success ? "打开App成功" : "打开App失败", message: nil)
             }
+        }
+    }
+    
+    @objc func onToastMessage() {
+        Task {
+            await app.showToast(error: NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "我是错误提示，会自动消息"]))
+            await app.showToast(text: "错误提示已经消失")
         }
     }
 }
