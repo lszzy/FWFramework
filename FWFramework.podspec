@@ -132,6 +132,11 @@ Pod::Spec.new do |s|
       sss.dependency 'FWFramework/FWFramework/Service'
     end
     
+    ss.subspec 'Cloud' do |sss|
+      sss.source_files = 'Sources/FWPlugin/Cloud/**/*.swift'
+      sss.dependency 'FWFramework/FWFramework/Service'
+    end
+    
     ss.subspec 'SDWebImage' do |sss|
       sss.source_files = 'Sources/FWPlugin/SDWebImage/**/*.swift'
       sss.dependency 'SDWebImage'
