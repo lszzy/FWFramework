@@ -1024,15 +1024,9 @@ extension FrameworkAutoloader {
         error: Error?,
         cancel: AttributedStringParameter? = nil
     ) async {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showAlert(error: error, cancel: cancel) {
-                    continuation.resume()
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showAlert(error: error, cancel: cancel) {
+                continuation.resume()
             }
         }
     }
@@ -1049,15 +1043,9 @@ extension FrameworkAutoloader {
         style: AlertStyle = .default,
         cancel: AttributedStringParameter? = nil
     ) async {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showAlert(title: title, message: message, style: style, cancel: cancel) {
-                    continuation.resume()
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showAlert(title: title, message: message, style: style, cancel: cancel) {
+                continuation.resume()
             }
         }
     }
@@ -1076,17 +1064,11 @@ extension FrameworkAutoloader {
         cancel: AttributedStringParameter?,
         actions: [AttributedStringParameter]?
     ) async -> Int? {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions) { index in
-                    continuation.resume(returning: index)
-                } cancelBlock: {
-                    continuation.resume(returning: nil)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions) { index in
+                continuation.resume(returning: index)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
             }
         }
     }
@@ -1099,17 +1081,11 @@ extension FrameworkAutoloader {
         title: AttributedStringParameter?,
         message: AttributedStringParameter?
     ) async -> Bool {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showConfirm(title: title, message: message) {
-                    continuation.resume(returning: true)
-                } cancelBlock: {
-                    continuation.resume(returning: false)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showConfirm(title: title, message: message) {
+                continuation.resume(returning: true)
+            } cancelBlock: {
+                continuation.resume(returning: false)
             }
         }
     }
@@ -1126,17 +1102,11 @@ extension FrameworkAutoloader {
         cancel: AttributedStringParameter?,
         confirm: AttributedStringParameter?
     ) async -> Bool {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showConfirm(title: title, message: message, cancel: cancel, confirm: confirm) {
-                    continuation.resume(returning: true)
-                } cancelBlock: {
-                    continuation.resume(returning: false)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showConfirm(title: title, message: message, cancel: cancel, confirm: confirm) {
+                continuation.resume(returning: true)
+            } cancelBlock: {
+                continuation.resume(returning: false)
             }
         }
     }
@@ -1155,17 +1125,11 @@ extension FrameworkAutoloader {
         confirm: AttributedStringParameter? = nil,
         promptBlock: (@MainActor @Sendable (UITextField) -> Void)? = nil
     ) async -> String? {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptBlock: promptBlock) { value in
-                    continuation.resume(returning: value)
-                } cancelBlock: {
-                    continuation.resume(returning: nil)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptBlock: promptBlock) { value in
+                continuation.resume(returning: value)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
             }
         }
     }
@@ -1186,17 +1150,11 @@ extension FrameworkAutoloader {
         promptCount: Int,
         promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?
     ) async -> [String]? {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock) { values in
-                    continuation.resume(returning: values)
-                } cancelBlock: {
-                    continuation.resume(returning: nil)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock) { values in
+                continuation.resume(returning: values)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
             }
         }
     }
@@ -1211,15 +1169,9 @@ extension FrameworkAutoloader {
         message: AttributedStringParameter?,
         cancel: AttributedStringParameter?
     ) async {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showSheet(title: title, message: message, cancel: cancel) {
-                    continuation.resume()
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, cancel: cancel) {
+                continuation.resume()
             }
         }
     }
@@ -1234,17 +1186,11 @@ extension FrameworkAutoloader {
         message: AttributedStringParameter?,
         actions: [AttributedStringParameter]?
     ) async -> Int? {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showSheet(title: title, message: message, actions: actions) { index in
-                    continuation.resume(returning: index)
-                } cancelBlock: {
-                    continuation.resume(returning: nil)
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, actions: actions) { index in
+                continuation.resume(returning: index)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
             }
         }
     }
@@ -1265,18 +1211,12 @@ extension FrameworkAutoloader {
         currentIndex: Int = -1,
         customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
     ) async -> Int? {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: { index in
-                    continuation.resume(returning: index)
-                }, cancelBlock: {
-                    continuation.resume(returning: nil)
-                }, customBlock: customBlock)
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideAlert(animated: true)
-            }
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: { index in
+                continuation.resume(returning: index)
+            }, cancelBlock: {
+                continuation.resume(returning: nil)
+            }, customBlock: customBlock)
         }
     }
 }

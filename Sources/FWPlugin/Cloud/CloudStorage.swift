@@ -334,8 +334,9 @@ public final class CloudStorageSync: ObservableObject {
             queue: .main
         ) { [weak self] notification in
             guard let self else { return }
+            let sendableNotification = SendableValue(notification)
             MainActor.assumeIsolated {
-                self.didChangeExternally(notification: notification)
+                self.didChangeExternally(notification: sendableNotification.value)
             }
         }
         ubiquitousKvs.synchronize()

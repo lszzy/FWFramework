@@ -561,15 +561,9 @@ extension FrameworkAutoloader {
 @MainActor extension Wrapper where Base: UIView {
     /// 异步显示错误消息吐司，自动隐藏
     public func showMessage(error: Error?) async {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showMessage(error: error) {
-                    continuation.resume()
-                }
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideMessage()
+        await withCheckedContinuation { continuation in
+            self.showMessage(error: error) {
+                continuation.resume()
             }
         }
     }
@@ -581,16 +575,10 @@ extension FrameworkAutoloader {
         style: ToastStyle = .default,
         customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
     ) async {
-        await withTaskCancellationHandler {
-            await withCheckedContinuation { continuation in
-                self.showMessage(text: text, detail: detail, style: style, completion: {
-                    continuation.resume()
-                }, customBlock: customBlock)
-            }
-        } onCancel: {
-            DispatchQueue.fw.mainAsync {
-                self.hideMessage()
-            }
+        await withCheckedContinuation { continuation in
+            self.showMessage(text: text, detail: detail, style: style, completion: {
+                continuation.resume()
+            }, customBlock: customBlock)
         }
     }
 }
