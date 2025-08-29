@@ -38,6 +38,12 @@ public class PurchaseManager: @unchecked Sendable {
         try await Product.products(for: identifiers)
     }
 
+    /// 获取指定产品
+    public func product(_ identifier: String) async throws -> Product {
+        if let product = try await (products([identifier])).first { return product }
+        throw Product.PurchaseError.productUnavailable
+    }
+
     /// 支付指定产品ID，成功时自动验证（验证失败抛异常），可指定自动完成交易（默认false）
     @MainActor public func purchase(
         _ identifier: String,
@@ -46,17 +52,14 @@ public class PurchaseManager: @unchecked Sendable {
         appAccountToken: String? = nil,
         options: Set<Product.PurchaseOption> = []
     ) async throws -> Product.PurchaseResult {
-        if let product = try await Product.products(for: [identifier]).first {
-            return try await purchase(
-                product,
-                finishAutomatically: finishAutomatically,
-                quantity: quantity,
-                appAccountToken: appAccountToken,
-                options: options
-            )
-        }
-
-        throw Product.PurchaseError.productUnavailable
+        let product = try await product(identifier)
+        return try await purchase(
+            product,
+            finishAutomatically: finishAutomatically,
+            quantity: quantity,
+            appAccountToken: appAccountToken,
+            options: options
+        )
     }
 
     /// 支付指定产品，成功时自动验证（验证失败抛异常），可指定自动完成交易（默认false）
