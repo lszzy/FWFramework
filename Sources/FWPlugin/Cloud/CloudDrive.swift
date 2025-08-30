@@ -40,12 +40,6 @@ public final class CloudDrive: @unchecked Sendable {
         }
     }
 
-    /// The path of the directory for this drive, relative to the root of the iCloud container
-    @available(*, deprecated, renamed: "relativePathToRoot")
-    public var relativePathToRootInContainer: String {
-        relativePathToRoot
-    }
-
     /// The path of the directory for this drive, relative to the root of the drive
     public let relativePathToRoot: String
 
