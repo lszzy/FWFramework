@@ -8,9 +8,13 @@
 
 import FWFramework
 
+struct TestCloudTimeModel: SmartModel, AnyArchivable {
+    var value: Double = 0
+}
+
 class TestCloudModel: ObservableObject {
     @CloudStorage(TestCloudController.cloudKeyName)
-    var testCloudTime: Double = 0
+    var testCloudTime: TestCloudTimeModel = .init()
 }
 
 class TestCloudController: UIViewController {
@@ -39,7 +43,7 @@ class TestCloudController: UIViewController {
         let result = AppTheme.largeButton()
         result.setTitle("写入iCloud数据", for: .normal)
         result.app.addTouch { [weak self] _ in
-            self?.cloudModel.testCloudTime = Date.app.currentTime
+            self?.cloudModel.testCloudTime = TestCloudTimeModel(value: Date.app.currentTime)
             self?.refreshCloud()
         }
         return result
@@ -151,8 +155,8 @@ extension TestCloudController {
     func refreshCloud() {
         Task {
             var statusStr = "iCloud数据：\n"
-            if cloudModel.testCloudTime > 0 {
-                statusStr += Date(timeIntervalSince1970: cloudModel.testCloudTime).app.stringValue
+            if cloudModel.testCloudTime.value > 0 {
+                statusStr += Date(timeIntervalSince1970: cloudModel.testCloudTime.value).app.stringValue
             } else {
                 statusStr += "不存在"
             }

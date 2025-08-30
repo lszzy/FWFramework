@@ -8,6 +8,9 @@
 import Combine
 import SwiftUI
 import UIKit
+#if FWMacroSPM
+@_spi(FW) import FWFramework
+#endif
 
 // MARK: - CloudStorage
 /// [CloudStorage](https://github.com/nonstrict-hq/CloudStorage)
@@ -252,44 +255,12 @@ extension CloudStorage where Value == Data? {
     }
 }
 
-extension CloudStorage where Value: Codable {
+extension CloudStorage where Value: AnyArchivable {
     public init(wrappedValue: Value, _ key: String) {
-        func syncGet() -> Value {
-            guard let data = sync.data(for: key) else { return wrappedValue }
-            do {
-                let decoder = JSONDecoder()
-                let value = try decoder.decode(Value.self, from: data)
-                return value
-            } catch {
-                assertionFailure("\(error)")
-                return wrappedValue
-            }
-        }
-        func syncSet(_ newValue: Value) {
-            do {
-                let encoder = JSONEncoder()
-                let data = try encoder.encode(newValue)
-                sync.set(data, for: key)
-            } catch {
-                assertionFailure("\(error)")
-            }
-        }
-        self.init(keyName: key, syncGet: syncGet, syncSet: syncSet)
-    }
-}
-
-extension CloudStorage where Value == UUID {
-    public init(wrappedValue: Value, _ key: String) {
-        if sync.string(for: key) == nil {
-            sync.set(wrappedValue.uuidString, for: key)
-        }
         self.init(
             keyName: key,
-            syncGet: {
-                guard let uuidString = sync.string(for: key) else { return wrappedValue }
-                return UUID(uuidString: uuidString)!
-            },
-            syncSet: { newValue in sync.set(newValue.uuidString, for: key) }
+            syncGet: { Value.archiveDecode(sync.data(for: key)) ?? wrappedValue },
+            syncSet: { newValue in sync.set(newValue.archiveEncode(), for: key) }
         )
     }
 }

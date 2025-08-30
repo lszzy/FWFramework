@@ -28,7 +28,7 @@ class TestController: UIViewController {
             ["Request", "TestRequestController"],
             ["Socket", "TestSocketController"],
             ["Purchase", "TestPurchaseController"],
-            ["Cloud", "TestCloudController"],
+            ["iCloud", "TestCloudController"],
             ["AudioPlayer", "TestAudioController"],
             ["VideoPlayer", "TestVideoController"],
             ["AudioRecorder", "TestRecorderController"]
