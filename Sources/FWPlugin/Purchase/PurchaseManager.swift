@@ -160,11 +160,16 @@ public class PurchaseManager: @unchecked Sendable {
             return nil
         }
     }
+    
+    /// 同步交易列表
+    public func syncTransactions() async throws {
+        try await AppStore.sync()
+    }
 
     /// 同步并恢复已购买的未退款交易，按支付时间倒序排列
     @discardableResult
     public func restorePurchases() async throws -> [Transaction] {
-        try await AppStore.sync()
+        try await syncTransactions()
         return await purchasedTransactions()
     }
 
