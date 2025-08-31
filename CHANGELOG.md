@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.1.0] - 2025-08-31
+
+### Added
+* AlertPlugin and ToastPlugin support await coroutine calls
+* Added Cloud submodule to manage iCloud data and file plugins
+* PurchaseManager adds sync and product methods
+
 ## [9.0.0] - 2025-08-18
 
 ### Added
