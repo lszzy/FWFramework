@@ -84,6 +84,7 @@
 		2FDA141F28D30BCE00985FBD /* TestEmptyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */; };
 		2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA142028D30F3600985FBD /* TestImageController.swift */; };
 		2FE1E9C82BA16C5200D2C230 /* TestCodableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */; };
+		2FE1FB002E6311FF005377F2 /* TestCloudController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE1FAFF2E6311FF005377F2 /* TestCloudController.swift */; };
 		2FF08B3B28ADDC000074895A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1028ADDC000074895A /* Localizable.strings */; };
 		2FF08B3C28ADDC000074895A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1228ADDC000074895A /* InfoPlist.strings */; };
 		2FF08B3D28ADDC000074895A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2FF08B1628ADDC000074895A /* LaunchScreen.storyboard */; };
@@ -181,6 +182,8 @@
 		2FDA141E28D30BCE00985FBD /* TestEmptyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEmptyController.swift; sourceTree = "<group>"; };
 		2FDA142028D30F3600985FBD /* TestImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageController.swift; sourceTree = "<group>"; };
 		2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCodableController.swift; sourceTree = "<group>"; };
+		2FE1FAFE2E631045005377F2 /* FWFramework_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FWFramework_Example.entitlements; path = ../FWFramework_Example.entitlements; sourceTree = "<group>"; };
+		2FE1FAFF2E6311FF005377F2 /* TestCloudController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCloudController.swift; sourceTree = "<group>"; };
 		2FE6E8832BE0B97700F0CC00 /* README_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README_CN.md; path = ../README_CN.md; sourceTree = "<group>"; };
 		2FE6E8842BE0B97700F0CC00 /* CHANGELOG_CN.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG_CN.md; path = ../CHANGELOG_CN.md; sourceTree = "<group>"; };
 		2FE6E8852BE0B97700F0CC00 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
@@ -273,6 +276,7 @@
 				2F3849322DFCFD2000546F5E /* TestRecorderController.swift */,
 				2F6A412E28B66919003719E7 /* TestAuthorizeController.swift */,
 				2FB9E30328C0A69B00C78850 /* TestCacheController.swift */,
+				2FE1FAFF2E6311FF005377F2 /* TestCloudController.swift */,
 				2F2D997D2A72685F005C81BB /* TestDatabaseController.swift */,
 				2F46A0AE2A8F2F6900E95F4D /* TestEncodeController.swift */,
 				2FE1E9C72BA16C5100D2C230 /* TestCodableController.swift */,
@@ -572,6 +576,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACD41AFB9204008FA782 /* Info.plist */,
+				2FE1FAFE2E631045005377F2 /* FWFramework_Example.entitlements */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -755,6 +760,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FE1FB002E6311FF005377F2 /* TestCloudController.swift in Sources */,
 				2FB9E30228C09F2500C78850 /* TestStateController.swift in Sources */,
 				2FD9454129EF8248002C48F2 /* TestSwiftUIListController.swift in Sources */,
 				2FF08B6428ADDD730074895A /* AppDelegate.swift in Sources */,
@@ -920,6 +926,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FWFramework_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				EXCLUDED_ARCHS = "";
@@ -1002,6 +1009,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FWFramework_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				EXCLUDED_ARCHS = "";
@@ -1143,6 +1151,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FWFramework_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				EXCLUDED_ARCHS = "";
@@ -1172,6 +1181,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = FWFramework_Example.entitlements;
 				CURRENT_PROJECT_VERSION = 1.0.0.1;
 				DEVELOPMENT_TEAM = 3SPQYAJQY3;
 				EXCLUDED_ARCHS = "";

@@ -29,9 +29,9 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
                             for transaction in transactions {
                                 message += "\(transaction)\n"
                             }
-                            self?.app.showAlert(title: "Restore", message: message)
+                            await self?.app.showAlert(title: "Restore", message: message)
                         } catch {
-                            self?.app.showMessage(error: error)
+                            await self?.app.showMessage(error: error)
                         }
                     }
                 } else if index == 1 {
@@ -40,14 +40,14 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
                         for transaction in await PurchaseManager.shared.purchasedTransactions() {
                             message += "\(transaction)\n"
                         }
-                        self?.app.showAlert(title: "Transactions", message: message)
+                        await self?.app.showAlert(title: "Transactions", message: message)
                     }
                 } else {
                     Task {
                         do {
                             try await PurchaseManager.shared.manageSubscriptions()
                         } catch {
-                            self?.app.showMessage(error: error)
+                            await self?.app.showMessage(error: error)
                         }
                     }
                 }
@@ -63,7 +63,7 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
 
                 self.reloadData()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -100,35 +100,35 @@ class TestPurchaseController: UIViewController, TableViewControllerProtocol {
                 Task {
                     do {
                         let result = try await PurchaseManager.shared.purchase(product)
-                        self?.app.showAlert(title: "Purchase", message: "\(result)")
+                        await self?.app.showAlert(title: "Purchase", message: "\(result)")
                     } catch {
-                        self?.app.showMessage(error: error)
+                        await self?.app.showMessage(error: error)
                     }
                 }
             } else if index == 1 {
                 Task {
                     if let transaction = await PurchaseManager.shared.latestTransaction(product.id) {
-                        self?.app.showAlert(title: "Transaction", message: "\(transaction)")
+                        await self?.app.showAlert(title: "Transaction", message: "\(transaction)")
                     } else {
-                        self?.app.showMessage(text: "nil")
+                        await self?.app.showMessage(text: "nil")
                     }
                 }
             } else if index == 2 {
                 Task {
                     if let transaction = await PurchaseManager.shared.finish(product.id) {
-                        self?.app.showAlert(title: "Finish", message: "\(transaction)")
+                        await self?.app.showAlert(title: "Finish", message: "\(transaction)")
                         self?.reloadData()
                     } else {
-                        self?.app.showMessage(text: "nil")
+                        await self?.app.showMessage(text: "nil")
                     }
                 }
             } else {
                 Task {
                     do {
                         let result = try await PurchaseManager.shared.refund(product.id)
-                        self?.app.showAlert(title: "Refund", message: "\(result)")
+                        await self?.app.showAlert(title: "Refund", message: "\(result)")
                     } catch {
-                        self?.app.showMessage(error: error)
+                        await self?.app.showMessage(error: error)
                     }
                 }
             }

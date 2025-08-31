@@ -55,6 +55,10 @@ let package = Package(
             targets: ["FWPluginPurchase"]
         ),
         .library(
+            name: "FWPluginCloud",
+            targets: ["FWPluginCloud"]
+        ),
+        .library(
             name: "FWPluginMacros",
             targets: ["FWPluginMacros"]
         ),
@@ -185,6 +189,15 @@ let package = Package(
             name: "FWPluginPurchase",
             dependencies: ["FWFramework"],
             path: "Sources/FWPlugin/Purchase",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginCloud",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Cloud",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

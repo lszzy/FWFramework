@@ -1013,3 +1013,403 @@ extension FrameworkAutoloader {
         }}
     }
 }
+
+// MARK: - Concurrency+AlertPlugin
+@MainActor extension Wrapper where Base: UIViewController {
+    /// 异步显示错误警告框
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - cancel: 取消按钮标题，默认关闭
+    public func showAlert(
+        error: Error?,
+        cancel: AttributedStringParameter? = nil
+    ) async {
+        await withCheckedContinuation { continuation in
+            self.showAlert(error: error, cancel: cancel) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 显示警告框(简单版)
+    /// - Parameters:
+    ///   - title: 警告框标题
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
+    ///   - cancel: 取消按钮标题，默认关闭
+    public func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle = .default,
+        cancel: AttributedStringParameter? = nil
+    ) async {
+        await withCheckedContinuation { continuation in
+            self.showAlert(title: title, message: message, style: style, cancel: cancel) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 显示警告框(详细版)
+    /// - Parameters:
+    ///   - title: 警告框标题
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
+    ///   - cancel: 取消按钮标题，默认单按钮关闭，多按钮取消
+    ///   - actions: 动作按钮标题列表
+    public func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle = .default,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?
+    ) async -> Int? {
+        await withCheckedContinuation { continuation in
+            self.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions) { index in
+                continuation.resume(returning: index)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
+            }
+        }
+    }
+
+    /// 显示确认框(简单版)
+    /// - Parameters:
+    ///   - title: 确认框标题
+    ///   - message: 确认框消息
+    public func showConfirm(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?
+    ) async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.showConfirm(title: title, message: message) {
+                continuation.resume(returning: true)
+            } cancelBlock: {
+                continuation.resume(returning: false)
+            }
+        }
+    }
+
+    /// 显示确认框(详细版)
+    /// - Parameters:
+    ///   - title: 确认框标题
+    ///   - message: 确认框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    public func showConfirm(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?
+    ) async -> Bool {
+        await withCheckedContinuation { continuation in
+            self.showConfirm(title: title, message: message, cancel: cancel, confirm: confirm) {
+                continuation.resume(returning: true)
+            } cancelBlock: {
+                continuation.resume(returning: false)
+            }
+        }
+    }
+
+    /// 显示输入框(简单版)
+    /// - Parameters:
+    ///   - title: 输入框标题
+    ///   - message: 输入框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    ///   - promptBlock: 输入框初始化事件，参数为输入框
+    public func showPrompt(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
+        promptBlock: (@MainActor @Sendable (UITextField) -> Void)? = nil
+    ) async -> String? {
+        await withCheckedContinuation { continuation in
+            self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptBlock: promptBlock) { value in
+                continuation.resume(returning: value)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
+            }
+        }
+    }
+
+    /// 显示输入框(详细版)
+    /// - Parameters:
+    ///   - title: 输入框标题
+    ///   - message: 输入框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    ///   - promptCount: 输入框数量
+    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index
+    public func showPrompt(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter? = nil,
+        confirm: AttributedStringParameter? = nil,
+        promptCount: Int,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?
+    ) async -> [String]? {
+        await withCheckedContinuation { continuation in
+            self.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock) { values in
+                continuation.resume(returning: values)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
+            }
+        }
+    }
+
+    /// 显示操作表(无动作)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - cancel: 取消按钮标题，默认取消
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?
+    ) async {
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, cancel: cancel) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 显示操作表(简单版)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - actions: 动作按钮标题列表
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?
+    ) async -> Int? {
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, actions: actions) { index in
+                continuation.resume(returning: index)
+            } cancelBlock: {
+                continuation.resume(returning: nil)
+            }
+        }
+    }
+
+    /// 显示操作表(完整版)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
+    ///   - actions: 动作按钮标题列表
+    ///   - currentIndex: 当前选中动作索引，默认-1
+    ///   - customBlock: 自定义弹出框事件
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int = -1,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async -> Int? {
+        await withCheckedContinuation { continuation in
+            self.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, actionBlock: { index in
+                continuation.resume(returning: index)
+            }, cancelBlock: {
+                continuation.resume(returning: nil)
+            }, customBlock: customBlock)
+        }
+    }
+}
+
+// MARK: - Wrapper+UIView
+@MainActor extension Wrapper where Base: UIView {
+    /// 显示错误警告框
+    /// - Parameters:
+    ///   - error: 错误对象
+    ///   - cancel: 取消按钮标题，默认关闭
+    public func showAlert(
+        error: Error?,
+        cancel: AttributedStringParameter? = nil
+    ) async {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        await ctrl?.fw.showAlert(error: error, cancel: cancel)
+    }
+
+    /// 显示警告框(简单版)
+    /// - Parameters:
+    ///   - title: 警告框标题
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
+    ///   - cancel: 取消按钮标题，默认关闭
+    public func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle = .default,
+        cancel: AttributedStringParameter? = nil
+    ) async {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        await ctrl?.fw.showAlert(title: title, message: message, style: style, cancel: cancel)
+    }
+
+    /// 显示警告框(详细版)
+    /// - Parameters:
+    ///   - title: 警告框标题
+    ///   - message: 警告框消息
+    ///   - style: 警告框样式
+    ///   - cancel: 取消按钮标题，默认单按钮关闭，多按钮取消
+    ///   - actions: 动作按钮标题列表
+    public func showAlert(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        style: AlertStyle = .default,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?
+    ) async -> Int? {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showAlert(title: title, message: message, style: style, cancel: cancel, actions: actions)
+    }
+
+    /// 显示确认框(简单版)
+    /// - Parameters:
+    ///   - title: 确认框标题
+    ///   - message: 确认框消息
+    public func showConfirm(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?
+    ) async -> Bool {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showConfirm(title: title, message: message) ?? false
+    }
+
+    /// 显示确认框(详细版)
+    /// - Parameters:
+    ///   - title: 确认框标题
+    ///   - message: 确认框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    public func showConfirm(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?
+    ) async -> Bool {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showConfirm(title: title, message: message, cancel: cancel, confirm: confirm) ?? false
+    }
+
+    /// 显示输入框(简单版)
+    /// - Parameters:
+    ///   - title: 输入框标题
+    ///   - message: 输入框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    ///   - promptBlock: 输入框初始化事件，参数为输入框
+    public func showPrompt(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
+        promptBlock: (@MainActor @Sendable (UITextField) -> Void)? = nil
+    ) async -> String? {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptBlock: promptBlock)
+    }
+
+    /// 显示输入框(详细版)
+    /// - Parameters:
+    ///   - title: 输入框标题
+    ///   - message: 输入框消息
+    ///   - cancel: 取消按钮文字，默认取消
+    ///   - confirm: 确认按钮文字，默认确定
+    ///   - promptCount: 输入框数量
+    ///   - promptBlock: 输入框初始化事件，参数为输入框和索引index
+    public func showPrompt(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        confirm: AttributedStringParameter?,
+        promptCount: Int,
+        promptBlock: (@MainActor @Sendable (UITextField, Int) -> Void)?
+    ) async -> [String]? {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showPrompt(title: title, message: message, cancel: cancel, confirm: confirm, promptCount: promptCount, promptBlock: promptBlock)
+    }
+
+    /// 显示操作表(无动作)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - cancel: 取消按钮标题，默认取消
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?
+    ) async {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        await ctrl?.fw.showSheet(title: title, message: message, cancel: cancel)
+    }
+
+    /// 显示操作表(简单版)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - actions: 动作按钮标题列表
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?
+    ) async -> Int? {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showSheet(title: title, message: message, actions: actions)
+    }
+
+    /// 显示弹出框(完整版)
+    /// - Parameters:
+    ///   - title: 操作表标题
+    ///   - message: 操作表消息
+    ///   - cancel: 取消按钮标题，默认Alert单按钮关闭，Alert多按钮或Sheet取消
+    ///   - actions: 动作按钮标题列表
+    ///   - currentIndex: 当前选中动作索引，默认-1
+    ///   - customBlock: 自定义弹出框事件
+    public func showSheet(
+        title: AttributedStringParameter?,
+        message: AttributedStringParameter?,
+        cancel: AttributedStringParameter?,
+        actions: [AttributedStringParameter]?,
+        currentIndex: Int = -1,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async -> Int? {
+        var ctrl = viewController
+        if ctrl == nil || ctrl?.presentedViewController != nil {
+            ctrl = UIWindow.fw.main?.fw.topPresentedController
+        }
+        return await ctrl?.fw.showSheet(title: title, message: message, cancel: cancel, actions: actions, currentIndex: currentIndex, customBlock: customBlock)
+    }
+}

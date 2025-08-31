@@ -556,3 +556,63 @@ extension FrameworkAutoloader {
         }
     }
 }
+
+// MARK: - Concurrency+ToastPlugin
+@MainActor extension Wrapper where Base: UIView {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showMessage(error: Error?) async {
+        await withCheckedContinuation { continuation in
+            self.showMessage(error: error) {
+                continuation.resume()
+            }
+        }
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await withCheckedContinuation { continuation in
+            self.showMessage(text: text, detail: detail, style: style, completion: {
+                continuation.resume()
+            }, customBlock: customBlock)
+        }
+    }
+}
+
+@MainActor extension Wrapper where Base: UIViewController {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showMessage(error: Error?) async {
+        await toastContainer.fw.showMessage(error: error)
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await toastContainer.fw.showMessage(text: text, detail: detail, style: style, customBlock: customBlock)
+    }
+}
+
+@MainActor extension Wrapper where Base: UIWindow {
+    /// 异步显示错误消息吐司，自动隐藏
+    public func showMessage(error: Error?) async {
+        await UIWindow.fw.main?.fw.showMessage(error: error)
+    }
+
+    /// 异步显示指定样式消息吐司，自动隐藏，支持String和AttributedString
+    public static func showMessage(
+        text: AttributedStringParameter?,
+        detail: AttributedStringParameter? = nil,
+        style: ToastStyle = .default,
+        customBlock: (@MainActor @Sendable (Any) -> Void)? = nil
+    ) async {
+        await UIWindow.fw.main?.fw.showMessage(text: text, detail: detail, style: style, customBlock: customBlock)
+    }
+}

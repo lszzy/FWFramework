@@ -46,7 +46,10 @@ class TestConcurrencyController: UIViewController, TableViewControllerProtocol {
             ["Authorize(Location)", "onAuthorizeLocation"],
             ["Authorize(Biometry)", "onAuthorizeBiometry"],
             ["Toolkit(Safari)", "onToolkitSafari"],
-            ["Toolkit(App)", "onToolkitApp"]
+            ["Toolkit(App)", "onToolkitApp"],
+            ["Toast(Message)", "onToastMessage"],
+            ["Alert(Confirm)", "onAlertConfirm"],
+            ["Alert(Sheet)", "onAlertSheet"]
         ])
     }
 }
@@ -293,6 +296,28 @@ extension TestConcurrencyController {
             DispatchQueue.app.mainAsync {
                 self.app.showAlert(title: success ? "打开App成功" : "打开App失败", message: nil)
             }
+        }
+    }
+
+    @objc func onToastMessage() {
+        Task {
+            await app.showMessage(error: NSError(domain: "test", code: 0, userInfo: [NSLocalizedDescriptionKey: "我是错误提示，会自动消失"]))
+            await app.showMessage(text: "错误提示已经消失")
+        }
+    }
+
+    @objc func onAlertConfirm() {
+        Task {
+            let result = await app.showConfirm(title: "请点击按钮", message: nil)
+            await app.showMessage(text: "你点击了 - \(result ? "确定" : "取消")")
+        }
+    }
+
+    @objc func onAlertSheet() {
+        Task {
+            let actions = ["操作1", "操作2", "操作3"]
+            let result = await app.showSheet(title: nil, message: nil, actions: actions)
+            await app.showMessage(text: "你点击了 - \(result != nil ? actions[result!] : "取消")")
         }
     }
 }

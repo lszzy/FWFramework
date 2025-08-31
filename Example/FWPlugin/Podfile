@@ -23,6 +23,7 @@ target "FWFramework_Plugin" do
   pod 'FWFramework/FWPlugin/Motion', :path => '../../'
   pod 'FWFramework/FWPlugin/Speech', :path => '../../'
   pod 'FWFramework/FWPlugin/Purchase', :path => '../../'
+  pod 'FWFramework/FWPlugin/Cloud', :path => '../../'
   pod 'FWFramework/FWPlugin/SDWebImage', :path => '../../'
   pod 'FWFramework/FWPlugin/Alamofire', :path => '../../'
   pod 'FWFramework/FWPlugin/ObjectMapper', :path => '../../'

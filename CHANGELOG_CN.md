@@ -1,5 +1,12 @@
 # 更新日志
 
+## [9.1.0] - 2025-08-31
+
+### Added
+* AlertPlugin和ToastPlugin支持await协程调用
+* 新增Cloud子模块管理iCloud数据和文件插件
+* PurchaseManager新增sync和product方法
+
 ## [9.0.0] - 2025-08-18
 
 ### Added

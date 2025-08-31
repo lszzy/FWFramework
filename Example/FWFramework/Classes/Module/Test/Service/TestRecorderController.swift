@@ -300,7 +300,7 @@ extension TestRecorderController {
                 }
                 Logger.debug("uri: %@", uri ?? "")
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -310,7 +310,7 @@ extension TestRecorderController {
             do {
                 try await recorder.pauseRecorder()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -320,7 +320,7 @@ extension TestRecorderController {
             do {
                 try await recorder.resumeRecorder()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -333,7 +333,7 @@ extension TestRecorderController {
                 self.state.recordSecs = 0
                 self.updateState()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -345,7 +345,7 @@ extension TestRecorderController {
                 guard state.currentDuration > 0 else { return }
                 try await recorder.seekToPlayer(state.currentDuration * touchProgress)
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -366,7 +366,7 @@ extension TestRecorderController {
                     updateState()
                 }
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -376,7 +376,7 @@ extension TestRecorderController {
             do {
                 try await recorder.pausePlayer()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -386,7 +386,7 @@ extension TestRecorderController {
             do {
                 try await recorder.resumePlayer()
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -397,7 +397,7 @@ extension TestRecorderController {
                 try await recorder.stopPlayer()
                 recorder.playBackListener = nil
             } catch {
-                self.app.showMessage(error: error)
+                await self.app.showMessage(error: error)
             }
         }
     }
@@ -414,7 +414,7 @@ extension TestRecorderController {
                 state.recognizeText = ""
                 updateState()
                 if task != nil {
-                    self.app.showMessage(error: error)
+                    await self.app.showMessage(error: error)
                 }
             }
         }
