@@ -5,8 +5,6 @@
 //  Created by wuyong on 2022/8/22.
 //
 
-import AVFoundation
-import CoreLocation
 import Photos
 import UIKit
 import UserNotifications
@@ -16,19 +14,13 @@ import UserNotifications
 public struct AuthorizeType: RawRepresentable, Equatable, Hashable, Sendable {
     public typealias RawValue = String
 
-    /// 使用时定位，Info.plist需配置NSLocationWhenInUseUsageDescription
-    public static let locationWhenInUse: AuthorizeType = .init("locationWhenInUse")
-    /// 后台定位，Info.plist需配置NSLocationAlwaysUsageDescription和NSLocationAlwaysAndWhenInUseUsageDescription
-    public static let locationAlways: AuthorizeType = .init("locationAlways")
     /// 相册，Info.plist需配置NSPhotoLibraryUsageDescription|NSPhotoLibraryAddUsageDescription
     public static let photoLibrary: AuthorizeType = .init("photoLibrary")
     /// 照相机，Info.plist需配置NSCameraUsageDescription
     public static let camera: AuthorizeType = .init("camera")
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
     public static let notifications: AuthorizeType = .init("notifications")
-    /// 麦克风，Info.plist需配置NSMicrophoneUsageDescription
-    public static let microphone: AuthorizeType = .init("microphone")
-
+    
     public var rawValue: String
 
     public init(rawValue: String) {
@@ -105,100 +97,14 @@ public class AuthorizeManager {
         }
 
         switch type {
-        case .locationWhenInUse:
-            return AuthorizeLocation.shared
-        case .locationAlways:
-            return AuthorizeLocation.always
         case .photoLibrary:
             return AuthorizePhotoLibrary.shared
         case .camera:
             return AuthorizeCamera.shared
         case .notifications:
             return AuthorizeNotifications.shared
-        case .microphone:
-            return AuthorizeMicrophone.shared
         default:
             return nil
-        }
-    }
-}
-
-// MARK: - AuthorizeLocation
-/// 定位授权
-public class AuthorizeLocation: NSObject, AuthorizeProtocol, CLLocationManagerDelegate, @unchecked Sendable {
-    public static let shared = AuthorizeLocation()
-    public static let always = AuthorizeLocation(isAlways: true)
-
-    public lazy var locationManager: CLLocationManager = {
-        let result = CLLocationManager()
-        result.delegate = self
-        return result
-    }()
-
-    private var isAlways: Bool = false
-    private var completionBlock: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?
-
-    public init(isAlways: Bool = false) {
-        super.init()
-        self.isAlways = isAlways
-    }
-
-    private func authorizeStatus(for status: CLAuthorizationStatus, isAlways: Bool = false) -> AuthorizeStatus {
-        switch status {
-        case .restricted:
-            return .restricted
-        case .denied:
-            return .denied
-        case .authorizedAlways:
-            return .authorized
-        case .authorizedWhenInUse:
-            if isAlways {
-                return .denied
-            } else {
-                return .authorized
-            }
-        default:
-            return .notDetermined
-        }
-    }
-
-    public func authorizeStatus() -> AuthorizeStatus {
-        let status: CLAuthorizationStatus
-        if #available(iOS 14.0, *) {
-            status = locationManager.authorizationStatus
-        } else {
-            status = CLLocationManager.authorizationStatus()
-        }
-        return authorizeStatus(for: status, isAlways: isAlways)
-    }
-
-    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
-        completionBlock = completion
-        if isAlways {
-            locationManager.requestAlwaysAuthorization()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-    }
-
-    @available(iOS 14.0, *)
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        let authorizeStatus = authorizeStatus(for: manager.authorizationStatus, isAlways: isAlways)
-        if authorizeStatus != .notDetermined, completionBlock != nil {
-            DispatchQueue.fw.mainAsync {
-                self.completionBlock?(authorizeStatus, nil)
-                self.completionBlock = nil
-            }
-        }
-    }
-
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        let authorizeStatus = authorizeStatus(for: status, isAlways: isAlways)
-        if authorizeStatus != .notDetermined, completionBlock != nil {
-            DispatchQueue.fw.mainAsync {
-                self.completionBlock?(authorizeStatus, nil)
-                self.completionBlock = nil
-            }
         }
     }
 }
@@ -350,35 +256,6 @@ public class AuthorizeNotifications: NSObject, AuthorizeProtocol, @unchecked Sen
         }
         DispatchQueue.fw.mainAsync {
             UIApplication.shared.registerForRemoteNotifications()
-        }
-    }
-}
-
-// MARK: - AuthorizeMicrophone
-/// 麦克风授权
-public class AuthorizeMicrophone: NSObject, AuthorizeProtocol, @unchecked Sendable {
-    public static let shared = AuthorizeMicrophone()
-
-    public func authorizeStatus() -> AuthorizeStatus {
-        let status = AVAudioSession.sharedInstance().recordPermission
-        switch status {
-        case .denied:
-            return .denied
-        case .granted:
-            return .authorized
-        default:
-            return .notDetermined
-        }
-    }
-
-    public func requestAuthorize(_ completion: (@MainActor @Sendable (AuthorizeStatus, Error?) -> Void)?) {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
-            let status: AuthorizeStatus = granted ? .authorized : .denied
-            if completion != nil {
-                DispatchQueue.fw.mainAsync {
-                    completion?(status, nil)
-                }
-            }
         }
     }
 }
