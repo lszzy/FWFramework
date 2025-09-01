@@ -1,5 +1,10 @@
 # Changelog
 
+## [9.2.0] - 2025-09-01
+
+### Changed
+* Split the Location, Microphone, and Speech submodule codes and optimize package permission warnings
+
 ## [9.1.0] - 2025-08-31
 
 ### Added

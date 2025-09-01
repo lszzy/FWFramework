@@ -23,6 +23,14 @@ let package = Package(
             targets: ["FWSwiftUI"]
         ),
         .library(
+            name: "FWPluginLocation",
+            targets: ["FWPluginLocation"]
+        ),
+        .library(
+            name: "FWPluginMicrophone",
+            targets: ["FWPluginMicrophone"]
+        ),
+        .library(
             name: "FWPluginCalendar",
             targets: ["FWPluginCalendar"]
         ),
@@ -117,6 +125,24 @@ let package = Package(
             name: "FWSwiftUI",
             dependencies: ["FWFramework"],
             path: "Sources/FWSwiftUI",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginLocation",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Location",
+            swiftSettings: [
+                .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
+                .define("FWMacroSPM")
+            ]
+        ),
+        .target(
+            name: "FWPluginMicrophone",
+            dependencies: ["FWFramework"],
+            path: "Sources/FWPlugin/Authorize/Microphone",
             swiftSettings: [
                 .define("DEBUG", .when(platforms: [.iOS], configuration: .debug)),
                 .define("FWMacroSPM")

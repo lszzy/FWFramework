@@ -8,14 +8,10 @@
 import Combine
 import Speech
 import SwiftUI
-#if FWMacroSPM
-@_spi(FW) import FWFramework
-#endif
 
 /// [SwiftSpeech](https://github.com/Cay-Zhang/SwiftSpeech)
 public enum SwiftSpeech {
     public struct ViewModifiers {}
-    public struct Demos {}
     struct EnvironmentKeys {}
 
     public nonisolated(unsafe) static var defaultAnimation: Animation = .interactiveSpring()
@@ -31,7 +27,7 @@ extension SwiftSpeech {
 
         func requestSpeechRecognitionAuthorization() {
             SFSpeechRecognizer.requestAuthorization { authStatus in
-                DispatchQueue.fw.mainAsync {
+                DispatchQueue.main.async {
                     if self.speechRecognitionAuthorizationStatus != authStatus {
                         self.speechRecognitionAuthorizationStatus = authStatus
                     }
