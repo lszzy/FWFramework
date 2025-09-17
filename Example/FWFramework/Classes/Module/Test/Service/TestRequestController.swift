@@ -695,14 +695,22 @@ extension TestRequestController {
             return
         }
 
-        let endpoint = URL(string: "http://127.0.0.1:8000/")!
+        let endpoint = URL(string: "http://127.0.0.1:3000/sse")!
         sseRequest = AlamofireImpl.shared.session.eventSourceRequest(endpoint, lastEventID: "0")
         sseRequest?.responseEventSource { [weak self] eventSource in
             switch eventSource.event {
             case let .message(message):
-                self?.sseButton.setTitle(message.data?.app.substring(to: 19), for: .normal)
+                self?.sseButton.setTitle(message.data, for: .normal)
             case let .complete(completion):
-                self?.sseButton.setTitle(completion.error == nil ? "SSE Completed" : "SSE Failed", for: .normal)
+                if completion.error == nil {
+                    self?.sseButton.setTitle("SSE Completed", for: .normal)
+                } else {
+                    let isCancelled = completion.error?.isExplicitlyCancelledError ?? false
+                    self?.sseButton.setTitle(isCancelled ? "SSE Cancelled" : "SSE Failed", for: .normal)
+                    if !isCancelled {
+                        self?.app.showMessage(text: "请先运行`node sse_server.js`启动SSE Server")
+                    }
+                }
             }
         }
     }
