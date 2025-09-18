@@ -577,8 +577,9 @@ extension WrapperGlobal {
         if let height = UIScreen.customToolBarHeights[orientation] { return height }
 
         // 2. 获取实时根导航控制器工具栏高度并缓存
-        if let navController = firstRootController(of: UINavigationController.self) {
-            let height = navController.toolbar.frame.height + safeAreaInsets.bottom
+        if let navController = firstRootController(of: UINavigationController.self),
+           let toolBarView = navController.innerToolBarView {
+            let height = toolBarView.frame.height + safeAreaInsets.bottom
             UIScreen.cachedToolBarHeights[orientation] = height
             return height
         }
@@ -797,9 +798,10 @@ extension WrapperGlobal {
     /// 当前工具栏布局高度，隐藏时为0，推荐使用
     public var toolBarHeight: CGFloat {
         guard let navController = base.navigationController,
-              !navController.isToolbarHidden else { return 0 }
+              !navController.isToolbarHidden,
+              let toolBarView = navController.innerToolBarView else { return 0 }
         // 如果未同时显示标签栏，高度需要加上安全区域高度
-        var height = navController.toolbar.frame.height
+        var height = toolBarView.frame.height
         if tabBarHeight <= 0 {
             height += UIScreen.fw.safeAreaInsets.bottom
         }
@@ -987,6 +989,27 @@ extension UIScreen {
     fileprivate static var cachedNavigationBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate static var cachedTabBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
     fileprivate static var cachedToolBarHeights: [UIInterfaceOrientation: CGFloat] = [:]
+}
+
+// MARK: - UINavigationController+Adaptive
+extension UINavigationController {
+    fileprivate var innerToolBarView: UIView? {
+        if #available(iOS 26.0, *) {
+            guard !isToolbarHidden else { return nil }
+            let containerClass = String(format: "%@%@%@", "FloatingBa", "rContaine", "rView")
+            let viewClass = String(format: "%@%@%@", "UIInh", "erite", "dView")
+            let toolBarContainer = view.subviews.first(where: {
+                String(describing: type(of: $0)).contains(containerClass)
+            })
+            let toolBarView = toolBarContainer?.fw.recursiveSubview(block: {
+                String(describing: type(of: $0)).contains(viewClass)
+                    && $0.frame.minY == 0 && $0.frame.height > 0
+            })
+            return toolBarView
+        } else {
+            return toolbar
+        }
+    }
 }
 
 // MARK: - FrameworkAutoloader+Adaptive
