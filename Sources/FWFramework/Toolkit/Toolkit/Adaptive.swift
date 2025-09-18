@@ -798,8 +798,10 @@ extension WrapperGlobal {
     /// 当前工具栏布局高度，隐藏时为0，推荐使用
     public var toolBarHeight: CGFloat {
         guard let navController = base.navigationController,
-              !navController.isToolbarHidden,
-              let toolBarView = navController.innerToolBarView else { return 0 }
+              !navController.isToolbarHidden else { return 0 }
+        guard let toolBarView = navController.innerToolBarView else {
+            return UIScreen.fw.toolBarHeight
+        }
         // 如果未同时显示标签栏，高度需要加上安全区域高度
         var height = toolBarView.frame.height
         if tabBarHeight <= 0 {
