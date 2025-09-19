@@ -1219,7 +1219,7 @@ open class ImageCropToolbar: UIView {
 
         for i in 0..<count {
             let button = buttons[i]
-            let sameOffset = horizontally ? containerRect.height - button.bounds.height : containerRect.width - button.bounds.width
+            let sameOffset = horizontally ? abs(containerRect.height - 44.0 - button.bounds.height) : abs(containerRect.width - button.bounds.width)
             let diffOffset = padding + CGFloat(i) * (fixedSize + padding)
             var origin = horizontally ? CGPoint(x: diffOffset, y: sameOffset) : CGPoint(x: sameOffset, y: diffOffset)
             if horizontally {
