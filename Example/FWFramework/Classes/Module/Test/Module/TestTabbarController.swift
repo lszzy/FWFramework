@@ -54,7 +54,11 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testBarItem.contentView = TestTabbarContentView()
         testBarItem.contentView.highlightTextColor = AppTheme.textColor
         testBarItem.contentView.highlightIconColor = AppTheme.textColor
-        testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 50)
+        if #available(iOS 26.0, *) {
+            testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 26)
+        } else {
+            testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 50)
+        }
         testBarItem.title = APP.localized("testTitle")
         testController.tabBarItem = testBarItem
         testController.tabBarItem.accessibilityIdentifier = "id.test"

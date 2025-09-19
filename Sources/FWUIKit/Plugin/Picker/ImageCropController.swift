@@ -919,6 +919,10 @@ open class ImageCropScrollView: UIScrollView {
 }
 
 open class ImageCropToolbar: UIView {
+    open var toolBarHeight: CGFloat = 44.0 {
+        didSet { setNeedsLayout() }
+    }
+    
     open var statusBarHeightInset: CGFloat = 0 {
         didSet { setNeedsLayout() }
     }
@@ -1133,8 +1137,8 @@ open class ImageCropToolbar: UIView {
             let insetPadding = buttonInsetPadding
 
             var frame = CGRect.zero
-            frame.origin.y = (bounds.height - 44.0) / 2.0
-            frame.size.height = 44.0
+            frame.origin.y = (bounds.height - toolBarHeight) / 2.0
+            frame.size.height = toolBarHeight
             frame.size.width = min(self.frame.size.width / 3.0, cancelTextButton.frame.size.width)
             if !reverseContentLayout {
                 frame.origin.x = insetPadding
@@ -1160,7 +1164,7 @@ open class ImageCropToolbar: UIView {
             }
 
             let containerRect = CGRect(x: x, y: frame.origin.y, width: width, height: bounds.height - frame.origin.y).integral
-            let buttonSize = CGSize(width: 44.0, height: 44.0)
+            let buttonSize = CGSize(width: toolBarHeight, height: toolBarHeight)
 
             var buttons: [UIButton] = []
             if !rotateCounterClockwiseButtonHidden {
@@ -1178,19 +1182,19 @@ open class ImageCropToolbar: UIView {
             layoutToolbarButtons(buttons, sameButtonSize: buttonSize, inContainerRect: containerRect, horizontally: true)
         } else {
             var frame = CGRect.zero
-            frame.origin.x = (bounds.width - 44.0) / 2.0
-            frame.size.height = 44.0
-            frame.size.width = 44.0
-            frame.origin.y = bounds.height - 44.0
+            frame.origin.x = (bounds.width - toolBarHeight) / 2.0
+            frame.size.height = toolBarHeight
+            frame.size.width = toolBarHeight
+            frame.origin.y = bounds.height - toolBarHeight
             cancelIconButton.frame = frame
 
             frame.origin.y = statusBarHeightInset
-            frame.size.width = 44.0
-            frame.size.height = 44.0
+            frame.size.width = toolBarHeight
+            frame.size.height = toolBarHeight
             doneIconButton.frame = frame
 
             let containerRect = CGRect(x: frame.origin.x, y: doneIconButton.frame.maxY, width: bounds.width - frame.origin.x, height: cancelIconButton.frame.minY - doneIconButton.frame.maxY)
-            let buttonSize = CGSize(width: 44.0, height: 44.0)
+            let buttonSize = CGSize(width: toolBarHeight, height: toolBarHeight)
 
             var buttons = [UIButton]()
             if !rotateCounterClockwiseButtonHidden {
@@ -1219,7 +1223,11 @@ open class ImageCropToolbar: UIView {
 
         for i in 0..<count {
             let button = buttons[i]
-            let sameOffset = horizontally ? abs(containerRect.height - 44.0 - button.bounds.height) : abs(containerRect.width - button.bounds.width)
+            var adaptOffset: CGFloat = 0
+            if #available(iOS 26.0, *) {
+                adaptOffset = toolBarHeight
+            }
+            let sameOffset = horizontally ? abs(containerRect.height - adaptOffset - button.bounds.height) : abs(containerRect.width - button.bounds.width)
             let diffOffset = padding + CGFloat(i) * (fixedSize + padding)
             var origin = horizontally ? CGPoint(x: diffOffset, y: sameOffset) : CGPoint(x: sameOffset, y: diffOffset)
             if horizontally {
