@@ -398,7 +398,7 @@ public class DatabaseManager: @unchecked Sendable {
         let modelName = localName(with: type)
         return version(modelName: modelName)
     }
-    
+
     /// 返回指定模型数据库文件路径，不存在时也有值
     public static func modelPath<T: DatabaseModel>(with type: T.Type) -> String {
         let cacheDirectory = databaseCacheDirectory(type)

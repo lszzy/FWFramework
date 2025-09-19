@@ -922,7 +922,7 @@ open class ImageCropToolbar: UIView {
     open var toolBarHeight: CGFloat = 44.0 {
         didSet { setNeedsLayout() }
     }
-    
+
     open var statusBarHeightInset: CGFloat = 0 {
         didSet { setNeedsLayout() }
     }
