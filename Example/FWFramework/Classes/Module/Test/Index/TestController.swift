@@ -134,10 +134,15 @@ extension TestController: TableViewControllerProtocol {
     }
 
     func setupTableLayout() {
-        // 示例安全区域布局，scrollView关闭contentInset自适应
         app.adjustExtendedLayout(compatible: true)
-        tableView.contentInsetAdjustmentBehavior = .never
-        tableView.layoutChain.edges(toSafeArea: .zero)
+        if #available(iOS 26.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .automatic
+            tableView.layoutChain.horizontal().top(toSafeArea: .zero).bottom()
+        } else {
+            // 示例安全区域布局，scrollView关闭contentInset自适应
+            tableView.contentInsetAdjustmentBehavior = .never
+            tableView.layoutChain.edges(toSafeArea: .zero)
+        }
     }
 
     func setupNavbar() {

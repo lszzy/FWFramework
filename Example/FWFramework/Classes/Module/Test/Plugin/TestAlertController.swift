@@ -18,19 +18,15 @@ class TestAlertController: UIViewController, TableViewControllerProtocol {
     func setupNavbar() {
         app.setRightBarItem(UIBarButtonItem.SystemItem.action.rawValue) { [weak self] _ in
             self?.app.showSheet(title: nil, message: nil, actions: ["切换按钮样式"], actionBlock: { _ in
-                if AlertAppearance.appearance.preferredActionColor == nil {
-                    AlertAppearance.appearance.preferredActionColor = UIColor.red
+                if AlertAppearance.appearance.preferredActionBlock == nil {
                     AlertAppearance.appearance.preferredActionBlock = { vc in
                         vc.actions.first
                     }
-                    AlertControllerAppearance.appearance.preferredActionColor = UIColor.red
                     AlertControllerAppearance.appearance.preferredActionBlock = { vc in
                         vc.actions.first
                     }
                 } else {
-                    AlertAppearance.appearance.preferredActionColor = nil
                     AlertAppearance.appearance.preferredActionBlock = nil
-                    AlertControllerAppearance.appearance.preferredActionColor = nil
                     AlertControllerAppearance.appearance.preferredActionBlock = nil
                 }
             })

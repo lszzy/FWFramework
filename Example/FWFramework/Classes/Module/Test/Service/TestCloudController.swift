@@ -19,7 +19,7 @@ class TestCloudModel: ObservableObject {
 
 class TestCloudController: UIViewController {
     private var cloudModel = TestCloudModel()
-    
+
     fileprivate static let cloudKeyName = "testCloudTime"
     fileprivate static let cloudFileName = "testCloudTime.txt"
 
@@ -48,7 +48,7 @@ class TestCloudController: UIViewController {
         }
         return result
     }()
-    
+
     private lazy var removeKeyButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("删除iCloud数据", for: .normal)
@@ -85,7 +85,7 @@ class TestCloudController: UIViewController {
         }
         return result
     }()
-    
+
     private lazy var removeFileButton: UIButton = {
         let result = AppTheme.largeButton()
         result.setTitle("删除iCloud文件", for: .normal)
@@ -130,7 +130,7 @@ extension TestCloudController: ViewControllerProtocol {
         writeKeyButton.app.layoutChain
             .top(toViewBottom: readKeyButton, offset: 10)
             .centerX()
-        
+
         removeKeyButton.app.layoutChain
             .top(toViewBottom: writeKeyButton, offset: 10)
             .centerX()
@@ -142,7 +142,7 @@ extension TestCloudController: ViewControllerProtocol {
         writeFileButton.app.layoutChain
             .top(toViewBottom: readFileButton, offset: 10)
             .centerX()
-        
+
         removeFileButton.app.layoutChain
             .top(toViewBottom: writeFileButton, offset: 10)
             .centerX()
@@ -160,7 +160,7 @@ extension TestCloudController {
             } else {
                 statusStr += "不存在"
             }
-            
+
             statusStr += "\niCloud文件：\n"
             do {
                 let cloudDrive = try await CloudDrive()

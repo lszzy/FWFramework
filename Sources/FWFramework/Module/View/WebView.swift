@@ -253,6 +253,9 @@ import WebKit
     /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
     func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool
 
+    /// 异步加载钩子，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
+    func webViewAsyncLoad(_ navigationAction: WKNavigationAction) async -> Bool
+
     /// 已经加载完成，可用来获取title、设置按钮等，默认空实现
     func webViewFinishLoad()
 
@@ -263,6 +266,11 @@ import WebKit
 extension WebViewDelegate {
     /// 是否开始加载，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
     public func webViewShouldLoad(_ navigationAction: WKNavigationAction) -> Bool {
+        true
+    }
+
+    /// 异步加载钩子，可用来拦截URL SCHEME、通用链接、系统链接等，默认true
+    public func webViewAsyncLoad(_ navigationAction: WKNavigationAction) async -> Bool {
         true
     }
 
@@ -1164,7 +1172,11 @@ extension WKWebView {
 private class WebViewDelegateProxy: DelegateProxy<WebViewDelegate>, WebViewDelegate, WKDownloadDelegate {
     // MARK: - WKNavigationDelegate
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
-        await withCheckedContinuation { continuation in
+        if let delegate, !(await delegate.webViewAsyncLoad(navigationAction)) {
+            return .cancel
+        }
+
+        return await withCheckedContinuation { continuation in
             if let webView = webView as? WebView,
                webView.cookieEnabled,
                let request = navigationAction.request as? NSMutableURLRequest {

@@ -281,7 +281,7 @@ extension TabBar {
 
         if isCustomizing {
             for (idx, _) in tabBarItems.enumerated() {
-                tabBarButtons[idx].isHidden = false
+                tabBarButtons.safeElement(idx)?.isHidden = false
                 moreContentView?.isHidden = true
             }
             for (_, container) in containers.enumerated() {
@@ -290,16 +290,16 @@ extension TabBar {
         } else {
             for (idx, item) in tabBarItems.enumerated() {
                 if let _ = item as? TabBarItem {
-                    tabBarButtons[idx].isHidden = true
+                    tabBarButtons.safeElement(idx)?.isHidden = true
                 } else {
-                    tabBarButtons[idx].isHidden = false
+                    tabBarButtons.safeElement(idx)?.isHidden = false
                 }
                 if isMoreItem(idx), let _ = moreContentView {
-                    tabBarButtons[idx].isHidden = true
+                    tabBarButtons.safeElement(idx)?.isHidden = true
                 }
             }
-            for (_, container) in containers.enumerated() {
-                container.isHidden = false
+            for (idx, container) in containers.enumerated() {
+                container.isHidden = tabBarButtons.count > idx ? false : true
             }
         }
 
@@ -316,8 +316,8 @@ extension TabBar {
         if layoutBaseSystem {
             // System itemPositioning
             for (idx, container) in containers.enumerated() {
-                if !tabBarButtons[idx].frame.isEmpty {
-                    container.frame = tabBarButtons[idx].frame
+                if let button = tabBarButtons.safeElement(idx), !button.frame.isEmpty {
+                    container.frame = button.frame
                 }
             }
         } else {

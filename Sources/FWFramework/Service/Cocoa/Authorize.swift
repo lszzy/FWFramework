@@ -20,7 +20,7 @@ public struct AuthorizeType: RawRepresentable, Equatable, Hashable, Sendable {
     public static let camera: AuthorizeType = .init("camera")
     /// 通知，远程推送需打开Push Notifications开关和Background Modes的Remote notifications开关
     public static let notifications: AuthorizeType = .init("notifications")
-    
+
     public var rawValue: String
 
     public init(rawValue: String) {

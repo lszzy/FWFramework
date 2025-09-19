@@ -167,7 +167,7 @@ public class PurchaseManager: @unchecked Sendable {
         try await sync()
         return await purchasedTransactions()
     }
-    
+
     /// 同步交易列表
     public func sync() async throws {
         try await AppStore.sync()

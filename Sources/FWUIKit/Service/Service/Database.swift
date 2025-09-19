@@ -388,15 +388,22 @@ public class DatabaseManager: @unchecked Sendable {
         }
     }
 
-    /// 返回本地模型数据库路径
+    /// 返回本地模型数据库路径，不存在时返回nil
     public static func localPath<T: DatabaseModel>(with type: T.Type) -> String? {
         commonLocalPath(type, isPath: true)
     }
 
-    /// 返回本地模型数据库版本号
+    /// 返回本地模型数据库版本号，不存在时返回nil
     public static func version<T: DatabaseModel>(with type: T.Type) -> String? {
         let modelName = localName(with: type)
         return version(modelName: modelName)
+    }
+
+    /// 返回指定模型数据库文件路径，不存在时也有值
+    public static func modelPath<T: DatabaseModel>(with type: T.Type) -> String {
+        let cacheDirectory = databaseCacheDirectory(type)
+        let version = getModelVersion(type)
+        return cacheDirectory.fw.appendingPath(String(format: "%@_v%@.sqlite", NSStringFromClass(type), version))
     }
 }
 
