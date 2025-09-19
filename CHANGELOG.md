@@ -7,6 +7,8 @@
 * Fixed a crash issue when enabling the new TabBarController style on iOS 26
 * Fixed an issue with toolBar height calculation on iOS 26
 * Fixed an issue with the image cropping component compatibility on iOS 26
+* Added a new asynchronous loading hook method for WebView
+* Added a new method for obtaining the model file path in Database
 
 ## [9.2.0] - 2025-09-01
 

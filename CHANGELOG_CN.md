@@ -7,6 +7,8 @@
 * 修复iOS 26 TabBarController启用新样式时崩溃问题
 * 修复iOS 26 toolBar高度计算问题
 * 修复iOS 26图片裁剪组件兼容问题
+* WebView新增异步开始加载钩子方法
+* Database新增获取模型文件路径方法
 
 ## [9.2.0] - 2025-09-01
 
