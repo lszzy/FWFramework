@@ -1,5 +1,13 @@
 # Changelog
 
+## [9.3.0] - 2025-09-19
+
+### Added
+* Compatibility with iOS 26 and Xcode 26
+* Fixed a crash issue when enabling the new TabBarController style on iOS 26
+* Fixed an issue with toolBar height calculation on iOS 26
+* Fixed an issue with the image cropping component compatibility on iOS 26
+
 ## [9.2.0] - 2025-09-01
 
 ### Changed
