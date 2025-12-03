@@ -17,9 +17,10 @@ extension Session {
         _ convertible: URLConvertible,
         method: HTTPMethod = .get,
         headers: HTTPHeaders? = nil,
-        lastEventID: String? = nil
+        lastEventID: String? = nil,
+        requestModifier: RequestModifier? = nil
     ) -> DataStreamRequest {
-        eventSourceRequest(convertible, method: method, parameters: Empty?.none, headers: headers, lastEventID: lastEventID)
+        eventSourceRequest(convertible, method: method, parameters: Empty?.none, headers: headers, lastEventID: lastEventID, requestModifier: requestModifier)
     }
     
     public func eventSourceRequest<Parameters: Encodable & Sendable>(
@@ -28,7 +29,8 @@ extension Session {
         parameters: Parameters? = nil,
         encoder: any ParameterEncoder = URLEncodedFormParameterEncoder.default,
         headers: HTTPHeaders? = nil,
-        lastEventID: String? = nil
+        lastEventID: String? = nil,
+        requestModifier: RequestModifier? = nil
     ) -> DataStreamRequest {
         streamRequest(convertible, method: method, parameters: parameters, encoder: encoder, headers: headers) { request in
             request.timeoutInterval = TimeInterval(Int32.max)
@@ -37,6 +39,7 @@ extension Session {
             if let lastEventID {
                 request.headers.add(name: "Last-Event-ID", value: lastEventID)
             }
+            try requestModifier?(&request)
         }
     }
 }
