@@ -19,6 +19,7 @@ class TestController: UIViewController {
         ]],
         ["Service", [
             ["Theme", "TestThemeController"],
+            ["Palette", "TestPaletteController"],
             ["Authorize", "TestAuthorizeController"],
             ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
