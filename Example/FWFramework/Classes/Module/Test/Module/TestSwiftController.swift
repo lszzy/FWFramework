@@ -308,7 +308,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
 
     func setupCollectionView() {
         view.backgroundColor = UIColor.app.bgWhite
-        collectionView.backgroundColor = AppTheme.tableColor
+        collectionView.backgroundColor = UIColor.app.bgColor
         collectionView.isPagingEnabled = true
         collectionDelegate.sectionCount = 2
         collectionDelegate.numberOfItems = { [weak self] _ in

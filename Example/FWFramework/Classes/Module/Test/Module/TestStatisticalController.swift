@@ -13,7 +13,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     lazy var shieldView: UIView = {
         let result = UIView()
-        result.backgroundColor = AppTheme.tableColor
+        result.backgroundColor = UIColor.app.bgColor
         result.app.addTapGesture { [weak self] _ in
             self?.shieldView.isHidden = true
             self?.shieldView.removeFromSuperview()

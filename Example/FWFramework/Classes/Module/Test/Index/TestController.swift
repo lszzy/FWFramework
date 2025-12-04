@@ -129,7 +129,7 @@ extension TestController: TableViewControllerProtocol {
     }
 
     func setupTableView() {
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.keyboardDismissMode = .onDrag
     }
 

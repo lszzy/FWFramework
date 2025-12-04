@@ -334,7 +334,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         cycleView.titlesGroup = ["1", "2", "3", "4"]
 
         let footerView = UIView()
-        footerView.backgroundColor = AppTheme.tableColor
+        footerView.backgroundColor = UIColor.app.bgColor
         contentView.addSubview(footerView)
         footerView.app.layoutChain.left().bottom().top(toViewBottom: cycleView).width(APP.screenWidth).height(1000)
 
@@ -361,7 +361,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
             self?.app.close(animated: !(self?.noAnimate ?? false))
         }
 
-        view.backgroundColor = navigationController != nil ? AppTheme.tableColor : AppTheme.tableColor.withAlphaComponent(0.9)
+        view.backgroundColor = navigationController != nil ? UIColor.app.bgColor : UIColor.app.bgColor.withAlphaComponent(0.9)
         view.app.addTapGesture { [weak self] _ in
             self?.app.close(animated: !(self?.noAnimate ?? false))
         }

@@ -44,7 +44,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
 
     func setupCollectionView() {
         collectionView.alwaysBounceVertical = true
-        collectionView.backgroundColor = AppTheme.tableColor
+        collectionView.backgroundColor = UIColor.app.bgColor
         collectionView.app.setRefreshing { [weak self] in
             self?.onRefreshing()
         }

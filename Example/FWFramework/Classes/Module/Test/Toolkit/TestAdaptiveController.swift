@@ -57,7 +57,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             .right(10)
             .bottom(APP.safeAreaInsets.bottom + 10)
 
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.app.layoutChain
             .horizontal()
             .top()

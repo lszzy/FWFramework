@@ -103,7 +103,7 @@ struct TestSwiftUIListContent: View {
             }
             return list.eraseToAnyView()
         }
-        .resetListStyle(background: Color(AppTheme.tableColor), isPlainStyle: viewModel.style == 1)
+        .resetListStyle(background: Color(UIColor.app.bgColor), isPlainStyle: viewModel.style == 1)
         .listViewRefreshing(
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in

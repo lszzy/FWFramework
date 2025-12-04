@@ -72,7 +72,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
 
     // MARK: - WebViewControllerProtocol
     func setupWebView() {
-        view.backgroundColor = AppTheme.tableColor
+        view.backgroundColor = UIColor.app.bgColor
         webView.allowsUniversalLinks = true
         webView.allowsArbitraryLoads = true
         webView.injectWindowClose = true

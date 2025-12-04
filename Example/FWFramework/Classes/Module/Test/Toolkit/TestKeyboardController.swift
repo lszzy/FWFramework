@@ -106,7 +106,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     }()
 
     func setupSubviews() {
-        scrollView.backgroundColor = AppTheme.tableColor
+        scrollView.backgroundColor = UIColor.app.bgColor
 
         let textFieldAppearance = UITextField.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])
         let textViewAppearance = UITextView.appearance(whenContainedInInstancesOf: [TestKeyboardController.self])

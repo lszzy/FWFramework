@@ -31,10 +31,6 @@ extension ViewStyle where Base: UIView {
 }
 
 class AppTheme: NSObject {
-    public static var tableColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xF2F2F2), dark: .app.color(hex: 0x000000))
-    }
-
     public static var cellColor: UIColor {
         UIColor.app.themeLight(.app.color(hex: 0xFFFFFF), dark: .app.color(hex: 0x1C1C1C))
     }
@@ -103,7 +99,7 @@ extension AppTheme {
             viewController.app.navigationBarStyle = .default
         }
         ViewControllerManager.shared.hookViewDidLoad = { viewController in
-            viewController.view.backgroundColor = AppTheme.tableColor
+            viewController.view.backgroundColor = UIColor.app.bgColor
             // viewController.app.backBarItem = Icon.backImage
             // if (viewController.navigationController?.children.count ?? 0) > 1 &&
             //     viewController.navigationItem.leftBarButtonItem == nil {
@@ -111,7 +107,7 @@ extension AppTheme {
             // }
         }
         ViewControllerManager.shared.hookTableViewController = { viewController in
-            viewController.tableView.backgroundColor = AppTheme.tableColor
+            viewController.tableView.backgroundColor = UIColor.app.bgColor
         }
     }
 

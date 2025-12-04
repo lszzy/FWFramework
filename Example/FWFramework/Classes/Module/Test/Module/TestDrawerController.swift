@@ -37,7 +37,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         let result = UITableView.app.tableView()
         result.frame = CGRect(x: 0, y: 50, width: APP.screenWidth, height: view.app.height - 150)
         result.contentInsetAdjustmentBehavior = .never
-        result.backgroundColor = AppTheme.tableColor
+        result.backgroundColor = UIColor.app.bgColor
         result.dataSource = result.app.tableDelegate
         result.delegate = result.app.tableDelegate
         result.app.tableDelegate.numberOfRows = { [weak self] _ in
@@ -91,7 +91,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
     }
 
     func setupSubviews() {
-        view.backgroundColor = AppTheme.tableColor
+        view.backgroundColor = UIColor.app.bgColor
 
         let topLabel = UILabel(frame: CGRect(x: 50, y: 200, width: 100, height: 30))
         topLabel.text = "默认模式"

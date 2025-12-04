@@ -40,7 +40,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupTableView() {
         tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.app.setRefreshing { [weak self] in
             self?.onRefreshing()
         }
