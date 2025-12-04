@@ -210,9 +210,9 @@ public class PaletteTheme: @unchecked Sendable {
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.1),
         "bgColor": UIColor.fw.color(hex: 0xf3f4f6),
         "bgWhite": UIColor.fw.color(hex: 0xffffff),
+        "bgBlack": UIColor.fw.color(hex: 0x000000),
         "bgGrayLight": UIColor.fw.color(hex: 0xf5f7fa),
         "bgGrayDark": UIColor.fw.color(hex: 0x2f343c),
-        "bgBlack": UIColor.fw.color(hex: 0x000000)
     ]
     
     /// 默认深色调色板主题
@@ -249,112 +249,112 @@ public class PaletteTheme: @unchecked Sendable {
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.3),
         "bgColor": UIColor.fw.color(hex: 0x111827),
         "bgWhite": UIColor.fw.color(hex: 0x000000),
+        "bgBlack": UIColor.fw.color(hex: 0xffffff),
         "bgGrayLight": UIColor.fw.color(hex: 0x1a1a1a),
         "bgGrayDark": UIColor.fw.color(hex: 0xf5f7fa),
-        "bgBlack": UIColor.fw.color(hex: 0xffffff)
     ]
     
     /// 霞光紫调色板主题
     public nonisolated(unsafe) static var purpleTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x7c3aed),
-        "error": UIColor.fw.color(hex: 0xf43f5e),
-        "warning": UIColor.fw.color(hex: 0xf59e0b),
-        "success": UIColor.fw.color(hex: 0x10b981),
-        "info": UIColor.fw.color(hex: 0x6b7280),
-        "primaryLight": UIColor.fw.color(hex: 0xf3e8ff),
-        "errorLight": UIColor.fw.color(hex: 0xffe4e6),
-        "warningLight": UIColor.fw.color(hex: 0xfef3c7),
-        "successLight": UIColor.fw.color(hex: 0xd1fae5),
-        "infoLight": UIColor.fw.color(hex: 0xf3f4f6),
         "primaryDark": UIColor.fw.color(hex: 0x6d28d9),
-        "errorDark": UIColor.fw.color(hex: 0xe11d48),
-        "warningDark": UIColor.fw.color(hex: 0xd97706),
-        "successDark": UIColor.fw.color(hex: 0x059669),
-        "infoDark": UIColor.fw.color(hex: 0x4b5563),
         "primaryDisabled": UIColor.fw.color(hex: 0xc4b5fd),
+        "primaryLight": UIColor.fw.color(hex: 0xf3e8ff),
+        "error": UIColor.fw.color(hex: 0xf43f5e),
+        "errorDark": UIColor.fw.color(hex: 0xe11d48),
         "errorDisabled": UIColor.fw.color(hex: 0xfbcfe8),
+        "errorLight": UIColor.fw.color(hex: 0xffe4e6),
+        "warning": UIColor.fw.color(hex: 0xf59e0b),
+        "warningDark": UIColor.fw.color(hex: 0xd97706),
         "warningDisabled": UIColor.fw.color(hex: 0xfde68a),
+        "warningLight": UIColor.fw.color(hex: 0xfef3c7),
+        "success": UIColor.fw.color(hex: 0x10b981),
+        "successDark": UIColor.fw.color(hex: 0x059669),
         "successDisabled": UIColor.fw.color(hex: 0xa7f3d0),
-        "infoDisabled": UIColor.fw.color(hex: 0xd1d5db)
+        "successLight": UIColor.fw.color(hex: 0xd1fae5),
+        "info": UIColor.fw.color(hex: 0x6b7280),
+        "infoDark": UIColor.fw.color(hex: 0x4b5563),
+        "infoDisabled": UIColor.fw.color(hex: 0xd1d5db),
+        "infoLight": UIColor.fw.color(hex: 0xf3f4f6),
     ], uniquingKeysWith: { $1 })
     
     /// 清翠绿调色板主题
     public nonisolated(unsafe) static var greenTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x059669),
-        "error": UIColor.fw.color(hex: 0xdc2626),
-        "warning": UIColor.fw.color(hex: 0xeab308),
-        "success": UIColor.fw.color(hex: 0x16a34a),
-        "info": UIColor.fw.color(hex: 0x78716c),
-        "primaryLight": UIColor.fw.color(hex: 0xecfdf5),
-        "errorLight": UIColor.fw.color(hex: 0xfee2e2),
-        "warningLight": UIColor.fw.color(hex: 0xfefce8),
-        "successLight": UIColor.fw.color(hex: 0xdcfce7),
-        "infoLight": UIColor.fw.color(hex: 0xfafaf9),
         "primaryDark": UIColor.fw.color(hex: 0x047857),
-        "errorDark": UIColor.fw.color(hex: 0xb91c1c),
-        "warningDark": UIColor.fw.color(hex: 0xca8a04),
-        "successDark": UIColor.fw.color(hex: 0x15803d),
-        "infoDark": UIColor.fw.color(hex: 0x57534e),
         "primaryDisabled": UIColor.fw.color(hex: 0x6ee7b7),
+        "primaryLight": UIColor.fw.color(hex: 0xecfdf5),
+        "error": UIColor.fw.color(hex: 0xdc2626),
+        "errorDark": UIColor.fw.color(hex: 0xb91c1c),
         "errorDisabled": UIColor.fw.color(hex: 0xfca5a5),
+        "errorLight": UIColor.fw.color(hex: 0xfee2e2),
+        "warning": UIColor.fw.color(hex: 0xeab308),
+        "warningDark": UIColor.fw.color(hex: 0xca8a04),
         "warningDisabled": UIColor.fw.color(hex: 0xfacc15),
+        "warningLight": UIColor.fw.color(hex: 0xfefce8),
+        "success": UIColor.fw.color(hex: 0x16a34a),
+        "successDark": UIColor.fw.color(hex: 0x15803d),
         "successDisabled": UIColor.fw.color(hex: 0x86efac),
-        "infoDisabled": UIColor.fw.color(hex: 0xe7e5e4)
+        "successLight": UIColor.fw.color(hex: 0xdcfce7),
+        "info": UIColor.fw.color(hex: 0x78716c),
+        "infoDark": UIColor.fw.color(hex: 0x57534e),
+        "infoDisabled": UIColor.fw.color(hex: 0xe7e5e4),
+        "infoLight": UIColor.fw.color(hex: 0xfafaf9),
     ], uniquingKeysWith: { $1 })
     
     /// 暖阳橙调色板主题
     public nonisolated(unsafe) static var orangeTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0xf97316),
-        "error": UIColor.fw.color(hex: 0xef4444),
-        "warning": UIColor.fw.color(hex: 0xfbbf24),
-        "success": UIColor.fw.color(hex: 0x22c55e),
-        "info": UIColor.fw.color(hex: 0x6366f1),
-        "primaryLight": UIColor.fw.color(hex: 0xffedd5),
-        "errorLight": UIColor.fw.color(hex: 0xfee2e2),
-        "warningLight": UIColor.fw.color(hex: 0xfef3c7),
-        "successLight": UIColor.fw.color(hex: 0xdcfce7),
-        "infoLight": UIColor.fw.color(hex: 0xe0e7ff),
         "primaryDark": UIColor.fw.color(hex: 0xea580c),
-        "errorDark": UIColor.fw.color(hex: 0xdc2626),
-        "warningDark": UIColor.fw.color(hex: 0xf59e0b),
-        "successDark": UIColor.fw.color(hex: 0x16a34a),
-        "infoDark": UIColor.fw.color(hex: 0x4f46e5),
         "primaryDisabled": UIColor.fw.color(hex: 0xfed7aa),
+        "primaryLight": UIColor.fw.color(hex: 0xffedd5),
+        "error": UIColor.fw.color(hex: 0xef4444),
+        "errorDark": UIColor.fw.color(hex: 0xdc2626),
         "errorDisabled": UIColor.fw.color(hex: 0xfecaca),
+        "errorLight": UIColor.fw.color(hex: 0xfee2e2),
+        "warning": UIColor.fw.color(hex: 0xfbbf24),
+        "warningDark": UIColor.fw.color(hex: 0xf59e0b),
         "warningDisabled": UIColor.fw.color(hex: 0xfde68a),
+        "warningLight": UIColor.fw.color(hex: 0xfef3c7),
+        "success": UIColor.fw.color(hex: 0x22c55e),
+        "successDark": UIColor.fw.color(hex: 0x16a34a),
         "successDisabled": UIColor.fw.color(hex: 0x86efac),
-        "infoDisabled": UIColor.fw.color(hex: 0xc7d2fe)
+        "successLight": UIColor.fw.color(hex: 0xdcfce7),
+        "info": UIColor.fw.color(hex: 0x6366f1),
+        "infoDark": UIColor.fw.color(hex: 0x4f46e5),
+        "infoDisabled": UIColor.fw.color(hex: 0xc7d2fe),
+        "infoLight": UIColor.fw.color(hex: 0xe0e7ff),
     ], uniquingKeysWith: { $1 })
     
     /// 午夜蓝调色板主题
     public nonisolated(unsafe) static var blueTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x0b3d91),
-        "error": UIColor.fw.color(hex: 0xef5350),
-        "warning": UIColor.fw.color(hex: 0xffa726),
-        "success": UIColor.fw.color(hex: 0x66bb6a),
-        "info": UIColor.fw.color(hex: 0x2196f3),
-        "primaryLight": UIColor.fw.color(hex: 0x081a33),
-        "errorLight": UIColor.fw.color(hex: 0x5e1914),
-        "warningLight": UIColor.fw.color(hex: 0x663c00),
-        "successLight": UIColor.fw.color(hex: 0x1b3a1b),
-        "infoLight": UIColor.fw.color(hex: 0x003d66),
         "primaryDark": UIColor.fw.color(hex: 0x062a57),
-        "errorDark": UIColor.fw.color(hex: 0xc62828),
-        "warningDark": UIColor.fw.color(hex: 0xe65100),
-        "successDark": UIColor.fw.color(hex: 0x2e7d32),
-        "infoDark": UIColor.fw.color(hex: 0x01579b),
         "primaryDisabled": UIColor.fw.color(hex: 0x274a7a),
+        "primaryLight": UIColor.fw.color(hex: 0x081a33),
+        "error": UIColor.fw.color(hex: 0xef5350),
+        "errorDark": UIColor.fw.color(hex: 0xc62828),
         "errorDisabled": UIColor.fw.color(hex: 0xef9a9a),
+        "errorLight": UIColor.fw.color(hex: 0x5e1914),
+        "warning": UIColor.fw.color(hex: 0xffa726),
+        "warningDark": UIColor.fw.color(hex: 0xe65100),
         "warningDisabled": UIColor.fw.color(hex: 0xffb74d),
+        "warningLight": UIColor.fw.color(hex: 0x663c00),
+        "success": UIColor.fw.color(hex: 0x66bb6a),
+        "successDark": UIColor.fw.color(hex: 0x2e7d32),
         "successDisabled": UIColor.fw.color(hex: 0x81c784),
-        "infoDisabled": UIColor.fw.color(hex: 0x4fc3f7)
+        "successLight": UIColor.fw.color(hex: 0x1b3a1b),
+        "info": UIColor.fw.color(hex: 0x2196f3),
+        "infoDark": UIColor.fw.color(hex: 0x01579b),
+        "infoDisabled": UIColor.fw.color(hex: 0x4fc3f7),
+        "infoLight": UIColor.fw.color(hex: 0x003d66),
     ], uniquingKeysWith: { $1 })
     
     /// 自定义调色板变色排除的名称列表
     public nonisolated(unsafe) static var variantExcludes: [String] = [
         "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor",
         "lightColor", "borderColor", "dividerColor", "maskColor", "shadowColor",
-        "bgColor", "bgWhite", "bgGrayLight", "bgGrayDark", "bgBlack"
+        "bgColor", "bgWhite", "bgBlack", "bgGrayLight", "bgGrayDark"
     ]
     
     /// 自定义调色板变色比率，默认0.6

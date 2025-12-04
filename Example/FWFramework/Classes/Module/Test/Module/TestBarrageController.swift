@@ -30,7 +30,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         barrageManager.renderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         barrageManager.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
 
         let originY = CGRectGetHeight(view.frame) - 50
         let button = UIButton(type: .custom)

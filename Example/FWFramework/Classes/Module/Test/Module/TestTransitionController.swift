@@ -469,7 +469,7 @@ class TestTransitionCustomViewController: UIViewController, ViewControllerProtoc
         contentView.addSubview(childView)
         childView.app.layoutChain.edges().size(CGSize(width: 300, height: 250))
 
-        view.backgroundColor = AppTheme.backgroundColor.withAlphaComponent(0.5)
+        view.backgroundColor = UIColor.app.bgWhite.withAlphaComponent(0.5)
         view.app.addTapGesture { [weak self] _ in
             self?.dismiss()
         }

@@ -39,7 +39,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges(toSafeArea: .zero)
     }
 
@@ -81,7 +81,7 @@ class TestIconResultController: UIViewController, CollectionViewControllerProtoc
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges(toSafeArea: .zero)
     }
 

@@ -55,7 +55,7 @@ class TestPaletteController: UIViewController, CollectionViewControllerProtocol 
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges(toSafeArea: .zero)
     }
 
@@ -105,7 +105,7 @@ class TestPaletteResultController: UIViewController, CollectionViewControllerPro
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges(toSafeArea: .zero)
     }
 

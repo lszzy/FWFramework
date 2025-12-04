@@ -26,7 +26,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         player.playerDelegate = self
         player.playbackDelegate = self
 
-        player.playerView.playerBackgroundColor = AppTheme.backgroundColor
+        player.playerView.playerBackgroundColor = UIColor.app.bgWhite
 
         addChild(player)
         view.addSubview(player.view)
@@ -174,7 +174,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = AppTheme.backgroundColor
+        backgroundColor = UIColor.app.bgWhite
 
         addSubview(closeButton)
         addSubview(playButton)

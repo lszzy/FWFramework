@@ -45,7 +45,7 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
     private lazy var textLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         result.font = APP.font(designValue(16))

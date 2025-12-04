@@ -368,7 +368,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func onOpenResult() {
         let vc = UIViewController()
         vc.title = "弹出框"
-        vc.view.backgroundColor = AppTheme.backgroundColor
+        vc.view.backgroundColor = UIColor.app.bgWhite
         vc.app.completionHandler = { [weak self] result in
             let result = result != nil ? APP.safeString(result) : "deinit"
             self?.app.showMessage(text: "完成回调：\(result)")

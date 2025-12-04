@@ -32,10 +32,6 @@ extension ViewStyle where Base: UIView {
 }
 
 class AppTheme: NSObject {
-    public static var backgroundColor: UIColor {
-        UIColor.app.themeLight(.white, dark: .black)
-    }
-
     public static var barColor: UIColor {
         UIColor.app.themeLight(.app.color(hex: 0xFAFAFA), dark: .app.color(hex: 0x121212))
     }
@@ -163,7 +159,7 @@ extension AppTheme {
             textField.font = UIFont.app.font(ofSize: 15)
             textField.textColor = UIColor.app.mainColor
             textField.tintColor = UIColor.app.mainColor
-            textField.backgroundColor = AppTheme.backgroundColor
+            textField.backgroundColor = UIColor.app.bgWhite
             textField.clearButtonMode = .whileEditing
             textField.returnKeyType = .done
             textField.app.setBorderColor(UIColor.app.borderColor, width: 0.5, cornerRadius: 5)

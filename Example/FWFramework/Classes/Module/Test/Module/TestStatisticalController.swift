@@ -137,7 +137,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges()
     }
 

@@ -64,7 +64,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private lazy var textView: UITextView = {
         let result = createTextView()
         result.tag = 3
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.app.maxLength = 200
         result.app.placeholder = "问题\n最多200个字符"
         result.app.lineHeight = 25
@@ -87,7 +87,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private lazy var descView: UITextView = {
         let result = createTextView()
         result.tag = 4
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.app.maxLength = 20
         result.app.menuDisabled = true
         result.app.placeholder = "仅数字和字母转大写，最多20个英文"

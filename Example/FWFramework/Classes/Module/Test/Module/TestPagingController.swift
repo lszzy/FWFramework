@@ -256,7 +256,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.layoutChain.edges(UIEdgeInsets(top: 0, left: 0, bottom: cart ? TestPagingController.cartViewHeight : 0, right: 0), excludingEdge: .right)
         collectionView.layoutChain.width(cart ? TestPagingController.categoryViewWidth : 0)
     }

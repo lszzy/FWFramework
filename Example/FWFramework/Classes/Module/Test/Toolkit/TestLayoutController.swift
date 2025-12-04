@@ -17,7 +17,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         result.numberOfLines = 3
         result.lineBreakMode = .byTruncatingTail
         result.lineTruncatingSpacing = self.buttonWidth
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.font = APP.font(16)
         result.lineSpacing = APP.font(16).pointSize / 2.0
         result.textColor = UIColor.app.mainColor
@@ -112,7 +112,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
                 .chainValue(\.text, "text")
                 .chainValue(\.textAlignment, .center)
                 .chainValue(\.textColor, UIColor.app.mainColor)
-                .chainValue(\.backgroundColor, AppTheme.backgroundColor)
+                .chainValue(\.backgroundColor, UIColor.app.bgWhite)
                 .chainBlock { label in
                     label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                     label.app.setCornerRadius(5)
@@ -246,7 +246,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let emptyLabel = UILabel()
         emptyLabel.textAlignment = .center
         emptyLabel.textColor = UIColor.app.mainColor
-        emptyLabel.backgroundColor = AppTheme.backgroundColor
+        emptyLabel.backgroundColor = UIColor.app.bgWhite
         emptyLabel.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         emptyLabel.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
         view.addSubview(emptyLabel)
