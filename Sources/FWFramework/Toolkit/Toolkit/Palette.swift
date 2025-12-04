@@ -360,6 +360,12 @@ public class PaletteTheme: @unchecked Sendable {
     /// 自定义调色板变色比率，默认0.6
     public nonisolated(unsafe) static var variantRatio: CGFloat = 0.6
     
+    /// 自定义浅色主题句柄，默认nil
+    public nonisolated(unsafe) static var customLightTheme: ((PaletteStyle) -> [String: UIColor]?)?
+    
+    /// 自定义深色主题句柄，默认nil
+    public nonisolated(unsafe) static var customDarkTheme: ((PaletteStyle) -> [String: UIColor]?)?
+    
     /// 从浅色模板自动生成深色主题变体
     public static func variantTheme(
         light: [String: UIColor],
@@ -382,6 +388,8 @@ public class PaletteTheme: @unchecked Sendable {
     
     /// 获取指定样式对应浅色主题
     public static func lightTheme(style: PaletteStyle) -> [String: UIColor] {
+        if let theme = customLightTheme?(style) { return theme }
+        
         switch style {
         case .purple:
             return purpleTheme
@@ -398,17 +406,13 @@ public class PaletteTheme: @unchecked Sendable {
     
     /// 获取指定样式对应深色主题
     public static func darkTheme(style: PaletteStyle) -> [String: UIColor] {
+        if let theme = customDarkTheme?(style) { return theme }
+        
         switch style {
-        case .purple:
-            return variantTheme(light: purpleTheme)
-        case .green:
-            return variantTheme(light: greenTheme)
-        case .orange:
-            return variantTheme(light: orangeTheme)
-        case .blue:
-            return variantTheme(light: blueTheme)
-        default:
+        case .default:
             return darkTheme
+        default:
+            return variantTheme(light: lightTheme(style: style))
         }
     }
 }

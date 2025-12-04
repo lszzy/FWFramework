@@ -25,6 +25,7 @@
 "colorGreen" = "清翠绿";
 "colorOrange" = "暖阳橙";
 "colorBlue" = "午夜蓝";
+"colorCustom" = "自定义";
 "welcomeTitle" = "你知道我在等你吗？";
 "backTitle" = "欢迎回来，%@";
 "logoutConfirm" = "确定要退出当前账号吗?";

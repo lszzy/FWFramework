@@ -38,6 +38,7 @@ class TestPaletteController: UIViewController, CollectionViewControllerProtocol 
                 APP.localized("colorGreen"),
                 APP.localized("colorOrange"),
                 APP.localized("colorBlue"),
+                APP.localized("colorCustom"),
             ]
             
             self?.app.showSheet(title: APP.localized("colorTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in

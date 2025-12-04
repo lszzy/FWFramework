@@ -113,6 +113,8 @@ extension SettingsController {
                 colorText = APP.localized("colorOrange")
             case .blue:
                 colorText = APP.localized("colorBlue")
+            case .custom:
+                colorText = APP.localized("colorCustom")
             default:
                 colorText = APP.localized("colorDefault")
             }
@@ -187,6 +189,7 @@ extension SettingsController {
             APP.localized("colorGreen"),
             APP.localized("colorOrange"),
             APP.localized("colorBlue"),
+            APP.localized("colorCustom"),
         ]
         
         app.showSheet(title: APP.localized("colorTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in

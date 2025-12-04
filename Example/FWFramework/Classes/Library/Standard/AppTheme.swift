@@ -18,6 +18,10 @@ extension WrapperCompatible {
 }
 
 // MARK: - AppTheme
+extension PaletteStyle {
+    public static let custom: PaletteStyle = .init(5)
+}
+
 extension NavigationBarStyle {
     public static let white: NavigationBarStyle = .init(1)
     public static let transparent: NavigationBarStyle = .init(2)
@@ -91,6 +95,18 @@ extension AppTheme {
     }
 
     @MainActor private static func setupAppearance() {
+        PaletteTheme.customLightTheme = { style in
+            if style == .custom {
+                return PaletteTheme.lightTheme.merging([
+                    "primary": UIColor.app.color(hex: 0xBE2813),
+                    "primaryLight": UIColor.app.color(hex: 0xF4A88B),
+                    "primaryDark": UIColor.app.color(hex: 0x851C0D),
+                    "primaryDisabled": UIColor.app.color(hex: 0xEF5931),
+                ], uniquingKeysWith: { $1 })
+            }
+            return nil
+        }
+        
         let defaultAppearance = NavigationBarAppearance()
         defaultAppearance.foregroundColor = AppTheme.textColor
         defaultAppearance.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
