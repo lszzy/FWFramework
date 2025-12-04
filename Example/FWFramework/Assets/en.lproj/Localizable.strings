@@ -19,6 +19,12 @@
 "themeLight" = "Light";
 "themeDark" = "Dark";
 "themeGray" = "Gray";
+"colorTitle" = "Color";
+"colorDefault" = "Default";
+"colorPurple" = "Purple";
+"colorGreen" = "Green";
+"colorOrange" = "Orange";
+"colorBlue" = "Blue";
 "welcomeTitle" = "Do you know that I'm waiting for you?";
 "backTitle" = "Welcome back, %@";
 "logoutConfirm" = "Are you sure you want to log out?";

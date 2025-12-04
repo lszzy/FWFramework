@@ -721,6 +721,21 @@ extension Wrapper where Base: UIColor {
         let colorDelta = r * 0.299 + g * 0.587 + b * 0.114
         return 1.0 - colorDelta > referenceValue
     }
+    
+    /// 从指定浅色和深色自动生成变体色，不含透明度，默认比率0.6
+    public static func variantColor(
+        light: UIColor,
+        dark: UIColor,
+        ratio: CGFloat = 0.6
+    ) -> UIColor {
+        let from = light.fw.rgbaValue
+        let to = dark.fw.rgbaValue
+        let clamp: (CGFloat) -> Int = { val in max(0, min(lround(val), 255)) }
+        let red = clamp((1.0 - ratio) * CGFloat(from.r) + ratio * CGFloat(to.r))
+        let green = clamp((1.0 - ratio) * CGFloat(from.g) + ratio * CGFloat(to.g))
+        let blue = clamp((1.0 - ratio) * CGFloat(from.b) + ratio * CGFloat(to.b))
+        return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    }
 
     /**
      创建渐变颜色，支持四个方向，默认向下Down

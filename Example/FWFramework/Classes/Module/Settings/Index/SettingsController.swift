@@ -66,6 +66,7 @@ extension SettingsController: TableViewControllerProtocol {
         tableData.removeAll()
         tableData.append([APP.localized("languageTitle"), "onLanguage"])
         tableData.append([APP.localized("themeTitle"), "onTheme"])
+        tableData.append([APP.localized("colorTitle"), "onThemeColor"])
         tableData.append([APP.localized("pluginTitle"), "onPlugin"])
         tableView.reloadData()
     }
@@ -100,6 +101,22 @@ extension SettingsController {
                 let theme = mode == .system ? APP.localized("systemTitle").appending(ThemeManager.shared.style == .dark ? "(\(APP.localized("themeDark")))" : "(\(APP.localized("themeLight")))") : (mode == .dark ? APP.localized("themeDark") : APP.localized("themeLight"))
                 cell.detailTextLabel?.text = theme
             }
+        } else if action == "onThemeColor" {
+            let paletteStyle = PaletteManager.shared.paletteStyle
+            var colorText = ""
+            switch paletteStyle {
+            case .purple:
+                colorText = APP.localized("colorPurple")
+            case .green:
+                colorText = APP.localized("colorGreen")
+            case .orange:
+                colorText = APP.localized("colorOrange")
+            case .blue:
+                colorText = APP.localized("colorBlue")
+            default:
+                colorText = APP.localized("colorDefault")
+            }
+            cell.detailTextLabel?.text = colorText
         } else {
             cell.detailTextLabel?.text = APP.localized("pluginDetail")
         }
@@ -160,6 +177,21 @@ extension SettingsController {
                 ThemeManager.shared.mode = ThemeMode(index)
                 self?.tableView.reloadData()
             }
+        }
+    }
+    
+    @objc private func onThemeColor() {
+        let actions = [
+            APP.localized("colorDefault"),
+            APP.localized("colorPurple"),
+            APP.localized("colorGreen"),
+            APP.localized("colorOrange"),
+            APP.localized("colorBlue"),
+        ]
+        
+        app.showSheet(title: APP.localized("colorTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in
+            PaletteManager.shared.paletteStyle = PaletteStyle(index)
+            self?.tableView.reloadData()
         }
     }
 

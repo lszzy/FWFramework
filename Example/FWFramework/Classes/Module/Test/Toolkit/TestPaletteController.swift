@@ -32,23 +32,16 @@ class TestPaletteController: UIViewController, CollectionViewControllerProtocol 
         // definesPresentationContext = true
         
         app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
-            self?.app.showSheet(title: "请选择主题", message: nil, actions: ["默认蓝", "霞光紫", "清翠绿", "暖阳橙", "午夜蓝"]) { [weak self] index in
-                if index == 0 {
-                    Palette.lightTheme = Palette.lightPalette
-                    Palette.darkTheme = Palette.darkPalette
-                } else if index == 1 {
-                    Palette.lightTheme = Palette.purplePalette
-                    Palette.darkTheme = Palette.paletteTheme(light: Palette.purplePalette)
-                } else if index == 2 {
-                    Palette.lightTheme = Palette.greenPalette
-                    Palette.darkTheme = Palette.paletteTheme(light: Palette.greenPalette)
-                } else if index == 3 {
-                    Palette.lightTheme = Palette.orangePalette
-                    Palette.darkTheme = Palette.paletteTheme(light: Palette.orangePalette)
-                } else if index == 4 {
-                    Palette.lightTheme = Palette.bluePalette
-                    Palette.darkTheme = Palette.paletteTheme(light: Palette.bluePalette)
-                }
+            let actions = [
+                APP.localized("colorDefault"),
+                APP.localized("colorPurple"),
+                APP.localized("colorGreen"),
+                APP.localized("colorOrange"),
+                APP.localized("colorBlue"),
+            ]
+            
+            self?.app.showSheet(title: APP.localized("colorTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in
+                PaletteManager.shared.paletteStyle = PaletteStyle(index)
                 self?.collectionView.reloadData()
             }
         }
@@ -66,10 +59,10 @@ class TestPaletteController: UIViewController, CollectionViewControllerProtocol 
     }
 
     func setupSubviews() {
-        collectionData = Array(Palette.lightPalette.keys).sorted(by: { key1, key2 in
-            if Palette.paletteExcludes.contains(key1) {
-                return Palette.paletteExcludes.contains(key2) ? key1 < key2 : false
-            } else if Palette.paletteExcludes.contains(key2) {
+        collectionData = Array(PaletteManager.shared.lightTheme.keys).sorted(by: { key1, key2 in
+            if PaletteTheme.variantExcludes.contains(key1) {
+                return PaletteTheme.variantExcludes.contains(key2) ? key1 < key2 : false
+            } else if PaletteTheme.variantExcludes.contains(key2) {
                 return true
             } else {
                 return key1 < key2
@@ -86,7 +79,7 @@ class TestPaletteController: UIViewController, CollectionViewControllerProtocol 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestPaletteCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         let name = collectionData[indexPath.item]
-        cell.colorView.backgroundColor = Palette.themeColor(name)
+        cell.colorView.backgroundColor = UIColor.app.paletteThemeColor(name)
         cell.nameLabel.text = name
         return cell
     }
@@ -126,7 +119,7 @@ class TestPaletteResultController: UIViewController, CollectionViewControllerPro
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestPaletteCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         let name = searchData[indexPath.item]
-        cell.colorView.backgroundColor = Palette.themeColor(name)
+        cell.colorView.backgroundColor = UIColor.app.paletteThemeColor(name)
         cell.nameLabel.text = name
         return cell
     }

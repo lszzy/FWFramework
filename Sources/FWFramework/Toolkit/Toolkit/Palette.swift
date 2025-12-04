@@ -10,89 +10,174 @@ import UIKit
 // MARK: - Palette+UIColor
 extension Wrapper where Base: UIColor {
     /// 主题色
-    public static var primary: UIColor { Palette.themeColor("primary") }
+    public static var primary: UIColor { paletteThemeColor("primary") }
     /// 主题色（深）
-    public static var primaryDark: UIColor { Palette.themeColor("primaryDark") }
+    public static var primaryDark: UIColor { paletteThemeColor("primaryDark") }
     /// 主题色（禁用）
-    public static var primaryDisabled: UIColor { Palette.themeColor("primaryDisabled") }
+    public static var primaryDisabled: UIColor { paletteThemeColor("primaryDisabled") }
     /// 主题色（淡）
-    public static var primaryLight: UIColor { Palette.themeColor("primaryLight") }
+    public static var primaryLight: UIColor { paletteThemeColor("primaryLight") }
     /// 成功色
-    public static var success: UIColor { Palette.themeColor("success") }
+    public static var success: UIColor { paletteThemeColor("success") }
     /// 成功色（深）
-    public static var successDark: UIColor { Palette.themeColor("successDark") }
+    public static var successDark: UIColor { paletteThemeColor("successDark") }
     /// 成功色（禁用）
-    public static var successDisabled: UIColor { Palette.themeColor("successDisabled") }
+    public static var successDisabled: UIColor { paletteThemeColor("successDisabled") }
     /// 成功色（淡）
-    public static var successLight: UIColor { Palette.themeColor("successLight") }
+    public static var successLight: UIColor { paletteThemeColor("successLight") }
     /// 警告色
-    public static var warning: UIColor { Palette.themeColor("warning") }
+    public static var warning: UIColor { paletteThemeColor("warning") }
     /// 警告色（深）
-    public static var warningDark: UIColor { Palette.themeColor("warningDark") }
+    public static var warningDark: UIColor { paletteThemeColor("warningDark") }
     /// 警告色（禁用）
-    public static var warningDisabled: UIColor { Palette.themeColor("warningDisabled") }
+    public static var warningDisabled: UIColor { paletteThemeColor("warningDisabled") }
     /// 警告色（淡）
-    public static var warningLight: UIColor { Palette.themeColor("warningLight") }
+    public static var warningLight: UIColor { paletteThemeColor("warningLight") }
     /// 错误色
-    public static var error: UIColor { Palette.themeColor("error") }
+    public static var error: UIColor { paletteThemeColor("error") }
     /// 错误色（深）
-    public static var errorDark: UIColor { Palette.themeColor("errorDark") }
+    public static var errorDark: UIColor { paletteThemeColor("errorDark") }
     /// 错误色（禁用）
-    public static var errorDisabled: UIColor { Palette.themeColor("errorDisabled") }
+    public static var errorDisabled: UIColor { paletteThemeColor("errorDisabled") }
     /// 错误色（淡）
-    public static var errorLight: UIColor { Palette.themeColor("errorLight") }
+    public static var errorLight: UIColor { paletteThemeColor("errorLight") }
     /// 信息色
-    public static var info: UIColor { Palette.themeColor("info") }
+    public static var info: UIColor { paletteThemeColor("info") }
     /// 信息色（深）
-    public static var infoDark: UIColor { Palette.themeColor("infoDark") }
+    public static var infoDark: UIColor { paletteThemeColor("infoDark") }
     /// 信息色（禁用）
-    public static var infoDisabled: UIColor { Palette.themeColor("infoDisabled") }
+    public static var infoDisabled: UIColor { paletteThemeColor("infoDisabled") }
     /// 信息色（淡）
-    public static var infoLight: UIColor { Palette.themeColor("infoLight") }
+    public static var infoLight: UIColor { paletteThemeColor("infoLight") }
     
     /// 纯白色值
-    public static var whiteColor: UIColor { Palette.themeColor("whiteColor") }
+    public static var whiteColor: UIColor { paletteThemeColor("whiteColor") }
     /// 纯黑色值
-    public static var blackColor: UIColor { Palette.themeColor("blackColor") }
+    public static var blackColor: UIColor { paletteThemeColor("blackColor") }
     /// 主要文字
-    public static var mainColor: UIColor { Palette.themeColor("mainColor") }
+    public static var mainColor: UIColor { paletteThemeColor("mainColor") }
     /// 常规文字
-    public static var contentColor: UIColor { Palette.themeColor("contentColor") }
+    public static var contentColor: UIColor { paletteThemeColor("contentColor") }
     /// 次要文字
-    public static var tipsColor: UIColor { Palette.themeColor("tipsColor") }
+    public static var tipsColor: UIColor { paletteThemeColor("tipsColor") }
     /// 占位文字
-    public static var lightColor: UIColor { Palette.themeColor("lightColor") }
+    public static var lightColor: UIColor { paletteThemeColor("lightColor") }
     /// 边框颜色
-    public static var borderColor: UIColor { Palette.themeColor("borderColor") }
+    public static var borderColor: UIColor { paletteThemeColor("borderColor") }
     /// 分割线
-    public static var dividerColor: UIColor { Palette.themeColor("dividerColor") }
+    public static var dividerColor: UIColor { paletteThemeColor("dividerColor") }
     /// 遮罩色
-    public static var maskColor: UIColor { Palette.themeColor("maskColor") }
+    public static var maskColor: UIColor { paletteThemeColor("maskColor") }
     /// 阴影颜色
-    public static var shadowColor: UIColor { Palette.themeColor("shadowColor") }
+    public static var shadowColor: UIColor { paletteThemeColor("shadowColor") }
     /// 背景色
-    public static var bgColor: UIColor { Palette.themeColor("bgColor") }
+    public static var bgColor: UIColor { paletteThemeColor("bgColor") }
     /// 纯白背景
-    public static var bgWhite: UIColor { Palette.themeColor("bgWhite") }
-    /// 浅灰背景
-    public static var bgGrayLight: UIColor { Palette.themeColor("bgGrayLight") }
-    /// 深灰背景
-    public static var bgGrayDark: UIColor { Palette.themeColor("bgGrayDark") }
+    public static var bgWhite: UIColor { paletteThemeColor("bgWhite") }
     /// 纯黑背景
-    public static var bgBlack: UIColor { Palette.themeColor("bgBlack") }
+    public static var bgBlack: UIColor { paletteThemeColor("bgBlack") }
+    /// 浅灰背景
+    public static var bgGrayLight: UIColor { paletteThemeColor("bgGrayLight") }
+    /// 深灰背景
+    public static var bgGrayDark: UIColor { paletteThemeColor("bgGrayDark") }
+    
+    /// 从调色板生成主题色
+    public static func paletteThemeColor(_ name: String) -> UIColor {
+        return UIColor.fw.themeColor { style in
+            if style == .dark {
+                return paletteDarkColor(name)
+            } else {
+                return paletteLightColor(name)
+            }
+        }
+    }
+    
+    /// 从调色板生成浅色
+    public static func paletteLightColor(_ name: String) -> UIColor {
+        return PaletteManager.shared.lightTheme[name] ?? .clear
+    }
+    
+    /// 从调色板生成深色
+    public static func paletteDarkColor(_ name: String) -> UIColor {
+        return PaletteManager.shared.darkTheme[name] ?? paletteLightColor(name)
+    }
 }
 
-// MARK: - Palette
-/// 调色板，支持从浅色自动生成深色变体
-public class Palette {
+// MARK: - PaletteManager
+/// 调色板管理器，支持从浅色自动生成深色变体
+public class PaletteManager: @unchecked Sendable {
+    /// 单例模式
+    public static let shared = PaletteManager()
+    
+    /// 当前调色板样式
+    public var paletteStyle: PaletteStyle {
+        get {
+            return _paletteStyle
+        }
+        set {
+            guard newValue != _paletteStyle else { return }
+            _paletteStyle = newValue
+
+            UserDefaults.standard.set(NSNumber(value: newValue.rawValue), forKey: "FWPaletteStyle")
+            UserDefaults.standard.synchronize()
+            
+            self.lightTheme = PaletteTheme.lightTheme(style: newValue)
+            self.darkTheme = PaletteTheme.darkTheme(style: newValue)
+
+            let themeStyle = ThemeManager.shared.style
+            NotificationCenter.default.post(name: .ThemeChanged, object: self, userInfo: [NSKeyValueChangeKey.oldKey: themeStyle.rawValue, NSKeyValueChangeKey.newKey: themeStyle.rawValue])
+            ThemeManager.shared.updateTheme()
+        }
+    }
+    
+    private var _paletteStyle: PaletteStyle = .default
+    
     /// 当前浅色主题配置
-    public nonisolated(unsafe) static var lightTheme: [String: UIColor] = lightPalette
+    public var lightTheme: [String: UIColor] = [:]
     
     /// 当前深色主题配置
-    public nonisolated(unsafe) static var darkTheme: [String: UIColor] = darkPalette
+    public var darkTheme: [String: UIColor] = [:]
     
-    /// 默认浅色调色板
-    public nonisolated(unsafe) static var lightPalette: [String: UIColor] = [
+    /// 初始化方法
+    public init() {
+        self.paletteStyle = .init(UserDefaults.standard.integer(forKey: "FWPaletteStyle"))
+        self.lightTheme = PaletteTheme.lightTheme(style: paletteStyle)
+        self.darkTheme = PaletteTheme.darkTheme(style: paletteStyle)
+    }
+}
+
+// MARK: - PaletteStyle
+/// 可扩展调色板样式
+public struct PaletteStyle: RawRepresentable, Equatable, Hashable, Sendable {
+    public typealias RawValue = Int
+
+    /// 默认调色板样式
+    public static let `default`: PaletteStyle = .init(0)
+    /// 霞光紫调色板样式
+    public static let purple: PaletteStyle = .init(1)
+    /// 清翠绿调色板样式
+    public static let green: PaletteStyle = .init(2)
+    /// 暖阳橙调色板样式
+    public static let orange: PaletteStyle = .init(3)
+    /// 午夜蓝调色板样式
+    public static let blue: PaletteStyle = .init(4)
+
+    public var rawValue: Int
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public init(_ rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
+// MARK: - PaletteTheme
+/// 调色板主题配置
+public class PaletteTheme: @unchecked Sendable {
+    /// 默认浅色调色板主题
+    public nonisolated(unsafe) static var lightTheme: [String: UIColor] = [
         "primary": UIColor.fw.color(hex: 0x2979ff),
         "primaryDark": UIColor.fw.color(hex: 0x2b85e4),
         "primaryDisabled": UIColor.fw.color(hex: 0xa0cfff),
@@ -130,8 +215,8 @@ public class Palette {
         "bgBlack": UIColor.fw.color(hex: 0x000000)
     ]
     
-    /// 默认深色调色板
-    public nonisolated(unsafe) static var darkPalette: [String: UIColor] = [
+    /// 默认深色调色板主题
+    public nonisolated(unsafe) static var darkTheme: [String: UIColor] = [
         "primary": UIColor.fw.color(hex: 0x8ab4ff),
         "primaryDark": UIColor.fw.color(hex: 0x5f8dff),
         "primaryDisabled": UIColor.fw.color(hex: 0x3d4f74),
@@ -169,8 +254,8 @@ public class Palette {
         "bgBlack": UIColor.fw.color(hex: 0xffffff)
     ]
     
-    /// 霞光紫调色板
-    public nonisolated(unsafe) static var purplePalette: [String: UIColor] = lightPalette.merging([
+    /// 霞光紫调色板主题
+    public nonisolated(unsafe) static var purpleTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x7c3aed),
         "error": UIColor.fw.color(hex: 0xf43f5e),
         "warning": UIColor.fw.color(hex: 0xf59e0b),
@@ -193,8 +278,8 @@ public class Palette {
         "infoDisabled": UIColor.fw.color(hex: 0xd1d5db)
     ], uniquingKeysWith: { $1 })
     
-    /// 清翠绿调色板
-    public nonisolated(unsafe) static var greenPalette: [String: UIColor] = lightPalette.merging([
+    /// 清翠绿调色板主题
+    public nonisolated(unsafe) static var greenTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x059669),
         "error": UIColor.fw.color(hex: 0xdc2626),
         "warning": UIColor.fw.color(hex: 0xeab308),
@@ -217,8 +302,8 @@ public class Palette {
         "infoDisabled": UIColor.fw.color(hex: 0xe7e5e4)
     ], uniquingKeysWith: { $1 })
     
-    /// 暖阳橙调色板
-    public nonisolated(unsafe) static var orangePalette: [String: UIColor] = lightPalette.merging([
+    /// 暖阳橙调色板主题
+    public nonisolated(unsafe) static var orangeTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0xf97316),
         "error": UIColor.fw.color(hex: 0xef4444),
         "warning": UIColor.fw.color(hex: 0xfbbf24),
@@ -241,8 +326,8 @@ public class Palette {
         "infoDisabled": UIColor.fw.color(hex: 0xc7d2fe)
     ], uniquingKeysWith: { $1 })
     
-    /// 午夜蓝调色板
-    public nonisolated(unsafe) static var bluePalette: [String: UIColor] = lightPalette.merging([
+    /// 午夜蓝调色板主题
+    public nonisolated(unsafe) static var blueTheme: [String: UIColor] = lightTheme.merging([
         "primary": UIColor.fw.color(hex: 0x0b3d91),
         "error": UIColor.fw.color(hex: 0xef5350),
         "warning": UIColor.fw.color(hex: 0xffa726),
@@ -265,65 +350,65 @@ public class Palette {
         "infoDisabled": UIColor.fw.color(hex: 0x4fc3f7)
     ], uniquingKeysWith: { $1 })
     
-    /// 自定义调色板变色比率，默认0.6
-    public nonisolated(unsafe) static var paletteRatio: CGFloat = 0.6
-    
     /// 自定义调色板变色排除的名称列表
-    public nonisolated(unsafe) static var paletteExcludes: [String] = [
+    public nonisolated(unsafe) static var variantExcludes: [String] = [
         "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor",
         "lightColor", "borderColor", "dividerColor", "maskColor", "shadowColor",
         "bgColor", "bgWhite", "bgGrayLight", "bgGrayDark", "bgBlack"
     ]
     
+    /// 自定义调色板变色比率，默认0.6
+    public nonisolated(unsafe) static var variantRatio: CGFloat = 0.6
+    
     /// 从浅色模板自动生成深色主题变体
-    public static func paletteTheme(
+    public static func variantTheme(
         light: [String: UIColor],
         dark: [String: UIColor]? = nil
     ) -> [String: UIColor] {
-        var paletteTheme = darkPalette.merging(dark ?? [:], uniquingKeysWith: { $1 })
-        let lightColors = light.filter { !paletteExcludes.contains($0.key) }
-        for (name, light) in lightColors {
+        var paletteTheme = darkTheme.merging(dark ?? [:], uniquingKeysWith: { $1 })
+        let lightTheme = light.filter { !variantExcludes.contains($0.key) }
+        for (name, light) in lightTheme {
             if let dark = paletteTheme[name] {
-                paletteTheme[name] = paletteColor(light: light, dark: dark)
+                paletteTheme[name] = variantColor(light: light, dark: dark)
             }
         }
         return paletteTheme
     }
     
-    /// 从指定浅色和深色自动生成变体色，不含透明度，可自定义比率
-    public static func paletteColor(light: UIColor, dark: UIColor, ratio: CGFloat? = nil) -> UIColor {
-        let from = light.fw.rgbaValue
-        let to = dark.fw.rgbaValue
-        let ratio = ratio ?? paletteRatio
-        let clamp: (CGFloat) -> Int = { val in max(0, min(lround(val), 255)) }
-        let red = clamp((1.0 - ratio) * CGFloat(from.r) + ratio * CGFloat(to.r))
-        let green = clamp((1.0 - ratio) * CGFloat(from.g) + ratio * CGFloat(to.g))
-        let blue = clamp((1.0 - ratio) * CGFloat(from.b) + ratio * CGFloat(to.b))
-        return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+    /// 从指定浅色和深色自动生成变体色，不含透明度
+    public static func variantColor(light: UIColor, dark: UIColor) -> UIColor {
+        return UIColor.fw.variantColor(light: light, dark: dark, ratio: variantRatio)
     }
     
-    /// 从调色板生成主题色
-    public static func themeColor(_ name: String) -> UIColor {
-        return UIColor.fw.themeColor { style in
-            if style == .dark {
-                return darkColor(name)
-            } else {
-                return lightColor(name)
-            }
+    /// 获取指定样式对应浅色主题
+    public static func lightTheme(style: PaletteStyle) -> [String: UIColor] {
+        switch style {
+        case .purple:
+            return purpleTheme
+        case .green:
+            return greenTheme
+        case .orange:
+            return orangeTheme
+        case .blue:
+            return blueTheme
+        default:
+            return lightTheme
         }
     }
     
-    /// 从调色板生成浅色
-    public static func lightColor(_ name: String) -> UIColor {
-        return lightTheme[name] ?? .clear
-    }
-    
-    /// 从调色板生成深色
-    public static func darkColor(_ name: String) -> UIColor {
-        let dark = darkTheme[name]
-        if let dark, !paletteExcludes.contains(name) {
-            return paletteColor(light: lightColor(name), dark: dark)
+    /// 获取指定样式对应深色主题
+    public static func darkTheme(style: PaletteStyle) -> [String: UIColor] {
+        switch style {
+        case .purple:
+            return variantTheme(light: purpleTheme)
+        case .green:
+            return variantTheme(light: greenTheme)
+        case .orange:
+            return variantTheme(light: orangeTheme)
+        case .blue:
+            return variantTheme(light: blueTheme)
+        default:
+            return darkTheme
         }
-        return dark ?? lightColor(name)
     }
 }
