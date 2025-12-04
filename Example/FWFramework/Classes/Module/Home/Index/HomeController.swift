@@ -12,7 +12,7 @@ class HomeController: UIViewController {
     // MARK: - Accessor
     private lazy var mediatorButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitleColor(UIColor.app.mainColor, for: .normal)
+        button.setTitleColor(UIColor.app.primary, for: .normal)
         button.addTarget(self, action: #selector(onMediator), for: .touchUpInside)
         return button
     }()

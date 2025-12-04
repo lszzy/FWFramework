@@ -23,8 +23,7 @@ extension PaletteStyle {
 }
 
 extension NavigationBarStyle {
-    public static let white: NavigationBarStyle = .init(1)
-    public static let transparent: NavigationBarStyle = .init(2)
+    public static let transparent: NavigationBarStyle = .init(1)
 }
 
 extension ViewStyle where Base: UIView {
@@ -89,20 +88,14 @@ extension AppTheme {
         
         let defaultAppearance = NavigationBarAppearance()
         defaultAppearance.foregroundColor = UIColor.app.mainColor
-        defaultAppearance.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
+        defaultAppearance.backgroundColor = UIColor.app.bgWhite.app.color(alpha: 0.5)
         defaultAppearance.isTranslucent = true
         defaultAppearance.leftBackImage = Icon.backImage
-        let whiteAppearance = NavigationBarAppearance()
-        whiteAppearance.foregroundColor = .black
-        whiteAppearance.backgroundColor = .white.app.color(alpha: 0.5)
-        whiteAppearance.isTranslucent = true
-        whiteAppearance.leftBackImage = Icon.backImage
         let transparentAppearance = NavigationBarAppearance()
         transparentAppearance.foregroundColor = UIColor.app.mainColor
         transparentAppearance.backgroundTransparent = true
         transparentAppearance.leftBackImage = Icon.backImage
         NavigationBarAppearance.setAppearance(defaultAppearance, for: .default)
-        NavigationBarAppearance.setAppearance(whiteAppearance, for: .white)
         NavigationBarAppearance.setAppearance(transparentAppearance, for: .transparent)
 
         UITableView.app.resetTableStyle()

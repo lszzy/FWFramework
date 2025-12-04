@@ -190,11 +190,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
 
     @objc func onNavigationStyle() {
-        if app.navigationBarStyle == .default {
-            app.navigationBarStyle = .white
-        } else {
-            app.navigationBarStyle = .default
-        }
+        app.navigationBarStyle = .default
         refreshBarFrame()
     }
 
@@ -327,11 +323,9 @@ class TestAdaptiveChildController: UIViewController, ViewControllerProtocol {
         if index < 1 {
             app.navigationBarStyle = .default
         } else if index < 2 {
-            app.navigationBarStyle = .white
-        } else if index < 3 {
             app.navigationBarStyle = .transparent
         } else {
-            app.navigationBarStyle = .init([-1, 0, 1, 2].randomElement()!)
+            app.navigationBarStyle = .init([-1, 0, 1].randomElement()!)
             app.navigationBarHidden = app.navigationBarStyle.rawValue == -1
         }
         navigationItem.title = "标题:\(index + 1) 样式:\(app.navigationBarStyle.rawValue)"

@@ -175,6 +175,7 @@ extension TestController {
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
         let title = rowData[0] as? String ?? ""
+        cell.textLabel?.textColor = UIColor.app.mainColor
         cell.textLabel?.text = title
         return cell
     }

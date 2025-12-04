@@ -84,6 +84,7 @@ extension SettingsController {
         let rowData = tableData[indexPath.row]
         let text = APP.safeValue(rowData[0])
         let action = APP.safeValue(rowData[1])
+        cell.textLabel?.textColor = UIColor.app.mainColor
         cell.textLabel?.text = text
 
         if action == "onLanguage" {

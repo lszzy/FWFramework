@@ -29,12 +29,12 @@ extension TabController {
         tabBar.app.foregroundColor = UIColor.app.mainColor
         if #available(iOS 15, *) {
             tabBar.app.isTranslucent = true
-            tabBar.app.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
+            tabBar.app.backgroundColor = UIColor.app.bgWhite.app.color(alpha: 0.5)
         } else {
-            tabBar.app.backgroundColor = AppTheme.barColor
+            tabBar.app.backgroundColor = UIColor.app.bgWhite
         }
         tabBar.app.shadowColor = nil
-        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
+        tabBar.app.setShadowColor(UIColor.app.shadowColor, offset: CGSize(width: 0, height: 1), radius: 3)
 
         shouldHijackHandler = { tabVC, navVC, index in
             if tabVC.selectedIndex == index,
