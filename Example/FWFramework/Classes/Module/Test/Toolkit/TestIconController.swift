@@ -140,7 +140,7 @@ class TestIconCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         contentView.addSubview(imageView)
         contentView.addSubview(nameLabel)
         imageView.app.layoutChain.centerX().top().size(CGSize(width: 60, height: 60))

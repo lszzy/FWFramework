@@ -31,10 +31,6 @@ extension ViewStyle where Base: UIView {
 }
 
 class AppTheme: NSObject {
-    public static var cellColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xFFFFFF), dark: .app.color(hex: 0x1C1C1C))
-    }
-
     @MainActor public static func largeButton() -> UIButton {
         let button = UIButton()
         button.setTitleColor(UIColor.app.whiteColor, for: .normal)

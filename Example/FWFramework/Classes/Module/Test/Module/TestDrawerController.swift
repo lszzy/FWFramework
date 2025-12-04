@@ -45,7 +45,7 @@ class TestDrawerController: UIViewController, ViewControllerProtocol, UINavigati
         }
         result.app.tableDelegate.cellConfiguation = { cell, indexPath in
             cell.app.maxYViewExpanded = true
-            cell.contentView.backgroundColor = AppTheme.cellColor
+            cell.contentView.backgroundColor = UIColor.app.bgWhite
             cell.textLabel?.text = "\(indexPath.row + 1)"
         }
         result.app.tableDelegate.didScroll = { [weak self] scrollView in

@@ -26,7 +26,7 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
 
     private lazy var customLabel: UILabel = {
         let result = UILabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: UIColor.app.mainColor, text: "我是自定义标签")
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         return result
     }()
 

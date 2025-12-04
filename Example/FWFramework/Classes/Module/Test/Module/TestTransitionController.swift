@@ -343,7 +343,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         frameLabel.app.layoutChain.centerX().top(50)
 
         let button = UIButton()
-        button.backgroundColor = AppTheme.cellColor
+        button.backgroundColor = UIColor.app.bgWhite
         button.titleLabel?.font = UIFont.app.font(ofSize: 15)
         button.setTitleColor(UIColor.app.mainColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
@@ -383,7 +383,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
 
     lazy var contentView: UIView = {
         let result = UIView()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         return result
     }()
 
@@ -451,7 +451,7 @@ class TestTransitionCustomViewController: UIViewController, ViewControllerProtoc
         let result = UIView()
         result.layer.masksToBounds = true
         result.layer.cornerRadius = 10
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         return result
     }()
 

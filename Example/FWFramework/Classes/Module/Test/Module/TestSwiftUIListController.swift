@@ -64,17 +64,17 @@ struct TestSwiftUIListContent: View {
                 ForEach(viewModel.items, id: \.hash) { item in
                     Text(item)
                         .padding(.leading, 16)
-                        .resetCellStyle(background: Color(AppTheme.cellColor))
+                        .resetCellStyle(background: Color(UIColor.app.bgWhite))
                 }
             } header: {
                 Text("Header")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .resetHeaderStyle(background: Color(UIColor.app.bgWhite))
                     .removable(viewModel.items.isEmpty)
             } footer: {
                 Text("Footer")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .resetHeaderStyle(background: Color(UIColor.app.bgWhite))
                     .removable(viewModel.items.isEmpty)
             }
         }

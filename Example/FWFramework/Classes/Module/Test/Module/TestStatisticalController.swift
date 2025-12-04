@@ -79,7 +79,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectedSegmentIndex = 1
         result.selectionStyle = .box
         result.segmentEdgeInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 5)
@@ -94,7 +94,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     lazy var tagCollectionView: TextTagCollectionView = {
         let result = TextTagCollectionView()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.verticalSpacing = 10
         result.horizontalSpacing = 10
         return result
@@ -275,12 +275,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             return event
         }
         segmentedControl.app.statisticalExposureListener = { /* [weak self] */ _ in
-            // self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            // self?.segmentedControl.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(segmentedControl.app.statisticalExposure)
         tagCollectionView.app.statisticalExposure = StatisticalEvent(name: "exposure_tag", object: "tag")
         tagCollectionView.app.statisticalExposureListener = { [weak self] event in
-            self?.tagCollectionView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            self?.tagCollectionView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(tagCollectionView.app.statisticalExposure)
     }
@@ -317,12 +317,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .default)
-        cell.contentView.backgroundColor = AppTheme.cellColor
+        cell.contentView.backgroundColor = UIColor.app.bgWhite
         cell.textLabel?.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_tableView", object: tableObject)
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: tableObject)
         cell.app.statisticalExposureListener = { event in
-            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            cell.contentView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
         return cell
@@ -338,12 +338,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestStatisticalCell.app.cell(collectionView: collectionView, indexPath: indexPath)
-        cell.contentView.backgroundColor = AppTheme.cellColor
+        cell.contentView.backgroundColor = UIColor.app.bgWhite
         cell.textLabel.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
         cell.app.statisticalExposureListener = { event in
-            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            cell.contentView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
         return cell

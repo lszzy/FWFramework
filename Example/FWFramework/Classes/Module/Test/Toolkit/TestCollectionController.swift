@@ -126,7 +126,7 @@ class TestCollectionController: UIViewController, CollectionViewControllerProtoc
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.section == 0 {
             let cell = UICollectionViewCell.app.cell(collectionView: collectionView, indexPath: indexPath)
-            cell.contentView.backgroundColor = AppTheme.cellColor
+            cell.contentView.backgroundColor = UIColor.app.bgWhite
             return cell
         }
 
@@ -418,7 +418,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
         app.maxYViewPadding = 15
 
@@ -498,7 +498,7 @@ class TestCollectionDynamicLayoutHeaderView: UICollectionReusableView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = AppTheme.cellColor
+        backgroundColor = UIColor.app.bgWhite
         app.maxYViewPadding = 15
         addSubview(titleLabel)
         titleLabel.app.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))

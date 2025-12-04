@@ -388,7 +388,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         app.separatorInset = .zero
         selectionStyle = .none
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
         app.maxYViewPadding = 15
 
@@ -468,7 +468,7 @@ class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         app.maxYViewPadding = 15
         addSubview(titleLabel)
         titleLabel.app.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))

@@ -165,7 +165,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_custom() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellBgColorNormal = AppTheme.cellColor
+        cellProperty.cellBgColorNormal = UIColor.app.bgWhite
         cellProperty.cellBgColorSelected = .white
         cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2

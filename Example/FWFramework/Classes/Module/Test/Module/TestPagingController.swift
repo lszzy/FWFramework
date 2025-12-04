@@ -49,7 +49,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
 
     lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
         result.selectedTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
         result.sectionTitles = ["下单", "评价", "商家"]
@@ -226,7 +226,7 @@ class TestNestCollectionCell: UICollectionViewCell {
 
     override var isSelected: Bool {
         didSet {
-            contentView.backgroundColor = isSelected ? .gray : AppTheme.cellColor
+            contentView.backgroundColor = isSelected ? .gray : UIColor.app.bgWhite
         }
     }
 }
@@ -372,7 +372,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = AppTheme.cellColor
+        view.backgroundColor = UIColor.app.bgWhite
 
         let headerLabel = UILabel()
         headerLabel.font = UIFont.app.font(ofSize: 15)

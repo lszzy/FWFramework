@@ -21,7 +21,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.textFont = UIFont.systemFont(ofSize: 15)
         result.textColor = UIColor.app.randomColor
         result.selectedTextColor = result.textColor
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectedBackgroundColor = result.backgroundColor
         result.cornerRadius = 2
         result.selectedCornerRadius = result.cornerRadius
@@ -44,7 +44,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
 
     private lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl(sectionTitles: [])
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectionStyle = .box
         result.selectionIndicatorBoxCornerRadius = 12
         result.selectionIndicatorBoxEdgeInsets = UIEdgeInsets(top: 8, left: 4, bottom: 8, right: 4)
@@ -169,7 +169,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         textLabel.attributedText = attrStr
 
         let label = AttributedLabel()
-        label.backgroundColor = AppTheme.cellColor
+        label.backgroundColor = UIColor.app.bgWhite
         label.font = UIFont.systemFont(ofSize: 15)
         label.textColor = UIColor.app.mainColor
         label.textAlignment = .center
