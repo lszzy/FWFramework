@@ -16,7 +16,7 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
 
     private lazy var tabBarView: ToolbarView = {
         let result = ToolbarView(type: .tabBar)
-        result.backgroundColor = AppTheme.barColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.tintColor = UIColor.app.mainColor
         result.menuView.verticalOverflow = true
         result.menuView.leftButton = homeButton
@@ -36,7 +36,7 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
     private lazy var testButton: TestTabbarViewButton = {
         let result = TestTabbarViewButton(image: Icon.iconImage("zmdi-var-toys", size: 50)?.app.image(insets: UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10), color: nil), title: APP.localized("testTitle"))
         result.titleLabel?.font = APP.font(10)
-        result.imageView?.backgroundColor = AppTheme.barColor
+        result.imageView?.backgroundColor = UIColor.app.bgWhite
         result.imageView?.layer.cornerRadius = 35
         result.app.addTouch(target: self, action: #selector(onButtonClicked(_:)))
         result.tag = 2
@@ -147,7 +147,7 @@ class TestTabbarViewButton: ToolbarButton {
 class TestTabbarViewChildController: UIViewController, ViewControllerProtocol {
     private lazy var navigationView: ToolbarView = {
         let result = ToolbarView(type: .navBar)
-        result.backgroundColor = AppTheme.barColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.tintColor = UIColor.app.mainColor
         result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { _ in
             Navigator.close(animated: true)

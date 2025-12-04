@@ -97,7 +97,7 @@ class TestTabbarContentView: TabBarItemContentView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        imageView.backgroundColor = AppTheme.barColor
+        imageView.backgroundColor = UIColor.app.bgWhite
         imageView.layer.cornerRadius = 35
         insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
         imageInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)

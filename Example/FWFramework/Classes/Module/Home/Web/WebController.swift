@@ -176,7 +176,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
         toolbarItems = [flexibleItem, backItem, spaceItem, forwardItem, flexibleItem]
 
         navigationController?.toolbar.app.shadowImage = UIImage.app.image(color: UIColor.app.borderColor, size: CGSize(width: view.bounds.width, height: 0.5))
-        navigationController?.toolbar.app.backgroundColor = AppTheme.barColor
+        navigationController?.toolbar.app.backgroundColor = UIColor.app.bgWhite
         navigationController?.toolbar.app.foregroundColor = UIColor.app.mainColor
     }
 

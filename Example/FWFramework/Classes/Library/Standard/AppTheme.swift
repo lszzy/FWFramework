@@ -31,10 +31,6 @@ extension ViewStyle where Base: UIView {
 }
 
 class AppTheme: NSObject {
-    public static var barColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xFAFAFA), dark: .app.color(hex: 0x121212))
-    }
-
     public static var tableColor: UIColor {
         UIColor.app.themeLight(.app.color(hex: 0xF2F2F2), dark: .app.color(hex: 0x000000))
     }

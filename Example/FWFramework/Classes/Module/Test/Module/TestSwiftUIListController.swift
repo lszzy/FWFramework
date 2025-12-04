@@ -41,7 +41,7 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
             .navigationBarConfigure(
                 leading: Icon.backImage,
                 title: "TestSwiftUIListController",
-                background: AppTheme.barColor
+                background: UIColor.app.bgWhite
             )
             .wrappedHostingView()
 

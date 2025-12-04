@@ -180,12 +180,12 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     func pagingView(_ pagingView: PagingView, mainTableViewDidScroll scrollView: UIScrollView) {
         let progress = scrollView.contentOffset.y / (TestPagingController.headerViewHeight - TestPagingController.navigationViewHeight)
         if progress >= 1 {
-            barAppearance.backgroundColor = AppTheme.barColor
+            barAppearance.backgroundColor = UIColor.app.bgWhite
             barAppearance.foregroundColor = UIColor.app.mainColor
             app.navigationBarAppearance = barAppearance
             app.statusBarStyle = .default
         } else if progress >= 0 && progress < 1 {
-            barAppearance.backgroundColor = AppTheme.barColor.withAlphaComponent(progress)
+            barAppearance.backgroundColor = UIColor.app.bgWhite.withAlphaComponent(progress)
             if progress <= 0.5 {
                 barAppearance.foregroundColor = .white.withAlphaComponent(1 - progress)
             } else {

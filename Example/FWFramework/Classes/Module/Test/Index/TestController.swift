@@ -91,8 +91,7 @@ class TestController: UIViewController {
         let result = UISearchBar()
         result.placeholder = "Search"
         result.delegate = self
-        result.app.backgroundColor = AppTheme.barColor
-        result.app.textFieldBackgroundColor = AppTheme.tableColor
+        result.app.backgroundColor = UIColor.app.bgWhite
         result.app.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
         result.app.searchIconCenter = true
         result.app.searchIconOffset = 10

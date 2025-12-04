@@ -71,9 +71,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 
         let searchBar = result.searchBar
         searchBar.placeholder = "Search"
-        searchBar.barTintColor = AppTheme.barColor
-        searchBar.app.backgroundColor = AppTheme.barColor
-        searchBar.app.textFieldBackgroundColor = AppTheme.tableColor
+        searchBar.app.backgroundColor = UIColor.app.bgWhite
         searchBar.app.searchIconOffset = 10
         searchBar.app.searchTextOffset = 4
         searchBar.app.clearIconOffset = -6
