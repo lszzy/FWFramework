@@ -53,7 +53,7 @@ iOS开发框架，主要解决原生开发中的常规和痛点问题，搭建�
     import FWSwiftUI
     import FWPluginMacros 
 
-## [Api文档](https://fwframework.wuyong.site)
+## [Api文档](https://fwframework.wuchenxi.vip)
 Api文档可运行scripts/jazzy.sh自动生成到docs文件夹，浏览器打开index.html即可。
 
 自定义代码前缀为app示例：
@@ -88,4 +88,4 @@ Api文档可运行scripts/jazzy.sh自动生成到docs文件夹，浏览器打开
 	如果您是某三方开源库的作者，若是本库侵犯了您的权益，请告诉我，本人会立即移除该三方开源库的使用，深感歉意。
 
 ## 官方网站
-[大勇的网站](http://www.wuyong.site)
+[大勇的网站](http://www.wuchenxi.vip)

@@ -53,7 +53,7 @@ This framework supports Swift Package Manager, just add and check the required m
 	import FWSwiftUI
     import FWPluginMacros  
 
-## [Api](https://fwframework.wuyong.site)
+## [Api](https://fwframework.wuchenxi.vip)
 The API document can be automatically generated into the docs folder by running scripts/jazzy.sh, and the browser can open index.html.
 
 Custom code prefix is app example:
@@ -88,4 +88,4 @@ This framework uses a lot of third-party libraries. Thanks to the authors of all
 	If you are the author of a third-party open source library, if this library violates your rights, please let me know, and I will immediately remove the use of the third-party open source library. 
 
 ## Support
-[wuyong.site](http://www.wuyong.site)
+[Website](http://www.wuchenxi.vip)
