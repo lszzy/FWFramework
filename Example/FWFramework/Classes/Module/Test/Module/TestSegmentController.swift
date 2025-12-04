@@ -21,7 +21,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.textFont = UIFont.systemFont(ofSize: 15)
         result.textColor = UIColor.app.randomColor
         result.selectedTextColor = result.textColor
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectedBackgroundColor = result.backgroundColor
         result.cornerRadius = 2
         result.selectedCornerRadius = result.cornerRadius
@@ -44,7 +44,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
 
     private lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl(sectionTitles: [])
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectionStyle = .box
         result.selectionIndicatorBoxCornerRadius = 12
         result.selectionIndicatorBoxEdgeInsets = UIEdgeInsets(top: 8, left: 4, bottom: 8, right: 4)
@@ -55,11 +55,11 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         result.selectionIndicatorCornerRadius = 2.5
         result.titleTextAttributes = [
             NSAttributedString.Key.font: UIFont.app.font(ofSize: 15),
-            NSAttributedString.Key.foregroundColor: AppTheme.textColor
+            NSAttributedString.Key.foregroundColor: UIColor.app.mainColor
         ]
         result.selectedTitleTextAttributes = [
             NSAttributedString.Key.font: UIFont.app.font(ofSize: 16, weight: .bold),
-            NSAttributedString.Key.foregroundColor: AppTheme.textColor
+            NSAttributedString.Key.foregroundColor: UIColor.app.mainColor
         ]
         result.useSelectedTitleTextAttributesSize = true
         result.segmentCustomBlock = { segmentedControl, index, rect in
@@ -98,7 +98,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .height(100)
 
         let progressView = ProgressView()
-        progressView.indicatorColor = AppTheme.textColor
+        progressView.indicatorColor = UIColor.app.mainColor
         gifImageView.addSubview(progressView)
         progressView.app.layoutChain.center().size(CGSize(width: 40, height: 40))
 
@@ -116,7 +116,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
 
         let activitySize = CGSize(width: 30, height: 30)
         let activityView = UIActivityIndicatorView(style: .large)
-        activityView.indicatorColor = AppTheme.textColor
+        activityView.indicatorColor = UIColor.app.mainColor
         activityView.indicatorSize = activitySize
         activityView.startAnimating()
         view.addSubview(activityView)
@@ -125,7 +125,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             .top(toViewBottom: gifImageView, offset: 10)
             .size(activitySize)
 
-        let textLabel = UILabel.app.label(font: UIFont.app.font(ofSize: 14), textColor: AppTheme.textColor)
+        let textLabel = UILabel.app.label(font: UIFont.app.font(ofSize: 14), textColor: UIColor.app.mainColor)
         textLabel.numberOfLines = 0
         textLabel.textAlignment = .center
         view.addSubview(textLabel)
@@ -139,7 +139,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
 
             NSAttributedString(string: "常规16 ", attributes: [
                 .font: APP.font(16, .regular),
-                .foregroundColor: AppTheme.buttonColor,
+                .foregroundColor: UIColor.app.primary,
                 .strikethroughStyle: NSUnderlineStyle.single.rawValue
             ])
 
@@ -156,9 +156,9 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
 
             NSAttributedString(string: "常规16 ", attributes: [
                 .font: UIFont.app.font(ofSize: 16, weight: .regular),
-                .foregroundColor: AppTheme.buttonColor,
+                .foregroundColor: UIColor.app.primary,
                 .strikethroughStyle: NSUnderlineStyle.thick.rawValue,
-                .strikethroughColor: AppTheme.textColor
+                .strikethroughColor: UIColor.app.mainColor
             ])
 
             NSAttributedString.app.attributedString("粗体16 ", font: UIFont.app.font(ofSize: 16, weight: .bold))
@@ -169,9 +169,9 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         textLabel.attributedText = attrStr
 
         let label = AttributedLabel()
-        label.backgroundColor = AppTheme.cellColor
+        label.backgroundColor = UIColor.app.bgWhite
         label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = AppTheme.textColor
+        label.textColor = UIColor.app.mainColor
         label.textAlignment = .center
         label.numberOfLines = 0
         label.clickedOnLink = { url in
@@ -197,21 +197,21 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
         let linkString = " 我是链接"
         label.appendAttributedText(NSAttributedString(string: linkString, attributes: [
             .font: UIFont.systemFont(ofSize: 15),
-            .foregroundColor: AppTheme.textColor,
+            .foregroundColor: UIColor.app.mainColor,
             .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .underlineColor: AppTheme.textColor
+            .underlineColor: UIColor.app.mainColor
         ]))
-        label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), attributes: [.foregroundColor: AppTheme.buttonColor])
+        label.addCustomLink("https://www.baidu.com", for: NSMakeRange(linkStart, (linkString as NSString).length), attributes: [.foregroundColor: UIColor.app.primary])
         label.appendAttributedText(NSAttributedString(string: " 我是删除线", attributes: [
             .font: UIFont.systemFont(ofSize: 15),
-            .foregroundColor: AppTheme.buttonColor,
+            .foregroundColor: UIColor.app.primary,
             .strikethroughStyle: NSUnderlineStyle.thick.rawValue
         ]))
         label.appendAttributedText(NSAttributedString(string: " 我是可以换行的删除线😀，我可以换行哦", attributes: [
             .font: UIFont.systemFont(ofSize: 15),
-            .foregroundColor: AppTheme.textColor,
+            .foregroundColor: UIColor.app.mainColor,
             .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-            .strikethroughColor: AppTheme.textColor
+            .strikethroughColor: UIColor.app.mainColor
         ]))
         label.appendText(" 结束")
 
@@ -226,7 +226,7 @@ class TestSegmentController: UIViewController, ViewControllerProtocol, UIScrollV
             tagCollectionView.addTag(tagName, config: textTagConfig)
         }
 
-        let marqueeLabel = MarqueeLabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "MarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
+        let marqueeLabel = MarqueeLabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: UIColor.app.mainColor, text: "MarqueeLabel 会在添加到界面上后，并且文字超过 label 宽度时自动滚动")
         view.addSubview(marqueeLabel)
         marqueeLabel.app.layoutChain
             .horizontal(10)

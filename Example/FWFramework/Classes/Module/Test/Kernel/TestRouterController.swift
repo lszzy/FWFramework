@@ -71,9 +71,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
 
         let searchBar = result.searchBar
         searchBar.placeholder = "Search"
-        searchBar.barTintColor = AppTheme.barColor
-        searchBar.app.backgroundColor = AppTheme.barColor
-        searchBar.app.textFieldBackgroundColor = AppTheme.tableColor
+        searchBar.app.backgroundColor = UIColor.app.bgWhite
         searchBar.app.searchIconOffset = 10
         searchBar.app.searchTextOffset = 4
         searchBar.app.clearIconOffset = -6
@@ -368,7 +366,7 @@ class TestRouterController: UIViewController, TableViewControllerProtocol, UISea
     func onOpenResult() {
         let vc = UIViewController()
         vc.title = "弹出框"
-        vc.view.backgroundColor = AppTheme.backgroundColor
+        vc.view.backgroundColor = UIColor.app.bgWhite
         vc.app.completionHandler = { [weak self] result in
             let result = result != nil ? APP.safeString(result) : "deinit"
             self?.app.showMessage(text: "完成回调：\(result)")

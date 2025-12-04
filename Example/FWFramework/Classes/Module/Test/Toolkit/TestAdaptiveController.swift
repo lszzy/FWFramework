@@ -17,7 +17,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     private lazy var frameLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = APP.font(15)
         result.textAlignment = .center
         return result
@@ -57,7 +57,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
             .right(10)
             .bottom(APP.safeAreaInsets.bottom + 10)
 
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.app.layoutChain
             .horizontal()
             .top()
@@ -190,16 +190,12 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
 
     @objc func onNavigationStyle() {
-        if app.navigationBarStyle == .default {
-            app.navigationBarStyle = .white
-        } else {
-            app.navigationBarStyle = .default
-        }
+        app.navigationBarStyle = .default
         refreshBarFrame()
     }
 
     @objc func onTitleColor() {
-        navigationController?.navigationBar.app.titleAttributes = navigationController?.navigationBar.app.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: AppTheme.buttonColor]
+        navigationController?.navigationBar.app.titleAttributes = navigationController?.navigationBar.app.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: UIColor.app.primary]
         refreshBarFrame()
     }
 
@@ -327,11 +323,9 @@ class TestAdaptiveChildController: UIViewController, ViewControllerProtocol {
         if index < 1 {
             app.navigationBarStyle = .default
         } else if index < 2 {
-            app.navigationBarStyle = .white
-        } else if index < 3 {
             app.navigationBarStyle = .transparent
         } else {
-            app.navigationBarStyle = .init([-1, 0, 1, 2].randomElement()!)
+            app.navigationBarStyle = .init([-1, 0, 1].randomElement()!)
             app.navigationBarHidden = app.navigationBarStyle.rawValue == -1
         }
         navigationItem.title = "标题:\(index + 1) 样式:\(app.navigationBarStyle.rawValue)"

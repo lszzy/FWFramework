@@ -19,6 +19,7 @@ class TestController: UIViewController {
         ]],
         ["Service", [
             ["Theme", "TestThemeController"],
+            ["Palette", "TestPaletteController"],
             ["Authorize", "TestAuthorizeController"],
             ["Notification", "TestNotificationController"],
             ["Cache", "TestCacheController"],
@@ -90,8 +91,7 @@ class TestController: UIViewController {
         let result = UISearchBar()
         result.placeholder = "Search"
         result.delegate = self
-        result.app.backgroundColor = AppTheme.barColor
-        result.app.textFieldBackgroundColor = AppTheme.tableColor
+        result.app.backgroundColor = UIColor.app.bgWhite
         result.app.contentInset = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
         result.app.searchIconCenter = true
         result.app.searchIconOffset = 10
@@ -129,7 +129,7 @@ extension TestController: TableViewControllerProtocol {
     }
 
     func setupTableView() {
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.keyboardDismissMode = .onDrag
     }
 
@@ -174,6 +174,7 @@ extension TestController {
         let sectionList = sectionData[1] as! [Any]
         let rowData = sectionList[indexPath.row] as! [Any]
         let title = rowData[0] as? String ?? ""
+        cell.textLabel?.textColor = UIColor.app.mainColor
         cell.textLabel?.text = title
         return cell
     }

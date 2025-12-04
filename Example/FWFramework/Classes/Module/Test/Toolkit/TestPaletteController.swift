@@ -8,7 +8,7 @@
 
 import FWFramework
 
-class TestIconController: UIViewController, CollectionViewControllerProtocol {
+class TestPaletteController: UIViewController, CollectionViewControllerProtocol {
     typealias CollectionElement = String
 
     private lazy var searchController: UISearchController = {
@@ -19,8 +19,8 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
         return result
     }()
 
-    private lazy var resultController: TestIconResultController = {
-        let result = TestIconResultController()
+    private lazy var resultController: TestPaletteResultController = {
+        let result = TestPaletteResultController()
         return result
     }()
 
@@ -30,6 +30,22 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
         // tableView.tableHeaderView = searchController.searchBar
         // 如果进入预编辑状态时searchBar消失，可添加如下代码：
         // definesPresentationContext = true
+        
+        app.setRightBarItem(UIBarButtonItem.SystemItem.action) { [weak self] _ in
+            let actions = [
+                APP.localized("colorDefault"),
+                APP.localized("colorPurple"),
+                APP.localized("colorGreen"),
+                APP.localized("colorOrange"),
+                APP.localized("colorBlue"),
+                APP.localized("colorCustom"),
+            ]
+            
+            self?.app.showSheet(title: APP.localized("colorTitle"), message: nil, cancel: APP.localized("取消"), actions: actions, currentIndex: -1) { [weak self] index in
+                PaletteManager.shared.paletteStyle = PaletteStyle(index)
+                self?.collectionView.reloadData()
+            }
+        }
     }
 
     func setupCollectionViewLayout() -> UICollectionViewLayout {
@@ -44,7 +60,15 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
     }
 
     func setupSubviews() {
-        collectionData = Array(MaterialIcons.iconMapper().keys)
+        collectionData = Array(PaletteManager.shared.lightTheme.keys).sorted(by: { key1, key2 in
+            if PaletteTheme.variantExcludes.contains(key1) {
+                return PaletteTheme.variantExcludes.contains(key2) ? key1 < key2 : false
+            } else if PaletteTheme.variantExcludes.contains(key2) {
+                return true
+            } else {
+                return key1 < key2
+            }
+        })
         resultController.collectionData = collectionData
         collectionView.reloadData()
     }
@@ -54,9 +78,9 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = TestIconCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = TestPaletteCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         let name = collectionData[indexPath.item]
-        cell.imageView.app.themeImage = APP.iconImage(name, 60)?.app.themeImage
+        cell.colorView.backgroundColor = UIColor.app.paletteThemeColor(name)
         cell.nameLabel.text = name
         return cell
     }
@@ -69,7 +93,7 @@ class TestIconController: UIViewController, CollectionViewControllerProtocol {
     }
 }
 
-class TestIconResultController: UIViewController, CollectionViewControllerProtocol, UISearchResultsUpdating {
+class TestPaletteResultController: UIViewController, CollectionViewControllerProtocol, UISearchResultsUpdating {
     typealias CollectionElement = String
 
     var searchData: [CollectionElement] = []
@@ -94,9 +118,9 @@ class TestIconResultController: UIViewController, CollectionViewControllerProtoc
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = TestIconCell.app.cell(collectionView: collectionView, indexPath: indexPath)
+        let cell = TestPaletteCell.app.cell(collectionView: collectionView, indexPath: indexPath)
         let name = searchData[indexPath.item]
-        cell.imageView.app.themeImage = APP.iconImage(name, 60)?.app.themeImage
+        cell.colorView.backgroundColor = UIColor.app.paletteThemeColor(name)
         cell.nameLabel.text = name
         return cell
     }
@@ -123,9 +147,10 @@ class TestIconResultController: UIViewController, CollectionViewControllerProtoc
     }
 }
 
-class TestIconCell: UICollectionViewCell {
-    lazy var imageView: UIImageView = {
-        let result = UIImageView()
+class TestPaletteCell: UICollectionViewCell {
+    lazy var colorView: UIView = {
+        let result = UIView()
+        result.app.setBorderColor(UIColor.app.borderColor, width: UIScreen.app.pointHalf, cornerRadius: 8)
         return result
     }()
 
@@ -140,12 +165,11 @@ class TestIconCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = UIColor.app.bgWhite
-        contentView.addSubview(imageView)
+        contentView.addSubview(colorView)
         contentView.addSubview(nameLabel)
-        imageView.app.layoutChain.centerX().top().size(CGSize(width: 60, height: 60))
+        colorView.app.layoutChain.centerX().top().size(CGSize(width: 60, height: 60))
         nameLabel.app.layoutChain.edges(.zero, excludingEdge: .top)
-            .top(toViewBottom: imageView)
+            .top(toViewBottom: colorView)
     }
 
     required init?(coder: NSCoder) {

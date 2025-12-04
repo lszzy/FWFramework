@@ -30,12 +30,12 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         barrageManager.renderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         barrageManager.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
 
         let originY = CGRectGetHeight(view.frame) - 50
         let button = UIButton(type: .custom)
         button.setTitle("开始", for: .normal)
-        button.setTitleColor(AppTheme.textColor, for: .normal)
+        button.setTitleColor(UIColor.app.mainColor, for: .normal)
         button.addTarget(self, action: #selector(startBarrage), for: .touchUpInside)
         button.frame = CGRect(x: 0, y: originY, width: 50, height: 50)
         button.backgroundColor = .red.withAlphaComponent(0.2)
@@ -43,7 +43,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
 
         let button2 = UIButton(type: .custom)
         button2.setTitle("暂停", for: .normal)
-        button2.setTitleColor(AppTheme.textColor, for: .normal)
+        button2.setTitleColor(UIColor.app.mainColor, for: .normal)
         button2.addTarget(self, action: #selector(pauseBarrage), for: .touchUpInside)
         button2.frame = CGRect(x: 55, y: originY, width: 50, height: 50)
         button2.backgroundColor = .red.withAlphaComponent(0.2)
@@ -51,7 +51,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
 
         let button3 = UIButton(type: .custom)
         button3.setTitle("继续", for: .normal)
-        button3.setTitleColor(AppTheme.textColor, for: .normal)
+        button3.setTitleColor(UIColor.app.mainColor, for: .normal)
         button3.addTarget(self, action: #selector(resumeBarrage), for: .touchUpInside)
         button3.frame = CGRect(x: 110, y: originY, width: 50, height: 50)
         button3.backgroundColor = .red.withAlphaComponent(0.2)
@@ -59,7 +59,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
 
         let button4 = UIButton(type: .custom)
         button4.setTitle("停止", for: .normal)
-        button4.setTitleColor(AppTheme.textColor, for: .normal)
+        button4.setTitleColor(UIColor.app.mainColor, for: .normal)
         button4.addTarget(self, action: #selector(stopBarrage), for: .touchUpInside)
         button4.frame = CGRect(x: 165, y: originY, width: 50, height: 50)
         button4.backgroundColor = .red.withAlphaComponent(0.2)
@@ -102,10 +102,10 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
 
         let descriptor = BarrageTextDescriptor()
         descriptor.text = "~弹幕~"
-        descriptor.textColor = AppTheme.textColor
+        descriptor.textColor = UIColor.app.mainColor
         descriptor.positionPriority = .low
         descriptor.textFont = UIFont.systemFont(ofSize: 17)
-        descriptor.strokeColor = AppTheme.textColor.withAlphaComponent(0.3)
+        descriptor.strokeColor = UIColor.app.mainColor.withAlphaComponent(0.3)
         descriptor.strokeWidth = -1
         descriptor.animationDuration = CGFloat(arc4random() % 5 + 5)
         descriptor.barrageCellClass = BarrageTextCell.self
@@ -118,10 +118,10 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     @objc func addFixedSpeedAnimationCell() {
         let descriptor = BarrageGradientBackgroundColorDescriptor()
         descriptor.text = "~等速弹幕~"
-        descriptor.textColor = AppTheme.textColor
+        descriptor.textColor = UIColor.app.mainColor
         descriptor.positionPriority = .low
         descriptor.textFont = UIFont.systemFont(ofSize: 17)
-        descriptor.strokeColor = AppTheme.textColor.withAlphaComponent(0.3)
+        descriptor.strokeColor = UIColor.app.mainColor.withAlphaComponent(0.3)
         descriptor.strokeWidth = -1
         descriptor.fixedSpeed = 50
         descriptor.barrageCellClass = BarrageGradientBackgroundColorCell.self
@@ -143,10 +143,10 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
         }
 
         descriptor.text = "~欢迎大驾光临~"
-        descriptor.textColor = AppTheme.textColor
+        descriptor.textColor = UIColor.app.mainColor
         descriptor.positionPriority = .middle
         descriptor.textFont = UIFont.systemFont(ofSize: 17)
-        descriptor.strokeColor = AppTheme.textColor.withAlphaComponent(0.3)
+        descriptor.strokeColor = UIColor.app.mainColor.withAlphaComponent(0.3)
         descriptor.strokeWidth = -1
         descriptor.animationDuration = CGFloat(arc4random() % 5 + 5)
         descriptor.barrageCellClass = BarrageWalkBannerCell.self
@@ -159,7 +159,7 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     @objc func addStopoverBarrage() {
         let descriptor = BarrageBecomeNobleDescriptor()
         let attrString = NSMutableAttributedString(string: "~样式弹幕~")
-        attrString.addAttribute(.foregroundColor, value: AppTheme.textColor, range: NSMakeRange(0, attrString.length))
+        attrString.addAttribute(.foregroundColor, value: UIColor.app.mainColor, range: NSMakeRange(0, attrString.length))
         attrString.addAttribute(.foregroundColor, value: UIColor.green, range: NSMakeRange(1, 2))
         attrString.addAttribute(.foregroundColor, value: UIColor.cyan, range: NSMakeRange(3, 2))
         attrString.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 17), range: NSMakeRange(0, attrString.length))
@@ -187,10 +187,10 @@ class TestBarrageController: UIViewController, ViewControllerProtocol {
     @objc func addVerticalAnimationCell() {
         let descriptor = BarrageVerticalTextDescriptor()
         descriptor.text = "~从上往下的动画~"
-        descriptor.textColor = AppTheme.textColor
+        descriptor.textColor = UIColor.app.mainColor
         descriptor.positionPriority = .low
         descriptor.textFont = UIFont.systemFont(ofSize: 17)
-        descriptor.strokeColor = AppTheme.textColor.withAlphaComponent(0.3)
+        descriptor.strokeColor = UIColor.app.mainColor.withAlphaComponent(0.3)
         descriptor.strokeWidth = -1
         descriptor.animationDuration = 5
         descriptor.barrageCellClass = BarrageVerticalAnimationCell.self

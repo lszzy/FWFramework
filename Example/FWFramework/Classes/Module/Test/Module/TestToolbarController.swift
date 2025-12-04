@@ -17,8 +17,8 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
 
     private lazy var navigationView: ToolbarView = {
         let result = ToolbarView(type: .navBar)
-        result.menuView.tintColor = AppTheme.textColor
-        result.backgroundColor = AppTheme.barColor
+        result.menuView.tintColor = UIColor.app.mainColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.menuView.titleView?.showsLoadingView = true
         result.menuView.titleView?.title = "我是很长很长要多长有多长长得不得了的按钮"
         result.bottomHeight = APP.navigationBarHeight
@@ -44,8 +44,8 @@ class TestToolbarController: UIViewController, TableViewControllerProtocol, Tool
 
     private lazy var toolbarView: ToolbarView = {
         let result = ToolbarView()
-        result.tintColor = AppTheme.textColor
-        result.backgroundColor = AppTheme.barColor
+        result.tintColor = UIColor.app.mainColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.topHeight = 44
         result.topHidden = true
         result.topView.backgroundColor = .green

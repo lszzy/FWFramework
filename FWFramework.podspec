@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '9.3.0'
+  s.version               = '9.4.0'
   s.summary               = 'ios develop framework'
-  s.homepage              = 'http://wuyong.site'
+  s.homepage              = 'http://fwframework.wuchenxi.vip'
   s.license               = 'MIT'
-  s.author                = { 'Wu Yong' => 'admin@wuyong.site' }
+  s.author                = { 'Wu Yong' => '245593358@qq.com' }
   s.source                = { :git => 'https://github.com/lszzy/FWFramework.git', :tag => s.version }
 
   s.ios.deployment_target = '13.0'

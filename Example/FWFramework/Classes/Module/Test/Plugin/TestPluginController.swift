@@ -64,7 +64,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 let progressView = ProgressView()
                 view = progressView
                 progressView.tag = 100
-                progressView.indicatorColor = AppTheme.textColor
+                progressView.indicatorColor = UIColor.app.mainColor
                 cell.contentView.addSubview(progressView)
                 progressView.app.layoutChain.center()
             }
@@ -85,7 +85,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
                 lottieView.animateWhenProgress = !Self.showLottieProgress
                 lottieView.tag = 100
                 lottieView.setAnimation(name: "Lottie")
-                lottieView.indicatorColor = AppTheme.textColor
+                lottieView.indicatorColor = UIColor.app.mainColor
                 cell.contentView.addSubview(lottieView)
                 lottieView.app.layoutChain.center()
             }
@@ -100,7 +100,7 @@ class TestPluginController: UIViewController, TableViewControllerProtocol {
             let indicatorView = IndicatorView()
             view = indicatorView
             indicatorView.tag = 100
-            indicatorView.indicatorColor = AppTheme.textColor
+            indicatorView.indicatorColor = UIColor.app.mainColor
             cell.contentView.addSubview(indicatorView)
             indicatorView.app.layoutChain.center()
         }

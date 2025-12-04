@@ -300,7 +300,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
 
     lazy var frameLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 
@@ -334,7 +334,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         cycleView.titlesGroup = ["1", "2", "3", "4"]
 
         let footerView = UIView()
-        footerView.backgroundColor = AppTheme.tableColor
+        footerView.backgroundColor = UIColor.app.bgColor
         contentView.addSubview(footerView)
         footerView.app.layoutChain.left().bottom().top(toViewBottom: cycleView).width(APP.screenWidth).height(1000)
 
@@ -343,9 +343,9 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         frameLabel.app.layoutChain.centerX().top(50)
 
         let button = UIButton()
-        button.backgroundColor = AppTheme.cellColor
+        button.backgroundColor = UIColor.app.bgWhite
         button.titleLabel?.font = UIFont.app.font(ofSize: 15)
-        button.setTitleColor(AppTheme.textColor, for: .normal)
+        button.setTitleColor(UIColor.app.mainColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
         footerView.addSubview(button)
         button.layoutChain.center().size(width: 200, height: 100)
@@ -361,7 +361,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
             self?.app.close(animated: !(self?.noAnimate ?? false))
         }
 
-        view.backgroundColor = navigationController != nil ? AppTheme.tableColor : AppTheme.tableColor.withAlphaComponent(0.9)
+        view.backgroundColor = navigationController != nil ? UIColor.app.bgColor : UIColor.app.bgColor.withAlphaComponent(0.9)
         view.app.addTapGesture { [weak self] _ in
             self?.app.close(animated: !(self?.noAnimate ?? false))
         }
@@ -383,7 +383,7 @@ class TestTransitionAlertViewController: UIViewController, ViewControllerProtoco
 
     lazy var contentView: UIView = {
         let result = UIView()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         return result
     }()
 
@@ -451,7 +451,7 @@ class TestTransitionCustomViewController: UIViewController, ViewControllerProtoc
         let result = UIView()
         result.layer.masksToBounds = true
         result.layer.cornerRadius = 10
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         return result
     }()
 
@@ -469,7 +469,7 @@ class TestTransitionCustomViewController: UIViewController, ViewControllerProtoc
         contentView.addSubview(childView)
         childView.app.layoutChain.edges().size(CGSize(width: 300, height: 250))
 
-        view.backgroundColor = AppTheme.backgroundColor.withAlphaComponent(0.5)
+        view.backgroundColor = UIColor.app.bgWhite.withAlphaComponent(0.5)
         view.app.addTapGesture { [weak self] _ in
             self?.dismiss()
         }

@@ -13,7 +13,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     lazy var shieldView: UIView = {
         let result = UIView()
-        result.backgroundColor = AppTheme.tableColor
+        result.backgroundColor = UIColor.app.bgColor
         result.app.addTapGesture { [weak self] _ in
             self?.shieldView.isHidden = true
             self?.shieldView.removeFromSuperview()
@@ -79,22 +79,22 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.selectedSegmentIndex = 1
         result.selectionStyle = .box
         result.segmentEdgeInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 5)
         result.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.segmentWidthStyle = .dynamic
         result.selectionIndicatorLocation = .bottom
-        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
-        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
+        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
         result.useSelectedTitleTextAttributesSize = true
         return result
     }()
 
     lazy var tagCollectionView: TextTagCollectionView = {
         let result = TextTagCollectionView()
-        result.backgroundColor = AppTheme.cellColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.verticalSpacing = 10
         result.horizontalSpacing = 10
         return result
@@ -137,7 +137,7 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
     }
 
     func setupCollectionLayout() {
-        collectionView.backgroundColor = AppTheme.backgroundColor
+        collectionView.backgroundColor = UIColor.app.bgWhite
         collectionView.app.layoutChain.edges()
     }
 
@@ -275,12 +275,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
             return event
         }
         segmentedControl.app.statisticalExposureListener = { /* [weak self] */ _ in
-            // self?.segmentedControl.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            // self?.segmentedControl.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(segmentedControl.app.statisticalExposure)
         tagCollectionView.app.statisticalExposure = StatisticalEvent(name: "exposure_tag", object: "tag")
         tagCollectionView.app.statisticalExposureListener = { [weak self] event in
-            self?.tagCollectionView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            self?.tagCollectionView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(tagCollectionView.app.statisticalExposure)
     }
@@ -317,12 +317,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell.app.cell(tableView: tableView, style: .default)
-        cell.contentView.backgroundColor = AppTheme.cellColor
+        cell.contentView.backgroundColor = UIColor.app.bgWhite
         cell.textLabel?.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_tableView", object: tableObject)
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_tableView", object: tableObject)
         cell.app.statisticalExposureListener = { event in
-            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            cell.contentView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
         return cell
@@ -338,12 +338,12 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = TestStatisticalCell.app.cell(collectionView: collectionView, indexPath: indexPath)
-        cell.contentView.backgroundColor = AppTheme.cellColor
+        cell.contentView.backgroundColor = UIColor.app.bgWhite
         cell.textLabel.text = "\(indexPath.row)"
         cell.app.statisticalClick = StatisticalEvent(name: "click_collectionView", object: "cell")
         cell.app.statisticalExposure = StatisticalEvent(name: "exposure_collectionView", object: "cell")
         cell.app.statisticalExposureListener = { event in
-            cell.contentView.backgroundColor = event.isFinished ? AppTheme.cellColor : UIColor.app.randomColor
+            cell.contentView.backgroundColor = event.isFinished ? UIColor.app.bgWhite : UIColor.app.randomColor
         }
         configShieldView(cell.app.statisticalExposure)
         return cell
@@ -367,7 +367,7 @@ class TestStatisticalCell: UICollectionViewCell {
     lazy var textLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 

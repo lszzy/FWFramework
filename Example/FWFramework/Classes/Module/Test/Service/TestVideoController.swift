@@ -26,7 +26,7 @@ class TestVideoController: UIViewController, ViewControllerProtocol {
         player.playerDelegate = self
         player.playbackDelegate = self
 
-        player.playerView.playerBackgroundColor = AppTheme.backgroundColor
+        player.playerView.playerBackgroundColor = UIColor.app.bgWhite
 
         addChild(player)
         view.addSubview(player.view)
@@ -148,7 +148,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     private lazy var closeButton: ToolbarButton = {
         let result = ToolbarButton(image: Icon.closeImage)
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.app.addTouch { _ in
             Navigator.close(animated: true)
         }
@@ -157,7 +157,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     private lazy var playButton: ToolbarButton = {
         let result = ToolbarButton(image: APP.iconImage("zdmi-var-play", 24))
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.app.addTouch { [weak self] _ in
             guard let player = self?.videoPlayer else { return }
 
@@ -174,7 +174,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = AppTheme.backgroundColor
+        backgroundColor = UIColor.app.bgWhite
 
         addSubview(closeButton)
         addSubview(playButton)

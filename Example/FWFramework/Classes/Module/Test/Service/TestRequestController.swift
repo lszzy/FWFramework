@@ -248,6 +248,8 @@ class TestRequestController: UIViewController {
     private var testHostName: String? = "www.wuyong.site"
 
     private var sseRequest: DataStreamRequest?
+    private var openaiRequest: DataStreamRequest?
+    static var openaiApiKey = ""
 
     // MARK: - Subviews
     private lazy var succeedButton: UIButton = {
@@ -319,17 +321,36 @@ class TestRequestController: UIViewController {
         button.app.addTouch(target: self, action: #selector(onObserve))
         return button
     }()
+    
+    private lazy var openaiButton: UIButton = {
+        let button = AppTheme.largeButton()
+        button.setTitle("OpenAI Request", for: .normal)
+        button.app.addTouch(target: self, action: #selector(onOpenAI))
+        return button
+    }()
+    
+    private lazy var openaiLabel: UILabel = {
+        let result = UILabel()
+        result.textColor = UIColor.app.mainColor
+        result.numberOfLines = 0
+        result.textAlignment = .left
+        return result
+    }()
 
     deinit {
         if sseRequest != nil {
             sseRequest?.cancel()
             sseRequest = nil
         }
+        if openaiRequest != nil {
+            openaiRequest?.cancel()
+            openaiRequest = nil
+        }
     }
 }
 
 // MARK: - Setup
-extension TestRequestController: ViewControllerProtocol {
+extension TestRequestController: ScrollViewControllerProtocol {
     func didInitialize() {
         // 测试\udf36|\udd75等字符会导致json解码失败问题
         var jsonString = "{\"name\": \"\\u8499\\u81ea\\u7f8e\\u5473\\u6ce1\\u6912\\u7b0b\\ud83d\\ude04\\\\udf36\\ufe0f\"}"
@@ -391,16 +412,18 @@ extension TestRequestController: ViewControllerProtocol {
     }
 
     func setupSubviews() {
-        view.addSubview(succeedButton)
-        view.addSubview(failedButton)
-        view.addSubview(cacheButton)
-        view.addSubview(retryButton)
-        view.addSubview(asyncButton)
-        view.addSubview(syncButton)
-        view.addSubview(uploadButton)
-        view.addSubview(downloadButton)
-        view.addSubview(sseButton)
-        view.addSubview(observeButton)
+        contentView.addSubview(succeedButton)
+        contentView.addSubview(failedButton)
+        contentView.addSubview(cacheButton)
+        contentView.addSubview(retryButton)
+        contentView.addSubview(asyncButton)
+        contentView.addSubview(syncButton)
+        contentView.addSubview(uploadButton)
+        contentView.addSubview(downloadButton)
+        contentView.addSubview(sseButton)
+        contentView.addSubview(observeButton)
+        contentView.addSubview(openaiButton)
+        contentView.addSubview(openaiLabel)
     }
 
     func setupLayout() {
@@ -439,15 +462,45 @@ extension TestRequestController: ViewControllerProtocol {
         sseButton.app.layoutChain
             .centerX()
             .top(toViewBottom: downloadButton, offset: 10)
-
+        
         observeButton.app.layoutChain
             .centerX()
             .top(toViewBottom: sseButton, offset: 10)
+
+        openaiButton.app.layoutChain
+            .centerX()
+            .top(toViewBottom: observeButton, offset: 10)
+        
+        openaiLabel.app.layoutChain
+            .horizontal(15)
+            .top(toViewBottom: openaiButton, offset: 10)
+            .bottom(toSafeArea: 10)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        contentView.layoutChain.width(view.bounds.width)
     }
 }
 
 // MARK: - Action
 extension TestRequestController {
+    struct OpenAIParameter: Encodable {
+        let model: String
+        let stream: Bool
+        let messages: [Message]
+        let thinking: Thinking
+        
+        struct Message: Encodable {
+            let role: String
+            let content: String
+        }
+        
+        struct Thinking: Encodable {
+            let type: String
+        }
+    }
+    
     @objc private func onSucceed() {
         let request = AppRequest.Builder()
             .requestUrl("http://kvm.wuyong.site/test.json")
@@ -514,7 +567,7 @@ extension TestRequestController {
     private func loadCache() {
         TestCacheRequest()
             .context(self)
-            .autoShowLoading(true)
+            .autoShowLoading(false)
             .preloadCacheModel(true)
             .responseSuccess { [weak self] req in
                 self?.cacheButton.setTitle(req.safeResponseModel, for: .normal)
@@ -709,6 +762,68 @@ extension TestRequestController {
                     self?.sseButton.setTitle(isCancelled ? "SSE Cancelled" : "SSE Failed", for: .normal)
                     if !isCancelled {
                         self?.app.showMessage(text: "请先运行`node sse_server.js`启动SSE Server")
+                    }
+                }
+            }
+        }
+    }
+    
+    @objc private func onOpenAI() {
+        if openaiRequest != nil {
+            openaiRequest?.cancel()
+            openaiRequest = nil
+
+            openaiButton.setTitle("OpenAI Request", for: .normal)
+            openaiLabel.text = ""
+            return
+        }
+        
+        app.showPrompt(title: "OpenAI 请求", message: nil, promptCount: 4) { textField, index in
+            if index == 0 {
+                textField.placeholder = "请输入API KEY"
+                textField.text = Self.openaiApiKey
+            } else if index == 1 {
+                textField.placeholder = "请输入BASE URL"
+                textField.text = "https://ark.cn-beijing.volces.com/api/v3"
+            } else if index == 2 {
+                textField.placeholder = "请输入Model"
+                textField.text = "doubao-seed-1-6-250615"
+            } else {
+                textField.placeholder = "请输入Content"
+                textField.text = "给我讲个笑话吧！"
+            }
+        } confirmBlock: { [weak self] values in
+            Self.openaiApiKey = values[0]
+            if Self.openaiApiKey.isEmpty {
+                self?.app.showMessage(text: "请先配置API KEY")
+                return
+            }
+            
+            let parameters = OpenAIParameter(model: values[2], stream: true, messages: [
+                OpenAIParameter.Message(role: "user", content: values[3])
+            ], thinking: OpenAIParameter.Thinking(type: "disabled"))
+            let headers = [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(Self.openaiApiKey)",
+            ]
+            self?.openaiLabel.text = ""
+            self?.openaiRequest = AlamofireImpl.shared.session.eventSourceRequest(URL(string: values[1] + "/chat/completions")!, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: HTTPHeaders(headers), lastEventID: "0")
+            self?.openaiRequest?.responseEventSource { [weak self] eventSource in
+                switch eventSource.event {
+                case let .message(message):
+                    let json = JSON(message.data?.app.jsonDecode as? [String: Any])
+                    let content = json["choices"][0]["delta"]["content"].stringValue
+                    self?.openaiLabel.text = (self?.openaiLabel.text ?? "") + content
+                    self?.openaiButton.setTitle(content, for: .normal)
+                case let .complete(completion):
+                    if completion.error == nil {
+                        self?.openaiButton.setTitle("OpenAI Completed", for: .normal)
+                    } else {
+                        let isCancelled = completion.error?.isExplicitlyCancelledError ?? false
+                        self?.openaiButton.setTitle(isCancelled ? "OpenAI Cancelled" : "OpenAI Failed", for: .normal)
+                        if !isCancelled {
+                            self?.app.showMessage(text: "OpenAI 请求失败")
+                        }
                     }
                 }
             }

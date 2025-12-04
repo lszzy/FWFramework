@@ -17,10 +17,10 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         result.numberOfLines = 3
         result.lineBreakMode = .byTruncatingTail
         result.lineTruncatingSpacing = self.buttonWidth
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.font = APP.font(16)
         result.lineSpacing = APP.font(16).pointSize / 2.0
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .left
         result.clickedOnLink = { [weak self] linkData in
             guard let linkData = linkData as? String else { return }
@@ -92,7 +92,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         view.arrangeSubviews {
             debugView
-                .chainValue(\.backgroundColor, AppTheme.textColor)
+                .chainValue(\.backgroundColor, UIColor.app.mainColor)
                 .chainBlock { result in
                     result.app.addTapGesture { _ in
                         result.app.toggleCollapsed()
@@ -111,8 +111,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
             debugLabel
                 .chainValue(\.text, "text")
                 .chainValue(\.textAlignment, .center)
-                .chainValue(\.textColor, AppTheme.textColor)
-                .chainValue(\.backgroundColor, AppTheme.backgroundColor)
+                .chainValue(\.textColor, UIColor.app.mainColor)
+                .chainValue(\.backgroundColor, UIColor.app.bgWhite)
                 .chainBlock { label in
                     label.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
                     label.app.setCornerRadius(5)
@@ -130,7 +130,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
 
             debugButton
                 .chainBlock { button in
-                    button.setTitleColor(AppTheme.textColor, for: .normal)
+                    button.setTitleColor(UIColor.app.mainColor, for: .normal)
                     button.setTitle("btn", for: .normal)
                     view.addSubview(button)
                 }
@@ -222,7 +222,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let numberLabel = UILabel()
         numberLabel.textAlignment = .center
         numberLabel.numberOfLines = 0
-        numberLabel.textColor = AppTheme.textColor
+        numberLabel.textColor = UIColor.app.mainColor
         numberLabel.text = numberString()
         view.addSubview(numberLabel)
         numberLabel.app.layoutMaker { make in
@@ -234,7 +234,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let number2Label = UILabel()
         number2Label.textAlignment = .center
         number2Label.numberOfLines = 0
-        number2Label.textColor = AppTheme.textColor
+        number2Label.textColor = UIColor.app.mainColor
         number2Label.text = number2String()
         view.addSubview(number2Label)
         number2Label.app.layoutMaker { make in
@@ -245,8 +245,8 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
 
         let emptyLabel = UILabel()
         emptyLabel.textAlignment = .center
-        emptyLabel.textColor = AppTheme.textColor
-        emptyLabel.backgroundColor = AppTheme.backgroundColor
+        emptyLabel.textColor = UIColor.app.mainColor
+        emptyLabel.backgroundColor = UIColor.app.bgWhite
         emptyLabel.app.contentInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
         emptyLabel.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
         view.addSubview(emptyLabel)
@@ -258,7 +258,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let emptyButton = UIButton()
         emptyButton.app.contentCollapse = true
         emptyButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        emptyButton.setTitleColor(AppTheme.textColor, for: .normal)
+        emptyButton.setTitleColor(UIColor.app.mainColor, for: .normal)
         emptyButton.app.setBorderColor(UIColor.red, width: UIScreen.app.pixelOne)
         view.addSubview(emptyButton)
         emptyButton.app.layoutMaker { make in
@@ -271,7 +271,7 @@ class TestLayoutController: UIViewController, ViewControllerProtocol {
         let emptySize2 = emptyButton.intrinsicContentSize.ceilValue
         resultLabel.text = "\(NSCoder.string(for: emptySize)) <=> \(NSCoder.string(for: emptySize2))"
         resultLabel.textAlignment = .center
-        resultLabel.textColor = AppTheme.textColor
+        resultLabel.textColor = UIColor.app.mainColor
         resultLabel.isUserInteractionEnabled = true
         resultLabel.app.addTapGesture { _ in
             emptyLabel.text = ["", "UILabel"].randomElement()

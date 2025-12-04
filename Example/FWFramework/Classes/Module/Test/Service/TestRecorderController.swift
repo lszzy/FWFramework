@@ -36,15 +36,15 @@ class TestRecorderController: UIViewController {
     // MARK: - Subviews
     private lazy var recordTimeLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         return result
     }()
 
     private lazy var recordButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Record", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Record", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStartRecord()
         }
@@ -53,8 +53,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var pauseButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Pause", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Pause", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onPauseRecord()
         }
@@ -63,8 +63,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var resumeButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Resume", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Resume", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onResumeRecord()
         }
@@ -73,8 +73,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var stopButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStopRecord()
         }
@@ -92,15 +92,15 @@ class TestRecorderController: UIViewController {
 
     private lazy var playTimeLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         return result
     }()
 
     private lazy var playButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Play", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Play", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStartPlay()
         }
@@ -109,8 +109,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var pausePlayButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Pause", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Pause", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onPausePlay()
         }
@@ -119,8 +119,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var resumePlayButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Resume", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Resume", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onResumePlay()
         }
@@ -129,8 +129,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var stopPlayButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStopPlay()
         }
@@ -139,7 +139,7 @@ class TestRecorderController: UIViewController {
 
     private lazy var recognizeLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         result.numberOfLines = 0
         return result
@@ -147,8 +147,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var recognizeButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Recognize", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Recognize", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStartRecognizer()
         }
@@ -157,8 +157,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var stopRecognizeButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Stop", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onStopRecognizer()
         }
@@ -167,8 +167,8 @@ class TestRecorderController: UIViewController {
 
     private lazy var localeButton: UIButton = {
         let result = UIButton()
-        result.app.setBorderColor(AppTheme.textColor, width: 1, cornerRadius: 8)
-        result.app.setTitle("Locale", font: UIFont.app.font(ofSize: 15), titleColor: AppTheme.textColor)
+        result.app.setBorderColor(UIColor.app.mainColor, width: 1, cornerRadius: 8)
+        result.app.setTitle("Locale", font: UIFont.app.font(ofSize: 15), titleColor: UIColor.app.mainColor)
         result.app.addTouch { [weak self] _ in
             self?.onChooseLocale()
         }

@@ -107,13 +107,13 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
         view.layer.addSublayer(layer)
 
         imageView = UIImageView(frame: CGRect(x: 20, y: 300, width: 50, height: 50))
-        UIImage.app.themeImageColorConfiguration = { @Sendable in AppTheme.textColor }
+        UIImage.app.themeImageColorConfiguration = { @Sendable in UIColor.app.mainColor }
         imageView.app.themeImage = Self.testImage?.app.themeImage
         view.addSubview(imageView)
 
         imageView = UIImageView(frame: CGRect(x: 90, y: 300, width: 50, height: 50))
         let colorImage = UIImage.app.themeLight(Self.testImage, dark: Self.testImage)
-        imageView.app.themeImage = colorImage.app.themeImage(color: AppTheme.textColor)
+        imageView.app.themeImage = colorImage.app.themeImage(color: UIColor.app.mainColor)
         view.addSubview(imageView)
 
         imageView = UIImageView(frame: CGRect(x: 160, y: 300, width: 50, height: 50))
@@ -143,9 +143,9 @@ class TestThemeController: UIViewController, ViewControllerProtocol {
         colorLabel.frame = CGRect(x: 0, y: 440, width: APP.screenWidth, height: 25)
         colorLabel.textAlignment = .center
         colorLabel.font = APP.font(16).app.boldFont
-        colorLabel.textColor = AppTheme.textColor
-        let lightColor = AppTheme.textColor.app.color(forStyle: .light)
-        let darkColor = AppTheme.textColor.app.color(forStyle: .dark)
+        colorLabel.textColor = UIColor.app.mainColor
+        let lightColor = UIColor.app.mainColor.app.color(forStyle: .light)
+        let darkColor = UIColor.app.mainColor.app.color(forStyle: .dark)
         colorLabel.text = "Light: \(lightColor.app.hexString) Dark: \(darkColor.app.hexString)"
         view.addSubview(colorLabel)
 

@@ -75,6 +75,7 @@
 		2FB9E30628C1E5D000C78850 /* TestNotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */; };
 		2FB9E30828C5A03800C78850 /* TestBridgeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30728C5A03800C78850 /* TestBridgeController.swift */; };
 		2FB9E30A28C5AA5D00C78850 /* TestRouterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */; };
+		2FCD02452EE08611006472FA /* TestPaletteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCD02442EE08611006472FA /* TestPaletteController.swift */; };
 		2FCDB4FC28E543820079A56C /* TestBannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FB28E543810079A56C /* TestBannerController.swift */; };
 		2FCDB4FE28E54B160079A56C /* TestPopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FD28E54B160079A56C /* TestPopupController.swift */; };
 		2FCDB50028E571820079A56C /* TestSegmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCDB4FF28E571820079A56C /* TestSegmentController.swift */; };
@@ -173,6 +174,7 @@
 		2FB9E30528C1E5D000C78850 /* TestNotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNotificationController.swift; sourceTree = "<group>"; };
 		2FB9E30728C5A03800C78850 /* TestBridgeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeController.swift; sourceTree = "<group>"; };
 		2FB9E30928C5AA5D00C78850 /* TestRouterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestRouterController.swift; sourceTree = "<group>"; };
+		2FCD02442EE08611006472FA /* TestPaletteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaletteController.swift; sourceTree = "<group>"; };
 		2FCDB4FB28E543810079A56C /* TestBannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBannerController.swift; sourceTree = "<group>"; };
 		2FCDB4FD28E54B160079A56C /* TestPopupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPopupController.swift; sourceTree = "<group>"; };
 		2FCDB4FF28E571820079A56C /* TestSegmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSegmentController.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				2FB11EFA28E2999C00DCB965 /* TestCollectionController.swift */,
 				2F6E0C4428E691D500C77153 /* TestCompatibleController.swift */,
 				2F6A412C28B64774003719E7 /* TestIconController.swift */,
+				2FCD02442EE08611006472FA /* TestPaletteController.swift */,
 				2FB11F0428E41C0700DCB965 /* TestKeyboardController.swift */,
 				2FB11EFE28E2E39E00DCB965 /* TestLayoutController.swift */,
 				2FB11EFC28E2D73800DCB965 /* TestTableController.swift */,
@@ -815,6 +818,7 @@
 				2FDA142128D30F3600985FBD /* TestImageController.swift in Sources */,
 				2F46A0AF2A8F2F6900E95F4D /* TestEncodeController.swift in Sources */,
 				2F30926B2BF5B51100F64898 /* LoginViewModel.swift in Sources */,
+				2FCD02452EE08611006472FA /* TestPaletteController.swift in Sources */,
 				2F06D15928D44934007E53EC /* TestPickerController.swift in Sources */,
 				2F6A412B28B62711003719E7 /* TestSwiftController.swift in Sources */,
 				2F6A412928B62207003719E7 /* TestSwiftUIController.swift in Sources */,

@@ -54,7 +54,7 @@ class TestAudioController: UIViewController {
 
     private lazy var audioLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         result.numberOfLines = 0
         return result

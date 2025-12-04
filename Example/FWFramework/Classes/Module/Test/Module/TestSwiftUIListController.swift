@@ -41,7 +41,7 @@ class TestSwiftUIListController: UIViewController, ViewControllerProtocol {
             .navigationBarConfigure(
                 leading: Icon.backImage,
                 title: "TestSwiftUIListController",
-                background: AppTheme.barColor
+                background: UIColor.app.bgWhite
             )
             .wrappedHostingView()
 
@@ -64,17 +64,17 @@ struct TestSwiftUIListContent: View {
                 ForEach(viewModel.items, id: \.hash) { item in
                     Text(item)
                         .padding(.leading, 16)
-                        .resetCellStyle(background: Color(AppTheme.cellColor))
+                        .resetCellStyle(background: Color(UIColor.app.bgWhite))
                 }
             } header: {
                 Text("Header")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .resetHeaderStyle(background: Color(UIColor.app.bgWhite))
                     .removable(viewModel.items.isEmpty)
             } footer: {
                 Text("Footer")
                     .padding(.leading, 16)
-                    .resetHeaderStyle(background: Color(AppTheme.cellColor))
+                    .resetHeaderStyle(background: Color(UIColor.app.bgWhite))
                     .removable(viewModel.items.isEmpty)
             }
         }
@@ -103,7 +103,7 @@ struct TestSwiftUIListContent: View {
             }
             return list.eraseToAnyView()
         }
-        .resetListStyle(background: Color(AppTheme.tableColor), isPlainStyle: viewModel.style == 1)
+        .resetListStyle(background: Color(UIColor.app.bgColor), isPlainStyle: viewModel.style == 1)
         .listViewRefreshing(
             shouldBegin: $viewModel.beginRefreshing,
             action: { completionHandler in

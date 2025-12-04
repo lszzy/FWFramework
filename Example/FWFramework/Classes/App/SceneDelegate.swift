@@ -10,7 +10,7 @@ import FWFramework
 
 class SceneDelegate: SceneResponder {
     override func setupController() {
-        window?.backgroundColor = AppTheme.backgroundColor
+        window?.backgroundColor = UIColor.app.bgWhite
         window?.rootViewController = TabController()
     }
 

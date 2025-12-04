@@ -537,24 +537,31 @@ extension Wrapper where Base: UIColor {
     public func color(alpha: CGFloat) -> UIColor {
         base.withAlphaComponent(alpha)
     }
+    
+    /// 读取颜色的RGBA值(0-255范围)，包含透明度
+    public var rgbaValue: (r: Int, g: Int, b: Int, a: Int) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        if !base.getRed(&red, green: &green, blue: &blue, alpha: &alpha) {
+            if base.getWhite(&red, alpha: &alpha) {
+                green = red
+                blue = red
+            }
+        }
+        
+        let r = lroundf(Float(red) * 255)
+        let g = lroundf(Float(green) * 255)
+        let b = lroundf(Float(blue) * 255)
+        let a = lround(alpha * 255)
+        return (r: r, g: g, b: b, a: a)
+    }
 
     /// 读取颜色的十六进制值RGB，不含透明度
     public var hexValue: Int {
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        if !base.getRed(&r, green: &g, blue: &b, alpha: &a) {
-            if base.getWhite(&r, alpha: &a) {
-                g = r
-                b = r
-            }
-        }
-
-        let red = Int(r * 255)
-        let green = Int(g * 255)
-        let blue = Int(b * 255)
-        return (red << 16) + (green << 8) + blue
+        let rgba = rgbaValue
+        return (rgba.r << 16) + (rgba.g << 8) + rgba.b
     }
 
     /// 读取颜色的透明度值，范围0~1
@@ -564,39 +571,19 @@ extension Wrapper where Base: UIColor {
 
     /// 读取颜色的十六进制字符串RGB，不含透明度
     public var hexString: String {
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        if !base.getRed(&r, green: &g, blue: &b, alpha: &a) {
-            if base.getWhite(&r, alpha: &a) {
-                g = r
-                b = r
-            }
-        }
-
-        return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
+        let rgba = rgbaValue
+        return String(format: "#%02lX%02lX%02lX", rgba.r, rgba.g, rgba.b)
     }
 
     /// 读取颜色的十六进制字符串RGBA|ARGB(透明度为1时RGB)，包含透明度
     public var hexAlphaString: String {
-        var r: CGFloat = 0
-        var g: CGFloat = 0
-        var b: CGFloat = 0
-        var a: CGFloat = 0
-        if !base.getRed(&r, green: &g, blue: &b, alpha: &a) {
-            if base.getWhite(&r, alpha: &a) {
-                g = r
-                b = r
-            }
-        }
-
-        if a >= 1.0 {
-            return String(format: "#%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
+        let rgba = rgbaValue
+        if rgba.a >= 255 {
+            return String(format: "#%02lX%02lX%02lX", rgba.r, rgba.g, rgba.b)
         } else if UIColor.innerColorStandardARGB {
-            return String(format: "#%02lX%02lX%02lX%02lX", lround(a * 255), lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255))
+            return String(format: "#%02lX%02lX%02lX%02lX", rgba.a, rgba.r, rgba.g, rgba.b)
         } else {
-            return String(format: "#%02lX%02lX%02lX%02lX", lroundf(Float(r) * 255), lroundf(Float(g) * 255), lroundf(Float(b) * 255), lround(a * 255))
+            return String(format: "#%02lX%02lX%02lX%02lX", rgba.r, rgba.g, rgba.b, rgba.a)
         }
     }
 
@@ -733,6 +720,21 @@ extension Wrapper where Base: UIColor {
         let referenceValue: CGFloat = 0.411
         let colorDelta = r * 0.299 + g * 0.587 + b * 0.114
         return 1.0 - colorDelta > referenceValue
+    }
+    
+    /// 从指定浅色和深色自动生成变体色，不含透明度，默认比率0.6
+    public static func variantColor(
+        light: UIColor,
+        dark: UIColor,
+        ratio: CGFloat = 0.6
+    ) -> UIColor {
+        let from = light.fw.rgbaValue
+        let to = dark.fw.rgbaValue
+        let clamp: (CGFloat) -> Int = { val in max(0, min(lround(val), 255)) }
+        let red = clamp((1.0 - ratio) * CGFloat(from.r) + ratio * CGFloat(to.r))
+        let green = clamp((1.0 - ratio) * CGFloat(from.g) + ratio * CGFloat(to.g))
+        let blue = clamp((1.0 - ratio) * CGFloat(from.b) + ratio * CGFloat(to.b))
+        return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
     }
 
     /**

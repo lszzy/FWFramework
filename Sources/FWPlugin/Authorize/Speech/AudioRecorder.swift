@@ -653,6 +653,9 @@ open class AudioRecorder: NSObject, AVAudioRecorderDelegate, @unchecked Sendable
                     customize?(self.speechRecognizer)
 
                     let recognitionRequest = SFSpeechURLRecognitionRequest(url: recordURL)
+                    if #available(iOS 16, *) {
+                        recognitionRequest.addsPunctuation = true
+                    }
                     requestCustomize?(recognitionRequest)
                     let sendableResumed = SendableValue(false)
                     self.recognitionTask = self.speechRecognizer.recognitionTask(with: recognitionRequest, resultHandler: { [weak self] result, error in

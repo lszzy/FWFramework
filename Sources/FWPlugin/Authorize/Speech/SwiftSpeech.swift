@@ -386,6 +386,8 @@ extension SwiftSpeech.Session {
         public var shouldReportPartialResults: Bool = true
 
         public var requiresOnDeviceRecognition: Bool = false
+        
+        public var addsPunctuation: Bool = true
 
         public var contextualStrings: [String] = []
 
@@ -398,6 +400,7 @@ extension SwiftSpeech.Session {
             taskHint: SFSpeechRecognitionTaskHint = .unspecified,
             shouldReportPartialResults: Bool = true,
             requiresOnDeviceRecognition: Bool = false,
+            addsPunctuation: Bool = true,
             contextualStrings: [String] = [],
             interactionIdentifier: String? = nil,
             audioSessionConfiguration: AudioSessionConfiguration = .recordOnly
@@ -406,6 +409,7 @@ extension SwiftSpeech.Session {
             self.taskHint = taskHint
             self.shouldReportPartialResults = shouldReportPartialResults
             self.requiresOnDeviceRecognition = requiresOnDeviceRecognition
+            self.addsPunctuation = addsPunctuation
             self.contextualStrings = contextualStrings
             self.interactionIdentifier = interactionIdentifier
             self.audioSessionConfiguration = audioSessionConfiguration
@@ -484,6 +488,9 @@ public class SpeechRecognizer {
 
             recognitionRequest.shouldReportPartialResults = sessionConfiguration.shouldReportPartialResults
             recognitionRequest.requiresOnDeviceRecognition = sessionConfiguration.requiresOnDeviceRecognition
+            if #available(iOS 16, *) {
+                recognitionRequest.addsPunctuation = sessionConfiguration.addsPunctuation
+            }
             recognitionRequest.taskHint = sessionConfiguration.taskHint
             recognitionRequest.contextualStrings = sessionConfiguration.contextualStrings
             recognitionRequest.interactionIdentifier = sessionConfiguration.interactionIdentifier

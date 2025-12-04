@@ -34,10 +34,10 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
     }
 
     func setupSubviews() {
-        tabBar.app.foregroundColor = AppTheme.textColor
-        tabBar.app.backgroundColor = AppTheme.barColor
+        tabBar.app.foregroundColor = UIColor.app.mainColor
+        tabBar.app.backgroundColor = UIColor.app.bgWhite
         tabBar.app.shadowColor = nil
-        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
+        tabBar.app.setShadowColor(UIColor.app.shadowColor, offset: CGSize(width: 0, height: 1), radius: 3)
     }
 
     func setupController() {
@@ -52,8 +52,8 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         testController.navigationItem.title = APP.localized("testTitle")
         let testBarItem = TabBarItem()
         testBarItem.contentView = TestTabbarContentView()
-        testBarItem.contentView.highlightTextColor = AppTheme.textColor
-        testBarItem.contentView.highlightIconColor = AppTheme.textColor
+        testBarItem.contentView.highlightTextColor = UIColor.app.mainColor
+        testBarItem.contentView.highlightIconColor = UIColor.app.mainColor
         if #available(iOS 26.0, *) {
             testBarItem.image = Icon.iconImage("zmdi-var-toys", size: 26)
         } else {
@@ -67,8 +67,8 @@ class TestTabbarController: TabBarController, UITabBarControllerDelegate {
         settingsControlelr.hidesBottomBarWhenPushed = false
         settingsControlelr.navigationItem.title = APP.localized("settingTitle")
         let settingsBarItem = TabBarItem()
-        settingsBarItem.contentView.highlightTextColor = AppTheme.textColor
-        settingsBarItem.contentView.highlightIconColor = AppTheme.textColor
+        settingsBarItem.contentView.highlightTextColor = UIColor.app.mainColor
+        settingsBarItem.contentView.highlightIconColor = UIColor.app.mainColor
         settingsControlelr.tabBarItem = settingsBarItem
         settingsControlelr.tabBarItem.image = APP.icon("zmdi-var-settings", 26)?.image
         settingsControlelr.tabBarItem.title = APP.localized("settingTitle")
@@ -97,7 +97,7 @@ class TestTabbarContentView: TabBarItemContentView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        imageView.backgroundColor = AppTheme.barColor
+        imageView.backgroundColor = UIColor.app.bgWhite
         imageView.layer.cornerRadius = 35
         insets = UIEdgeInsets(top: -35, left: 0, bottom: 0, right: 0)
         imageInsets = UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10)

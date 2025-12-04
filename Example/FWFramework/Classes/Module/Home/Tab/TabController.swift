@@ -26,15 +26,15 @@ class TabController: TabBarController {
 extension TabController {
     func setupSubviews() {
         delegate = self
-        tabBar.app.foregroundColor = AppTheme.textColor
+        tabBar.app.foregroundColor = UIColor.app.mainColor
         if #available(iOS 15, *) {
             tabBar.app.isTranslucent = true
-            tabBar.app.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
+            tabBar.app.backgroundColor = UIColor.app.bgWhite.app.color(alpha: 0.5)
         } else {
-            tabBar.app.backgroundColor = AppTheme.barColor
+            tabBar.app.backgroundColor = UIColor.app.bgWhite
         }
         tabBar.app.shadowColor = nil
-        tabBar.app.setShadowColor(.app.color(hex: 0x040000, alpha: 0.15), offset: CGSize(width: 0, height: 1), radius: 3)
+        tabBar.app.setShadowColor(UIColor.app.shadowColor, offset: CGSize(width: 0, height: 1), radius: 3)
 
         shouldHijackHandler = { tabVC, navVC, index in
             if tabVC.selectedIndex == index,
@@ -66,8 +66,8 @@ extension TabController {
         settingsControlelr.hidesBottomBarWhenPushed = false
         let settingsNav = UINavigationController(rootViewController: settingsControlelr)
         let tabBarItem = TabBarItem()
-        tabBarItem.contentView.highlightTextColor = AppTheme.textColor
-        tabBarItem.contentView.highlightIconColor = AppTheme.textColor
+        tabBarItem.contentView.highlightTextColor = UIColor.app.mainColor
+        tabBarItem.contentView.highlightIconColor = UIColor.app.mainColor
         settingsNav.tabBarItem = tabBarItem
         settingsNav.tabBarItem.accessibilityIdentifier = "id.settings"
         settingsNav.tabBarItem.badgeValue = ""

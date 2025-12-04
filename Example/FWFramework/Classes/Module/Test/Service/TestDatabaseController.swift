@@ -108,7 +108,7 @@ class TestDatabaseController: UIViewController, TableViewControllerProtocol {
     func setupTableView() {
         tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
     }
 
     func setupSubviews() {

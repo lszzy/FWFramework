@@ -72,7 +72,7 @@ class WebController: UIViewController, WebViewControllerProtocol {
 
     // MARK: - WebViewControllerProtocol
     func setupWebView() {
-        view.backgroundColor = AppTheme.tableColor
+        view.backgroundColor = UIColor.app.bgColor
         webView.allowsUniversalLinks = true
         webView.allowsArbitraryLoads = true
         webView.injectWindowClose = true
@@ -175,9 +175,9 @@ class WebController: UIViewController, WebViewControllerProtocol {
         spaceItem.width = 79
         toolbarItems = [flexibleItem, backItem, spaceItem, forwardItem, flexibleItem]
 
-        navigationController?.toolbar.app.shadowImage = UIImage.app.image(color: AppTheme.borderColor, size: CGSize(width: view.bounds.width, height: 0.5))
-        navigationController?.toolbar.app.backgroundColor = AppTheme.barColor
-        navigationController?.toolbar.app.foregroundColor = AppTheme.textColor
+        navigationController?.toolbar.app.shadowImage = UIImage.app.image(color: UIColor.app.borderColor, size: CGSize(width: view.bounds.width, height: 0.5))
+        navigationController?.toolbar.app.backgroundColor = UIColor.app.bgWhite
+        navigationController?.toolbar.app.foregroundColor = UIColor.app.mainColor
     }
 
     func reloadToolbar(_ animated: Bool) {

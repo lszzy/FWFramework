@@ -18,9 +18,12 @@ extension WrapperCompatible {
 }
 
 // MARK: - AppTheme
+extension PaletteStyle {
+    public static let custom: PaletteStyle = .init(5)
+}
+
 extension NavigationBarStyle {
-    public static let white: NavigationBarStyle = .init(1)
-    public static let transparent: NavigationBarStyle = .init(2)
+    public static let transparent: NavigationBarStyle = .init(1)
 }
 
 extension ViewStyle where Base: UIView {
@@ -28,53 +31,21 @@ extension ViewStyle where Base: UIView {
 }
 
 class AppTheme: NSObject {
-    public static var backgroundColor: UIColor {
-        UIColor.app.themeLight(.white, dark: .black)
-    }
-
-    public static var textColor: UIColor {
-        UIColor.app.themeLight(.black, dark: .white)
-    }
-
-    public static var detailColor: UIColor {
-        UIColor.app.themeLight(UIColor.black.withAlphaComponent(0.5), dark: UIColor.white.withAlphaComponent(0.5))
-    }
-
-    public static var barColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xFAFAFA), dark: .app.color(hex: 0x121212))
-    }
-
-    public static var tableColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xF2F2F2), dark: .app.color(hex: 0x000000))
-    }
-
-    public static var cellColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xFFFFFF), dark: .app.color(hex: 0x1C1C1C))
-    }
-
-    public static var borderColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0xDDDDDD), dark: .app.color(hex: 0x303030))
-    }
-
-    public static var buttonColor: UIColor {
-        UIColor.app.themeLight(.app.color(hex: 0x017AFF), dark: .app.color(hex: 0x0A84FF))
-    }
-
     @MainActor public static func largeButton() -> UIButton {
         let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(UIColor.app.whiteColor, for: .normal)
         button.titleLabel?.font = .app.boldFont(ofSize: 17)
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
 
         // 高亮时内容不透明
-        // button.app.setBackgroundColor(AppTheme.buttonColor, for: .normal)
-        // button.app.setBackgroundColor(AppTheme.buttonColor, for: .disabled)
-        // button.app.setBackgroundColor(AppTheme.buttonColor.app.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
+        // button.app.setBackgroundColor(UIColor.app.primary, for: .normal)
+        // button.app.setBackgroundColor(UIColor.app.primary, for: .disabled)
+        // button.app.setBackgroundColor(UIColor.app.primary.app.addColor(UIColor.black.withAlphaComponent(0.1)), for: .highlighted)
         // button.app.disabledAlpha = UIButton.app.disabledAlpha
 
         // 高亮时内容也透明
-        button.backgroundColor = AppTheme.buttonColor
+        button.backgroundColor = UIColor.app.primary
         button.app.disabledAlpha = UIButton.app.disabledAlpha
         button.app.highlightedAlpha = UIButton.app.highlightedAlpha
 
@@ -91,22 +62,28 @@ extension AppTheme {
     }
 
     @MainActor private static func setupAppearance() {
+        PaletteTheme.customLightTheme = { style in
+            if style == .custom {
+                return PaletteTheme.lightTheme.merging([
+                    "primary": UIColor.app.color(hex: 0xfa3534),
+                    "primaryDark": UIColor.app.color(hex: 0xdd6161),
+                    "primaryDisabled": UIColor.app.color(hex: 0xfab6b6),
+                    "primaryLight": UIColor.app.color(hex: 0xfef0f0),
+                ], uniquingKeysWith: { $1 })
+            }
+            return nil
+        }
+        
         let defaultAppearance = NavigationBarAppearance()
-        defaultAppearance.foregroundColor = AppTheme.textColor
-        defaultAppearance.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
+        defaultAppearance.foregroundColor = UIColor.app.mainColor
+        defaultAppearance.backgroundColor = UIColor.app.bgWhite.app.color(alpha: 0.5)
         defaultAppearance.isTranslucent = true
         defaultAppearance.leftBackImage = Icon.backImage
-        let whiteAppearance = NavigationBarAppearance()
-        whiteAppearance.foregroundColor = .black
-        whiteAppearance.backgroundColor = .white.app.color(alpha: 0.5)
-        whiteAppearance.isTranslucent = true
-        whiteAppearance.leftBackImage = Icon.backImage
         let transparentAppearance = NavigationBarAppearance()
-        transparentAppearance.foregroundColor = AppTheme.textColor
+        transparentAppearance.foregroundColor = UIColor.app.mainColor
         transparentAppearance.backgroundTransparent = true
         transparentAppearance.leftBackImage = Icon.backImage
         NavigationBarAppearance.setAppearance(defaultAppearance, for: .default)
-        NavigationBarAppearance.setAppearance(whiteAppearance, for: .white)
         NavigationBarAppearance.setAppearance(transparentAppearance, for: .transparent)
 
         UITableView.app.resetTableStyle()
@@ -118,7 +95,7 @@ extension AppTheme {
             viewController.app.navigationBarStyle = .default
         }
         ViewControllerManager.shared.hookViewDidLoad = { viewController in
-            viewController.view.backgroundColor = AppTheme.tableColor
+            viewController.view.backgroundColor = UIColor.app.bgColor
             // viewController.app.backBarItem = Icon.backImage
             // if (viewController.navigationController?.children.count ?? 0) > 1 &&
             //     viewController.navigationItem.leftBarButtonItem == nil {
@@ -126,7 +103,7 @@ extension AppTheme {
             // }
         }
         ViewControllerManager.shared.hookTableViewController = { viewController in
-            viewController.tableView.backgroundColor = AppTheme.tableColor
+            viewController.tableView.backgroundColor = UIColor.app.bgColor
         }
     }
 
@@ -161,12 +138,12 @@ extension AppTheme {
     @MainActor private static func setupStyle() {
         UITextField.app.defineStyle(.default) { textField in
             textField.font = UIFont.app.font(ofSize: 15)
-            textField.textColor = AppTheme.textColor
-            textField.tintColor = AppTheme.textColor
-            textField.backgroundColor = AppTheme.backgroundColor
+            textField.textColor = UIColor.app.mainColor
+            textField.tintColor = UIColor.app.mainColor
+            textField.backgroundColor = UIColor.app.bgWhite
             textField.clearButtonMode = .whileEditing
             textField.returnKeyType = .done
-            textField.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+            textField.app.setBorderColor(UIColor.app.borderColor, width: 0.5, cornerRadius: 5)
             textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 8, height: 0))
             textField.leftViewMode = .always
             textField.app.keyboardManager = true

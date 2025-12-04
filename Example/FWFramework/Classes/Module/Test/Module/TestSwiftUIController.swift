@@ -86,7 +86,7 @@ class TestSwiftUIHostingController: HostingController, ViewControllerProtocol {
                 }, label: {
                     HStack {
                         Spacer()
-                        Image(uiImage: Icon.backImage?.app.image(tintColor: AppTheme.textColor) ?? UIImage())
+                        Image(uiImage: Icon.backImage?.app.image(tintColor: UIColor.app.mainColor) ?? UIImage())
                         Spacer()
                     }
                 }),

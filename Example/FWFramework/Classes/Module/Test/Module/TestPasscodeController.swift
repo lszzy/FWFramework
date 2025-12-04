@@ -58,7 +58,7 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     lazy var valueLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = UIFont.boldSystemFont(ofSize: 24)
         result.text = "Empty"
         return result
@@ -165,17 +165,17 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_custom() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellBgColorNormal = AppTheme.cellColor
+        cellProperty.cellBgColorNormal = UIColor.app.bgWhite
         cellProperty.cellBgColorSelected = .white
-        cellProperty.cellCursorColor = AppTheme.textColor
+        cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2
         cellProperty.cellCursorHeight = 27
         cellProperty.cornerRadius = 4
         cellProperty.borderWidth = 0
         cellProperty.cellFont = UIFont.boldSystemFont(ofSize: 24)
-        cellProperty.cellTextColor = AppTheme.textColor
+        cellProperty.cellTextColor = UIColor.app.mainColor
         cellProperty.configCellShadowBlock = { layer in
-            layer.shadowColor = AppTheme.textColor.withAlphaComponent(0.2).cgColor
+            layer.shadowColor = UIColor.app.mainColor.withAlphaComponent(0.2).cgColor
             layer.shadowOpacity = 1
             layer.shadowOffset = CGSize(width: 0, height: 2)
             layer.shadowRadius = 4
@@ -192,19 +192,19 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_line() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellCursorColor = AppTheme.textColor
+        cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2
         cellProperty.cellCursorHeight = 27
         cellProperty.cornerRadius = 0
         cellProperty.borderWidth = 0
         cellProperty.cellFont = UIFont.boldSystemFont(ofSize: 24)
-        cellProperty.cellTextColor = AppTheme.textColor
+        cellProperty.cellTextColor = UIColor.app.mainColor
         cellProperty.showLine = true
         cellProperty.customLineViewBlock = {
             let lineView = PasscodeLineView()
-            lineView.underlineColorNormal = AppTheme.textColor.withAlphaComponent(0.3)
-            lineView.underlineColorSelected = AppTheme.textColor.withAlphaComponent(0.7)
-            lineView.underlineColorFilled = AppTheme.textColor
+            lineView.underlineColorNormal = UIColor.app.mainColor.withAlphaComponent(0.3)
+            lineView.underlineColorSelected = UIColor.app.mainColor.withAlphaComponent(0.7)
+            lineView.underlineColorFilled = UIColor.app.mainColor
             lineView.lineView.app.layoutChain.remake()
                 .height(4)
                 .edges(excludingEdge: .top)
@@ -225,13 +225,13 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_secretSymbol() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellCursorColor = AppTheme.textColor
+        cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2
         cellProperty.cellCursorHeight = 27
         cellProperty.cornerRadius = 0
         cellProperty.borderWidth = 0
         cellProperty.cellFont = UIFont.boldSystemFont(ofSize: 24)
-        cellProperty.cellTextColor = AppTheme.textColor
+        cellProperty.cellTextColor = UIColor.app.mainColor
         cellProperty.showLine = true
         cellProperty.securitySymbol = "*"
 
@@ -250,13 +250,13 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_secretImage() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellCursorColor = AppTheme.textColor
+        cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2
         cellProperty.cellCursorHeight = 27
         cellProperty.cornerRadius = 0
         cellProperty.borderWidth = 0
         cellProperty.cellFont = UIFont.boldSystemFont(ofSize: 24)
-        cellProperty.cellTextColor = AppTheme.textColor
+        cellProperty.cellTextColor = UIColor.app.mainColor
         cellProperty.showLine = true
         cellProperty.securityType = .view
         cellProperty.customSecurityViewBlock = {
@@ -279,20 +279,20 @@ class TestPasscodeController: UIViewController, ViewControllerProtocol {
 
     private func generateBoxInputView_secretView() -> PasscodeView {
         let cellProperty = PasscodeCellProperty()
-        cellProperty.cellCursorColor = AppTheme.textColor
+        cellProperty.cellCursorColor = UIColor.app.mainColor
         cellProperty.cellCursorWidth = 2
         cellProperty.cellCursorHeight = 27
         cellProperty.cornerRadius = 0
         cellProperty.borderWidth = 0
         cellProperty.cellFont = UIFont.boldSystemFont(ofSize: 24)
-        cellProperty.cellTextColor = AppTheme.textColor
+        cellProperty.cellTextColor = UIColor.app.mainColor
         cellProperty.showLine = true
         cellProperty.securityType = .view
         cellProperty.customSecurityViewBlock = {
             let view = UIView()
             view.backgroundColor = .clear
             let circleView = UIView()
-            circleView.backgroundColor = AppTheme.textColor
+            circleView.backgroundColor = UIColor.app.mainColor
             circleView.layer.cornerRadius = 4
             view.addSubview(circleView)
             circleView.app.layoutChain.center()

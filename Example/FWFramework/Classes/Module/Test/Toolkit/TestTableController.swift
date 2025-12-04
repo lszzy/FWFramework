@@ -40,7 +40,7 @@ class TestTableController: UIViewController, TableViewControllerProtocol {
     func setupTableView() {
         tableView.app.resetTableStyle()
         tableView.alwaysBounceVertical = true
-        tableView.backgroundColor = AppTheme.tableColor
+        tableView.backgroundColor = UIColor.app.bgColor
         tableView.app.setRefreshing { [weak self] in
             self?.onRefreshing()
         }
@@ -360,7 +360,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTitleClick(_:)))
         return result
@@ -370,7 +370,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTextClick(_:)))
         return result
@@ -388,7 +388,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         app.separatorInset = .zero
         selectionStyle = .none
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         // maxY视图不需要和bottom布局，默认平齐，可设置底部间距
         app.maxYViewPadding = 15
 
@@ -461,14 +461,14 @@ class TestTableDynamicLayoutCell: UITableViewCell {
 
 class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
     lazy var titleLabel: UILabel = {
-        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: UIColor.app.mainColor)
         result.numberOfLines = 0
         return result
     }()
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = AppTheme.cellColor
+        contentView.backgroundColor = UIColor.app.bgWhite
         app.maxYViewPadding = 15
         addSubview(titleLabel)
         titleLabel.app.layoutChain.edges(UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15))

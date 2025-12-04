@@ -109,7 +109,7 @@ class SwiftTestViewController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
         switch state {
         case .ready:
-            view.backgroundColor = AppTheme.backgroundColor
+            view.backgroundColor = UIColor.app.bgWhite
             state = .loading
         case .loading:
             view.app.showLoading(text: "开始加载")
@@ -155,7 +155,7 @@ class SwiftTestRequestViewController: UIViewController, ViewControllerProtocol, 
 
     // MARK: - ViewControllerProtocol
     func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
 
         view.addSubview(dataView)
     }
@@ -261,7 +261,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
 
         let result = UICollectionView.app.collectionView(layout)
         result.decelerationRate = .fast
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.delegate = result.app.collectionDelegate
         result.dataSource = result.app.collectionDelegate
         result.app.collectionDelegate.itemCount = 10
@@ -287,7 +287,7 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
 
         let result = UICollectionView.app.collectionView(layout)
         result.decelerationRate = .fast
-        result.backgroundColor = AppTheme.backgroundColor
+        result.backgroundColor = UIColor.app.bgWhite
         result.delegate = result.app.collectionDelegate
         result.dataSource = result.app.collectionDelegate
         result.app.collectionDelegate.itemCount = 10
@@ -307,8 +307,8 @@ class SwiftTestCollectionViewController: UIViewController, CollectionDelegateCon
     }
 
     func setupCollectionView() {
-        view.backgroundColor = AppTheme.backgroundColor
-        collectionView.backgroundColor = AppTheme.tableColor
+        view.backgroundColor = UIColor.app.bgWhite
+        collectionView.backgroundColor = UIColor.app.bgColor
         collectionView.isPagingEnabled = true
         collectionDelegate.sectionCount = 2
         collectionDelegate.numberOfItems = { [weak self] _ in
@@ -424,7 +424,7 @@ class SwiftTestTableViewController: UIViewController, TableDelegateControllerPro
     }
 
     func setupTableView() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
         tableDelegate.cellClass = Cell.self
         tableDelegate.numberOfRows = { [weak self] _ in
             return self?.tableData.count ?? 0
@@ -537,7 +537,7 @@ extension TestSwiftProtocol where Self: UIViewController {
 
 class TestSwiftProtocolDefaultController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
     func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
         view.app.addTapGesture { [weak self] _ in
             self?.testMethod()
         }
@@ -546,7 +546,7 @@ class TestSwiftProtocolDefaultController: UIViewController, ViewControllerProtoc
 
 class TestSwiftProtocolBaseController: UIViewController, ViewControllerProtocol, TestSwiftProtocol {
     func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
         view.app.addTapGesture { [weak self] _ in
             self?.testMethod()
         }
@@ -584,7 +584,7 @@ extension UIViewController {
 
 class TestObjcProtocolDefaultController: UIViewController, ViewControllerProtocol, TestObjcProtocol {
     func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
         view.app.addTapGesture { [weak self] _ in
             self?.testObjcMethod()
         }
@@ -593,7 +593,7 @@ class TestObjcProtocolDefaultController: UIViewController, ViewControllerProtoco
 
 class TestObjcProtocolBaseController: UIViewController, ViewControllerProtocol {
     func setupSubviews() {
-        view.backgroundColor = AppTheme.backgroundColor
+        view.backgroundColor = UIColor.app.bgWhite
         view.app.addTapGesture { [weak self] _ in
             self?.testObjcMethod()
         }
