@@ -86,8 +86,8 @@ class TestStatisticalController: UIViewController, TableViewControllerProtocol, 
         result.selectionIndicatorEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         result.segmentWidthStyle = .dynamic
         result.selectionIndicatorLocation = .bottom
-        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
-        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.titleTextAttributes = [NSAttributedString.Key.font: UIFont.app.font(ofSize: 16), NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
+        result.selectedTitleTextAttributes = [NSAttributedString.Key.font: UIFont.app.boldFont(ofSize: 18), NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
         result.useSelectedTitleTextAttributesSize = true
         return result
     }()
@@ -367,7 +367,7 @@ class TestStatisticalCell: UICollectionViewCell {
     lazy var textLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 

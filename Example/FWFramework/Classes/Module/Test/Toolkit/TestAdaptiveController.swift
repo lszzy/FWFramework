@@ -17,7 +17,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     private lazy var frameLabel: UILabel = {
         let result = UILabel()
         result.numberOfLines = 0
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = APP.font(15)
         result.textAlignment = .center
         return result
@@ -199,7 +199,7 @@ class TestAdaptiveController: UIViewController, TableViewControllerProtocol {
     }
 
     @objc func onTitleColor() {
-        navigationController?.navigationBar.app.titleAttributes = navigationController?.navigationBar.app.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: AppTheme.buttonColor]
+        navigationController?.navigationBar.app.titleAttributes = navigationController?.navigationBar.app.titleAttributes != nil ? nil : [NSAttributedString.Key.foregroundColor: UIColor.app.primary]
         refreshBarFrame()
     }
 

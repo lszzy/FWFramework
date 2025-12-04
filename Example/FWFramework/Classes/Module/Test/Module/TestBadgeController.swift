@@ -25,7 +25,7 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
         rightItem.app.showBadgeView(badgeView, badgeValue: "1")
 
         let customView = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-        customView.backgroundColor = AppTheme.textColor
+        customView.backgroundColor = UIColor.app.mainColor
         let customItem = UIBarButtonItem.app.item(object: customView, target: self, action: #selector(onClick(_:)))
         badgeView = BadgeView(badgeStyle: .small)
         customItem.app.showBadgeView(badgeView, badgeValue: "1")
@@ -50,43 +50,43 @@ class TestBadgeController: UIViewController, ViewControllerProtocol {
 
     func setupSubviews() {
         var view = UIView(frame: CGRect(x: 20, y: 20, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         var badgeView = BadgeView(badgeStyle: .dot)
         view.app.showBadgeView(badgeView)
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 20, y: 90, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .small)
         view.app.showBadgeView(badgeView, badgeValue: "9")
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 90, y: 90, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .small)
         view.app.showBadgeView(badgeView, badgeValue: "99")
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 160, y: 90, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .small)
         view.app.showBadgeView(badgeView, badgeValue: "99+")
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 20, y: 160, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .big)
         view.app.showBadgeView(badgeView, badgeValue: "9")
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 90, y: 160, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .big)
         view.app.showBadgeView(badgeView, badgeValue: "99")
         self.view.addSubview(view)
 
         view = UIView(frame: CGRect(x: 160, y: 160, width: 50, height: 50))
-        view.backgroundColor = AppTheme.textColor
+        view.backgroundColor = UIColor.app.mainColor
         badgeView = BadgeView(badgeStyle: .big)
         view.app.showBadgeView(badgeView, badgeValue: "99+")
         self.view.addSubview(view)

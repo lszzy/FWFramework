@@ -150,13 +150,13 @@ class TestPaletteResultController: UIViewController, CollectionViewControllerPro
 class TestPaletteCell: UICollectionViewCell {
     lazy var colorView: UIView = {
         let result = UIView()
-        result.app.setBorderColor(AppTheme.borderColor, width: UIScreen.app.pointHalf, cornerRadius: 8)
+        result.app.setBorderColor(UIColor.app.borderColor, width: UIScreen.app.pointHalf, cornerRadius: 8)
         return result
     }()
 
     lazy var nameLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = APP.font(10)
         result.textAlignment = .center
         result.numberOfLines = 0

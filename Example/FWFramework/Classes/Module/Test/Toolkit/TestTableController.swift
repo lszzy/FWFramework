@@ -360,7 +360,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTitleClick(_:)))
         return result
@@ -370,7 +370,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestTableDynamicLayoutCell.onTextClick(_:)))
         return result
@@ -461,7 +461,7 @@ class TestTableDynamicLayoutCell: UITableViewCell {
 
 class TestTableDynamicLayoutHeaderView: UITableViewHeaderFooterView {
     lazy var titleLabel: UILabel = {
-        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: UIColor.app.mainColor)
         result.numberOfLines = 0
         return result
     }()

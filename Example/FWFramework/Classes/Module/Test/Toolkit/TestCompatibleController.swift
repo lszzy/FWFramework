@@ -46,10 +46,10 @@ class TestCompatibleController: UIViewController, ViewControllerProtocol {
         let result = UILabel()
         result.numberOfLines = 0
         result.backgroundColor = AppTheme.backgroundColor
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         result.font = APP.font(designValue(16))
-        result.app.setBorderColor(AppTheme.borderColor, width: 0.5)
+        result.app.setBorderColor(UIColor.app.borderColor, width: 0.5)
         return result
     }()
 

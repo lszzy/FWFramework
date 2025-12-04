@@ -28,13 +28,13 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
     }
 
     func setupSubviews() {
-        var button = UIButton.app.button(title: "Button重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
+        var button = UIButton.app.button(title: "Button重复点击", font: APP.font(15), titleColor: UIColor.app.mainColor)
         button.frame = CGRect(x: 25, y: 15, width: 150, height: 30)
         button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button.app.addTouch(target: self, action: #selector(onClick1(_:)))
         view.addSubview(button)
 
-        var label = UILabel.app.label(font: APP.font(15), textColor: AppTheme.textColor, text: "View重复点击")
+        var label = UILabel.app.label(font: APP.font(15), textColor: UIColor.app.mainColor, text: "View重复点击")
         label.textAlignment = .center
         label.isUserInteractionEnabled = true
         label.frame = CGRect(x: 200, y: 15, width: 150, height: 30)
@@ -43,14 +43,14 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         }
         view.addSubview(label)
 
-        button = UIButton.app.button(title: "Button不可重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
+        button = UIButton.app.button(title: "Button不可重复点击", font: APP.font(15), titleColor: UIColor.app.mainColor)
         button.frame = CGRect(x: 25, y: 60, width: 150, height: 30)
         button.app.highlightedAlpha = UIButton.app.highlightedAlpha
         button.app.disabledAlpha = UIButton.app.disabledAlpha
         button.app.addTouch(target: self, action: #selector(onClick3(_:)))
         view.addSubview(button)
 
-        label = UILabel.app.label(font: APP.font(15), textColor: AppTheme.textColor, text: "View不可重复点击")
+        label = UILabel.app.label(font: APP.font(15), textColor: UIColor.app.mainColor, text: "View不可重复点击")
         label.textAlignment = .center
         label.isUserInteractionEnabled = true
         label.frame = CGRect(x: 200, y: 60, width: 150, height: 30)
@@ -60,7 +60,7 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         }
         view.addSubview(label)
 
-        button = UIButton.app.button(title: "Button1秒内不可重复点击", font: APP.font(15), titleColor: AppTheme.textColor)
+        button = UIButton.app.button(title: "Button1秒内不可重复点击", font: APP.font(15), titleColor: UIColor.app.mainColor)
         button.app.touchEventInterval = 1
         button.frame = CGRect(x: 25, y: 105, width: 200, height: 30)
         button.app.highlightedAlpha = UIButton.app.highlightedAlpha
@@ -70,14 +70,14 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         let timerButton = UIButton(type: .custom)
         timerButton.frame = CGRect(x: 20, y: 160, width: 40, height: 30)
         timerButton.titleLabel?.font = APP.font(15)
-        timerButton.setTitleColor(AppTheme.textColor, for: .normal)
+        timerButton.setTitleColor(UIColor.app.mainColor, for: .normal)
         timerButton.setTitle("=>", for: .normal)
         view.addSubview(timerButton)
 
         let sendButton = UIButton(type: .custom)
         sendButton.frame = CGRect(x: 80, y: 160, width: 40, height: 30)
         sendButton.titleLabel?.font = APP.font(15)
-        sendButton.setTitleColor(AppTheme.textColor, for: .normal)
+        sendButton.setTitleColor(UIColor.app.mainColor, for: .normal)
         sendButton.setTitle("发送", for: .normal)
         view.addSubview(sendButton)
         var sendTimer: Timer?
@@ -95,14 +95,14 @@ class TestButtonController: UIViewController, ViewControllerProtocol {
         let odometerView = OdometerView()
         odometerView.frame = CGRect(x: 140, y: 150, width: 130, height: 50)
         odometerView.textFont = APP.font(30, .semibold)
-        odometerView.textColor = AppTheme.textColor
+        odometerView.textColor = UIColor.app.mainColor
         odometerView.setNumber("$0.00")
         view.addSubview(odometerView)
 
         let randomButton = UIButton(type: .custom)
         randomButton.frame = CGRect(x: 290, y: 160, width: 40, height: 30)
         randomButton.titleLabel?.font = APP.font(15)
-        randomButton.setTitleColor(AppTheme.textColor, for: .normal)
+        randomButton.setTitleColor(UIColor.app.mainColor, for: .normal)
         randomButton.setTitle("随机", for: .normal)
         view.addSubview(randomButton)
         randomButton.app.addTouch { _ in

@@ -392,7 +392,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestCollectionDynamicLayoutCell.onTitleClick(_:)))
         return result
@@ -402,7 +402,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.isUserInteractionEnabled = true
         result.app.addTapGesture(target: self, action: #selector(TestCollectionDynamicLayoutCell.onTextClick(_:)))
         return result
@@ -491,7 +491,7 @@ class TestCollectionDynamicLayoutCell: UICollectionViewCell {
 
 class TestCollectionDynamicLayoutHeaderView: UICollectionReusableView {
     lazy var titleLabel: UILabel = {
-        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: AppTheme.textColor)
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 15), textColor: UIColor.app.mainColor)
         result.numberOfLines = 0
         return result
     }()

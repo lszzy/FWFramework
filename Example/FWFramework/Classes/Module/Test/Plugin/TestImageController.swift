@@ -91,9 +91,9 @@ class TestImageController: UIViewController, TableViewControllerProtocol {
             let url = fileName
             let pixelSize = CGSize(width: 100.0 * UIScreen.main.scale, height: 100.0 * UIScreen.main.scale)
             let cachedImage = UIImageView.app.loadImageCache(url: url)
-            cell.systemView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.systemView.app.setBorderColor(UIColor.app.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
             cell.systemView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.thumbnailPixelSize: NSValue(cgSize: pixelSize)])
-            cell.animatedView.app.setBorderColor(AppTheme.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
+            cell.animatedView.app.setBorderColor(UIColor.app.borderColor, width: cachedImage != nil ? 1 : 0, cornerRadius: 4)
             cell.animatedView.app.setImage(url: url, placeholderImage: cachedImage, options: [], context: [.thumbnailPixelSize: NSValue(cgSize: pixelSize)])
         }
         return cell

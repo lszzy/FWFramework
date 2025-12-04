@@ -172,7 +172,7 @@ class TestRefreshCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 
@@ -180,7 +180,7 @@ class TestRefreshCell: UITableViewCell {
         let result = UILabel()
         result.numberOfLines = 0
         result.font = UIFont.app.font(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 

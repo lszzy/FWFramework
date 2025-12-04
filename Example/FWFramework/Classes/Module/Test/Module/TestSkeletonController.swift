@@ -188,7 +188,7 @@ class TestSkeletonCell: UITableViewCell {
     lazy var iconLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是文本"
         return result
     }()
@@ -229,7 +229,7 @@ class TestSkeletonHeaderView: UITableViewHeaderFooterView {
     lazy var iconLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是头视图"
         return result
     }()
@@ -270,7 +270,7 @@ class TestSkeletonFooterView: UITableViewHeaderFooterView {
     lazy var iconLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是尾视图"
         return result
     }()
@@ -377,7 +377,7 @@ class TestSkeletonTableHeaderView: UIView {
 class TestSkeletonTableFooterView: UIView {
     lazy var label1: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是Label1"
         return result
     }()
@@ -385,7 +385,7 @@ class TestSkeletonTableFooterView: UIView {
     lazy var label2: UILabel = {
         let result = UILabel()
         result.font = UIFont.systemFont(ofSize: 12)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.numberOfLines = 0
         result.text = "我是Label2222222222\n我是Label22222\n我是Label2"
         return result
@@ -394,7 +394,7 @@ class TestSkeletonTableFooterView: UIView {
     lazy var textView1: UITextView = {
         let result = UITextView()
         result.isEditable = false
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是TextView1"
         return result
     }()
@@ -403,7 +403,7 @@ class TestSkeletonTableFooterView: UIView {
         let result = UITextView()
         result.font = UIFont.systemFont(ofSize: 12)
         result.isEditable = false
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.text = "我是TextView2222\n我是TextView2\n我是TextView"
         return result
     }()

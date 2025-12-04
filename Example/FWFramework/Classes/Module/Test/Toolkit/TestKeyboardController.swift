@@ -78,7 +78,7 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private lazy var countLabel: UILabel = {
         let result = UILabel()
         result.font = UIFont.app.font(ofSize: 13)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .right
         result.text = "0行 0/\(textView.app.maxLength)字"
         return result
@@ -219,11 +219,11 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private func createTextField() -> UITextField {
         let result = UITextField()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
-        result.tintColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
+        result.tintColor = UIColor.app.mainColor
         result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
         result.clearButtonMode = .whileEditing
-        result.app.setBorderView(.bottom, color: AppTheme.borderColor, width: 0.5)
+        result.app.setBorderView(.bottom, color: UIColor.app.borderColor, width: 0.5)
         result.layoutChain.width(APP.screenWidth - 30).height(50)
         return result
     }
@@ -231,10 +231,10 @@ class TestKeyboardController: UIViewController, ScrollViewControllerProtocol, UI
     private func createTextView() -> UITextView {
         let result = UITextView()
         result.font = UIFont.app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
-        result.tintColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
+        result.tintColor = UIColor.app.mainColor
         result.app.cursorRect = CGRect(x: 0, y: 0, width: 2, height: 0)
-        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.app.setBorderColor(UIColor.app.borderColor, width: 0.5, cornerRadius: 5)
         result.layoutChain.width(APP.screenWidth - 30).height(100)
         return result
     }

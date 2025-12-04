@@ -148,7 +148,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     private lazy var closeButton: ToolbarButton = {
         let result = ToolbarButton(image: Icon.closeImage)
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.app.addTouch { _ in
             Navigator.close(animated: true)
         }
@@ -157,7 +157,7 @@ class TestPlayerView: VideoPlayerView, VideoPlayerDelegate {
 
     private lazy var playButton: ToolbarButton = {
         let result = ToolbarButton(image: APP.iconImage("zdmi-var-play", 24))
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.app.addTouch { [weak self] _ in
             guard let player = self?.videoPlayer else { return }
 

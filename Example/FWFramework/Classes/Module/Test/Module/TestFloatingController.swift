@@ -15,7 +15,7 @@ class TestFloatingController: UIViewController, ViewControllerProtocol {
         result.itemMargins = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         result.minimumItemSize = CGSize(width: 69, height: 29)
         result.layer.borderWidth = 0.5
-        result.layer.borderColor = AppTheme.textColor.cgColor
+        result.layer.borderColor = UIColor.app.mainColor.cgColor
         return result
     }()
 
@@ -30,17 +30,17 @@ class TestFloatingController: UIViewController, ViewControllerProtocol {
         for i in 0..<suggestions.count {
             if i < 3 {
                 let label = UILabel()
-                label.textColor = AppTheme.textColor
+                label.textColor = UIColor.app.mainColor
                 label.numberOfLines = 0
                 label.text = suggestions[i]
                 label.font = APP.font(14)
-                label.app.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
+                label.app.setBorderColor(UIColor.app.mainColor, width: 0.5, cornerRadius: 10)
                 label.app.contentInset = UIEdgeInsets(top: 6, left: 20, bottom: 6, right: 20)
                 floatView.addSubview(label)
             } else {
                 let button = UIButton()
-                button.setTitleColor(AppTheme.textColor, for: .normal)
-                button.app.setBorderColor(AppTheme.textColor, width: 0.5, cornerRadius: 10)
+                button.setTitleColor(UIColor.app.mainColor, for: .normal)
+                button.app.setBorderColor(UIColor.app.mainColor, width: 0.5, cornerRadius: 10)
                 button.setTitle(suggestions[i], for: .normal)
                 button.titleLabel?.font = APP.font(14)
                 button.titleLabel?.numberOfLines = 0

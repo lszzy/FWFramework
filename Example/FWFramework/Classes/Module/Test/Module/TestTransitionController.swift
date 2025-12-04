@@ -300,7 +300,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
 
     lazy var frameLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         return result
     }()
 
@@ -345,7 +345,7 @@ class TestFullScreenViewController: UIViewController, ScrollViewControllerProtoc
         let button = UIButton()
         button.backgroundColor = AppTheme.cellColor
         button.titleLabel?.font = UIFont.app.font(ofSize: 15)
-        button.setTitleColor(AppTheme.textColor, for: .normal)
+        button.setTitleColor(UIColor.app.mainColor, for: .normal)
         button.setTitle("点击背景关闭", for: .normal)
         footerView.addSubview(button)
         button.layoutChain.center().size(width: 200, height: 100)

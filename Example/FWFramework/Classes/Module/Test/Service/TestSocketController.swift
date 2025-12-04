@@ -103,7 +103,7 @@ class TestSocketController: UIViewController {
     // MARK: - Subviews
     private lazy var serverLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = UIFont.systemFont(ofSize: 15)
         result.textAlignment = .center
         result.numberOfLines = 0
@@ -119,7 +119,7 @@ class TestSocketController: UIViewController {
 
     private lazy var clientLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = UIFont.systemFont(ofSize: 15)
         result.textAlignment = .center
         result.numberOfLines = 0

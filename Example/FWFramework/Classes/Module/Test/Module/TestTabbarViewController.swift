@@ -17,7 +17,7 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
     private lazy var tabBarView: ToolbarView = {
         let result = ToolbarView(type: .tabBar)
         result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.menuView.verticalOverflow = true
         result.menuView.leftButton = homeButton
         result.menuView.centerButton = testButton
@@ -100,15 +100,15 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
 
         var child: UIViewController
         if sender.tag == 1 {
-            homeButton.tintColor = AppTheme.textColor
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
+            homeButton.tintColor = UIColor.app.mainColor
+            testButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
+            settingsButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
 
             child = homeController
         } else if sender.tag == 2 {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor
-            settingsButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
+            homeButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
+            testButton.tintColor = UIColor.app.mainColor
+            settingsButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
 
             let animation = CABasicAnimation(keyPath: "transform.rotation.z")
             animation.fromValue = NSNumber(value: 0)
@@ -118,9 +118,9 @@ class TestTabbarViewController: UIViewController, ViewControllerProtocol {
 
             child = testController
         } else {
-            homeButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            testButton.tintColor = AppTheme.textColor.withAlphaComponent(0.6)
-            settingsButton.tintColor = AppTheme.textColor
+            homeButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
+            testButton.tintColor = UIColor.app.mainColor.withAlphaComponent(0.6)
+            settingsButton.tintColor = UIColor.app.mainColor
 
             child = settingsController
         }
@@ -148,7 +148,7 @@ class TestTabbarViewChildController: UIViewController, ViewControllerProtocol {
     private lazy var navigationView: ToolbarView = {
         let result = ToolbarView(type: .navBar)
         result.backgroundColor = AppTheme.barColor
-        result.tintColor = AppTheme.textColor
+        result.tintColor = UIColor.app.mainColor
         result.menuView.leftButton = ToolbarButton(object: Icon.backImage, block: { _ in
             Navigator.close(animated: true)
         })

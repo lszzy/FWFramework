@@ -26,7 +26,7 @@ class TabController: TabBarController {
 extension TabController {
     func setupSubviews() {
         delegate = self
-        tabBar.app.foregroundColor = AppTheme.textColor
+        tabBar.app.foregroundColor = UIColor.app.mainColor
         if #available(iOS 15, *) {
             tabBar.app.isTranslucent = true
             tabBar.app.backgroundColor = AppTheme.barColor.app.color(alpha: 0.5)
@@ -66,8 +66,8 @@ extension TabController {
         settingsControlelr.hidesBottomBarWhenPushed = false
         let settingsNav = UINavigationController(rootViewController: settingsControlelr)
         let tabBarItem = TabBarItem()
-        tabBarItem.contentView.highlightTextColor = AppTheme.textColor
-        tabBarItem.contentView.highlightIconColor = AppTheme.textColor
+        tabBarItem.contentView.highlightTextColor = UIColor.app.mainColor
+        tabBarItem.contentView.highlightIconColor = UIColor.app.mainColor
         settingsNav.tabBarItem = tabBarItem
         settingsNav.tabBarItem.accessibilityIdentifier = "id.settings"
         settingsNav.tabBarItem.badgeValue = ""

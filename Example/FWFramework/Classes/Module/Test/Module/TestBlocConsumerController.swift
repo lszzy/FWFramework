@@ -15,7 +15,7 @@ class TestBlocConsumerController: UIViewController, ViewControllerProtocol {
 
     private lazy var countLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = UIFont.systemFont(ofSize: 15)
         result.textAlignment = .center
         return result

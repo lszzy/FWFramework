@@ -131,7 +131,7 @@ class TestIconCell: UICollectionViewCell {
 
     lazy var nameLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.font = APP.font(10)
         result.textAlignment = .center
         result.numberOfLines = 0

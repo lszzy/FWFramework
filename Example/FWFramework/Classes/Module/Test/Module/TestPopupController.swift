@@ -18,14 +18,14 @@ class TestPopupController: UIViewController, ViewControllerProtocol, PopupMenuDe
     private lazy var textField: UITextField = {
         let result = UITextField()
         result.placeholder = "我是输入框"
-        result.textColor = AppTheme.textColor
-        result.app.setBorderColor(AppTheme.borderColor, width: 0.5, cornerRadius: 5)
+        result.textColor = UIColor.app.mainColor
+        result.app.setBorderColor(UIColor.app.borderColor, width: 0.5, cornerRadius: 5)
         result.delegate = self
         return result
     }()
 
     private lazy var customLabel: UILabel = {
-        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: AppTheme.textColor, text: "我是自定义标签")
+        let result = UILabel.app.label(font: UIFont.app.font(ofSize: 16), textColor: UIColor.app.mainColor, text: "我是自定义标签")
         result.backgroundColor = AppTheme.cellColor
         return result
     }()

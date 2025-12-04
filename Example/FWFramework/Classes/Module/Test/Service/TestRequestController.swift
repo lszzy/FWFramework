@@ -331,7 +331,7 @@ class TestRequestController: UIViewController {
     
     private lazy var openaiLabel: UILabel = {
         let result = UILabel()
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.numberOfLines = 0
         result.textAlignment = .left
         return result

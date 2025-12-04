@@ -50,8 +50,8 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
     lazy var segmentedControl: SegmentedControl = {
         let result = SegmentedControl()
         result.backgroundColor = AppTheme.cellColor
-        result.titleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
-        result.selectedTitleTextAttributes = [NSAttributedString.Key.foregroundColor: AppTheme.textColor]
+        result.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
+        result.selectedTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.app.mainColor]
         result.sectionTitles = ["下单", "评价", "商家"]
         result.indexChangedBlock = { [weak self] index in
             self?.pagerView.scrollToIndex(Int(index))
@@ -76,7 +76,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
 
     lazy var barAppearance: NavigationBarAppearance = {
         let result = NavigationBarAppearance()
-        result.foregroundColor = AppTheme.textColor
+        result.foregroundColor = UIColor.app.mainColor
         result.backgroundColor = .clear
         result.leftBackImage = Icon.backImage
         return result
@@ -181,7 +181,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
         let progress = scrollView.contentOffset.y / (TestPagingController.headerViewHeight - TestPagingController.navigationViewHeight)
         if progress >= 1 {
             barAppearance.backgroundColor = AppTheme.barColor
-            barAppearance.foregroundColor = AppTheme.textColor
+            barAppearance.foregroundColor = UIColor.app.mainColor
             app.navigationBarAppearance = barAppearance
             app.statusBarStyle = .default
         } else if progress >= 0 && progress < 1 {
@@ -189,7 +189,7 @@ class TestPagingController: UIViewController, ViewControllerProtocol, PagingView
             if progress <= 0.5 {
                 barAppearance.foregroundColor = .white.withAlphaComponent(1 - progress)
             } else {
-                barAppearance.foregroundColor = AppTheme.textColor.withAlphaComponent(progress)
+                barAppearance.foregroundColor = UIColor.app.mainColor.withAlphaComponent(progress)
             }
             app.navigationBarAppearance = barAppearance
             app.statusBarStyle = progress <= 0.5 ? .lightContent : .default
@@ -208,7 +208,7 @@ class TestNestCollectionCell: UICollectionViewCell {
     lazy var textLabel: UILabel = {
         let result = UILabel()
         result.font = .app.font(ofSize: 15)
-        result.textColor = AppTheme.textColor
+        result.textColor = UIColor.app.mainColor
         result.textAlignment = .center
         return result
     }()
@@ -376,7 +376,7 @@ class TestNestChildController: UIViewController, TableViewControllerProtocol, Co
 
         let headerLabel = UILabel()
         headerLabel.font = UIFont.app.font(ofSize: 15)
-        headerLabel.textColor = AppTheme.textColor
+        headerLabel.textColor = UIColor.app.mainColor
         headerLabel.text = "Header\(section)"
         headerLabel.frame = CGRect(x: 0, y: 0, width: APP.screenWidth, height: TestPagingController.itemViewHeight)
         view.addSubview(headerLabel)
