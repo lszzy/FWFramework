@@ -1,5 +1,12 @@
 # Changelog
 
+## [9.4.0] - 2025-12-04
+
+### Added
+* Added color palette theme tool and test cases
+* Added punctuation marks by default for speech recognition
+* Added data and encoding parameters to SSE requests
+
 ## [9.3.0] - 2025-09-19
 
 ### Added
