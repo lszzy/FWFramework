@@ -1086,6 +1086,21 @@ extension Wrapper where Base: UIBezierPath {
 
 // MARK: - Wrapper+UIWindow
 @MainActor extension Wrapper where Base: UIWindow {
+    /// 强制更新当前主题样式
+    public func updateStyle(_ style: UIUserInterfaceStyle? = nil) {
+        let style = style ?? base.overrideUserInterfaceStyle
+        var oldStyle = base.overrideUserInterfaceStyle
+        if style == oldStyle {
+            if style == .unspecified {
+                oldStyle = base.traitCollection.userInterfaceStyle == .dark ? .light : .dark
+            } else {
+                oldStyle = style == .dark ? .light : .dark
+            }
+            base.overrideUserInterfaceStyle = oldStyle
+        }
+        base.overrideUserInterfaceStyle = style
+    }
+    
     /// 获取指定索引TabBar根视图控制器(非导航控制器)，找不到返回nil
     public func getTabBarController(index: Int) -> UIViewController? {
         guard let tabBarController = rootTabBarController() else { return nil }
