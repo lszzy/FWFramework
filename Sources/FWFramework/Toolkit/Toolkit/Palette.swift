@@ -73,9 +73,9 @@ extension Wrapper where Base: UIColor {
     /// 主背景
     public static var bgColor: UIColor { paletteThemeColor("bgColor") }
     /// 表格背景
-    public static var bgTable: UIColor { paletteThemeColor("bgTable") }
+    public static var bgTableColor: UIColor { paletteThemeColor("bgTableColor") }
     /// 单元格背景
-    public static var bgCell: UIColor { paletteThemeColor("bgCell") }
+    public static var bgCellColor: UIColor { paletteThemeColor("bgCellColor") }
     /// 纯白背景
     public static var bgWhite: UIColor { paletteThemeColor("bgWhite") }
     /// 纯黑背景
@@ -213,8 +213,8 @@ public class PaletteTheme: @unchecked Sendable {
         "maskColor": UIColor.fw.color(hex: 0x000000, alpha: 0.4),
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.1),
         "bgColor": UIColor.fw.color(hex: 0xf3f4f6),
-        "bgTable": UIColor.fw.color(hex: 0xf3f4f6),
-        "bgCell": UIColor.fw.color(hex: 0xffffff),
+        "bgTableColor": UIColor.fw.color(hex: 0xf3f4f6),
+        "bgCellColor": UIColor.fw.color(hex: 0xffffff),
         "bgWhite": UIColor.fw.color(hex: 0xffffff),
         "bgBlack": UIColor.fw.color(hex: 0x000000),
         "bgGrayLight": UIColor.fw.color(hex: 0xf5f7fa),
@@ -254,8 +254,8 @@ public class PaletteTheme: @unchecked Sendable {
         "maskColor": UIColor.fw.color(hex: 0x000000, alpha: 0.6),
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.3),
         "bgColor": UIColor.fw.color(hex: 0x191919),
-        "bgTable": UIColor.fw.color(hex: 0x000000),
-        "bgCell": UIColor.fw.color(hex: 0x1c1c1e),
+        "bgTableColor": UIColor.fw.color(hex: 0x000000),
+        "bgCellColor": UIColor.fw.color(hex: 0x1c1c1e),
         "bgWhite": UIColor.fw.color(hex: 0x000000),
         "bgBlack": UIColor.fw.color(hex: 0xffffff),
         "bgGrayLight": UIColor.fw.color(hex: 0x1a1a1a),
@@ -360,9 +360,9 @@ public class PaletteTheme: @unchecked Sendable {
     
     /// 自定义调色板变色排除的名称列表
     public nonisolated(unsafe) static var variantExcludes: [String] = [
-        "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor",
-        "lightColor", "borderColor", "dividerColor", "maskColor", "shadowColor",
-        "bgColor", "bgTable", "bgCell", "bgWhite", "bgBlack", "bgGrayLight", "bgGrayDark"
+        "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor", "lightColor",
+        "borderColor", "dividerColor", "maskColor", "shadowColor", "bgColor",
+        "bgTableColor", "bgCellColor", "bgWhite", "bgBlack", "bgGrayLight", "bgGrayDark"
     ]
     
     /// 自定义调色板变色比率，默认0.6
