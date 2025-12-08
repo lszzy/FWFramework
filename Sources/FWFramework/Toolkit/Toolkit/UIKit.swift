@@ -476,9 +476,9 @@ extension Wrapper where Base: UIBezierPath {
     }
 
     /// 绘制四角圆角
-    public func setCornerRadius(_ radius: CGFloat) {
+    public func setCornerRadius(_ radius: CGFloat, masksToBounds: Bool = true) {
         base.layer.cornerRadius = radius
-        base.layer.masksToBounds = true
+        base.layer.masksToBounds = masksToBounds
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
