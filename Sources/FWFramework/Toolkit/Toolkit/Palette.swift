@@ -70,8 +70,12 @@ extension Wrapper where Base: UIColor {
     public static var maskColor: UIColor { paletteThemeColor("maskColor") }
     /// 阴影颜色
     public static var shadowColor: UIColor { paletteThemeColor("shadowColor") }
-    /// 背景色
+    /// 主背景
     public static var bgColor: UIColor { paletteThemeColor("bgColor") }
+    /// 表格背景
+    public static var bgTableColor: UIColor { paletteThemeColor("bgTableColor") }
+    /// 单元格背景
+    public static var bgCellColor: UIColor { paletteThemeColor("bgCellColor") }
     /// 纯白背景
     public static var bgWhite: UIColor { paletteThemeColor("bgWhite") }
     /// 纯黑背景
@@ -109,6 +113,9 @@ public class PaletteManager: @unchecked Sendable {
     /// 单例模式
     public static let shared = PaletteManager()
     
+    /// 设置默认样式
+    public nonisolated(unsafe) static var defaultStyle: PaletteStyle = .default
+    
     /// 当前调色板样式
     public var paletteStyle: PaletteStyle {
         get {
@@ -140,7 +147,11 @@ public class PaletteManager: @unchecked Sendable {
     
     /// 初始化方法
     public init() {
-        self.paletteStyle = .init(UserDefaults.standard.integer(forKey: "FWPaletteStyle"))
+        if let value = UserDefaults.standard.object(forKey: "FWPaletteStyle") as? Int {
+            self.paletteStyle = .init(value)
+        } else {
+            self.paletteStyle = Self.defaultStyle
+        }
         self.lightTheme = PaletteTheme.lightTheme(style: paletteStyle)
         self.darkTheme = PaletteTheme.darkTheme(style: paletteStyle)
     }
@@ -209,6 +220,8 @@ public class PaletteTheme: @unchecked Sendable {
         "maskColor": UIColor.fw.color(hex: 0x000000, alpha: 0.4),
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.1),
         "bgColor": UIColor.fw.color(hex: 0xf3f4f6),
+        "bgTableColor": UIColor.fw.color(hex: 0xf3f4f6),
+        "bgCellColor": UIColor.fw.color(hex: 0xffffff),
         "bgWhite": UIColor.fw.color(hex: 0xffffff),
         "bgBlack": UIColor.fw.color(hex: 0x000000),
         "bgGrayLight": UIColor.fw.color(hex: 0xf5f7fa),
@@ -247,7 +260,9 @@ public class PaletteTheme: @unchecked Sendable {
         "dividerColor": UIColor.fw.color(hex: 0x3a4251),
         "maskColor": UIColor.fw.color(hex: 0x000000, alpha: 0.6),
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.3),
-        "bgColor": UIColor.fw.color(hex: 0x111827),
+        "bgColor": UIColor.fw.color(hex: 0x191919),
+        "bgTableColor": UIColor.fw.color(hex: 0x000000),
+        "bgCellColor": UIColor.fw.color(hex: 0x1c1c1e),
         "bgWhite": UIColor.fw.color(hex: 0x000000),
         "bgBlack": UIColor.fw.color(hex: 0xffffff),
         "bgGrayLight": UIColor.fw.color(hex: 0x1a1a1a),
@@ -352,9 +367,9 @@ public class PaletteTheme: @unchecked Sendable {
     
     /// 自定义调色板变色排除的名称列表
     public nonisolated(unsafe) static var variantExcludes: [String] = [
-        "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor",
-        "lightColor", "borderColor", "dividerColor", "maskColor", "shadowColor",
-        "bgColor", "bgWhite", "bgBlack", "bgGrayLight", "bgGrayDark"
+        "whiteColor", "blackColor", "mainColor", "contentColor", "tipsColor", "lightColor",
+        "borderColor", "dividerColor", "maskColor", "shadowColor", "bgColor",
+        "bgTableColor", "bgCellColor", "bgWhite", "bgBlack", "bgGrayLight", "bgGrayDark"
     ]
     
     /// 自定义调色板变色比率，默认0.6

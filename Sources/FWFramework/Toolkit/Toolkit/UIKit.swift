@@ -476,9 +476,9 @@ extension Wrapper where Base: UIBezierPath {
     }
 
     /// 绘制四角圆角
-    public func setCornerRadius(_ radius: CGFloat) {
+    public func setCornerRadius(_ radius: CGFloat, masksToBounds: Bool = true) {
         base.layer.cornerRadius = radius
-        base.layer.masksToBounds = true
+        base.layer.masksToBounds = masksToBounds
     }
 
     /// 绘制单边或多边边框Layer。frame必须存在(添加视图后可调用layoutIfNeeded更新frame)
@@ -2770,6 +2770,29 @@ extension Wrapper where Base: UIBezierPath {
 
 // MARK: - Wrapper+UITableViewCell
 @MainActor extension Wrapper where Base: UITableViewCell {
+    /// 快捷设置背景色
+    public var backgroundColor: UIColor? {
+        get {
+            if #available(iOS 14.0, *) {
+                if base.backgroundConfiguration != nil {
+                    return base.backgroundConfiguration?.backgroundColor
+                }
+            }
+            
+            return base.backgroundColor
+        }
+        set {
+            if #available(iOS 14.0, *) {
+                if base.backgroundConfiguration != nil {
+                    base.backgroundConfiguration?.backgroundColor = newValue
+                    return
+                }
+            }
+            
+            base.backgroundColor = newValue
+        }
+    }
+    
     /// 设置分割线内边距，iOS8+默认15.f，设为UIEdgeInsetsZero可去掉
     public var separatorInset: UIEdgeInsets {
         get {
@@ -2963,6 +2986,29 @@ extension Wrapper where Base: UIBezierPath {
 
 // MARK: - Wrapper+UICollectionViewCell
 @MainActor extension Wrapper where Base: UICollectionViewCell {
+    /// 快捷设置背景色
+    public var backgroundColor: UIColor? {
+        get {
+            if #available(iOS 14.0, *) {
+                if base.backgroundConfiguration != nil {
+                    return base.backgroundConfiguration?.backgroundColor
+                }
+            }
+            
+            return base.backgroundColor
+        }
+        set {
+            if #available(iOS 14.0, *) {
+                if base.backgroundConfiguration != nil {
+                    base.backgroundConfiguration?.backgroundColor = newValue
+                    return
+                }
+            }
+            
+            base.backgroundColor = newValue
+        }
+    }
+    
     /// 获取当前所属collectionView
     public weak var collectionView: UICollectionView? {
         var superview = base.superview
