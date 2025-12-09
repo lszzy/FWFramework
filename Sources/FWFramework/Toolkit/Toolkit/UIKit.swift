@@ -2790,7 +2790,6 @@ extension Wrapper where Base: UIBezierPath {
             }
             
             base.backgroundColor = newValue
-            base.contentView.backgroundColor = newValue
         }
     }
     
@@ -3007,7 +3006,6 @@ extension Wrapper where Base: UIBezierPath {
             }
             
             base.backgroundColor = newValue
-            base.contentView.backgroundColor = newValue
         }
     }
     

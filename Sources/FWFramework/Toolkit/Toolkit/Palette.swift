@@ -113,6 +113,9 @@ public class PaletteManager: @unchecked Sendable {
     /// 单例模式
     public static let shared = PaletteManager()
     
+    /// 设置默认样式
+    public nonisolated(unsafe) static var defaultStyle: PaletteStyle = .default
+    
     /// 当前调色板样式
     public var paletteStyle: PaletteStyle {
         get {
@@ -144,7 +147,11 @@ public class PaletteManager: @unchecked Sendable {
     
     /// 初始化方法
     public init() {
-        self.paletteStyle = .init(UserDefaults.standard.integer(forKey: "FWPaletteStyle"))
+        if let value = UserDefaults.standard.object(forKey: "FWPaletteStyle") as? Int {
+            self.paletteStyle = .init(value)
+        } else {
+            self.paletteStyle = Self.defaultStyle
+        }
         self.lightTheme = PaletteTheme.lightTheme(style: paletteStyle)
         self.darkTheme = PaletteTheme.darkTheme(style: paletteStyle)
     }
