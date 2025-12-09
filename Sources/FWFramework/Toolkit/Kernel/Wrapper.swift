@@ -21,7 +21,7 @@ import QuartzCore
 /// ```
 public class WrapperGlobal {
     /// 当前框架版本号
-    public static let version = "9.4.0"
+    public static let version = "9.4.1"
 }
 
 /// 全局包装器别名

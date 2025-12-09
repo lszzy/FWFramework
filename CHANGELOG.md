@@ -1,5 +1,11 @@
 # Changelog
 
+## [9.4.1] - 2025-12-09
+
+### Added
+* Added static methods for global cell configuration.
+* Added default style configuration for the color palette, including background colors for tables and cells.
+
 ## [9.4.0] - 2025-12-04
 
 ### Added
