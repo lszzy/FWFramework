@@ -258,6 +258,12 @@ import UIKit
         get { base.maxYViewExpanded }
         set { base.maxYViewExpanded = newValue }
     }
+    
+    /// 配置创建cell钩子句柄，默认nil
+    public static var cellConfiguration: ((Base, UITableViewCell.CellStyle, UITableView.Style) -> Void)? {
+        get { NSObject.fw.getAssociatedObject(Base.self, key: #function) as? (Base, UITableViewCell.CellStyle, UITableView.Style) -> Void }
+        set { NSObject.fw.setAssociatedObject(Base.self, key: #function, value: newValue, policy: .OBJC_ASSOCIATION_COPY_NONATOMIC) }
+    }
 
     /// 免注册创建UITableViewCell，内部自动处理缓冲池，可指定style类型和reuseIdentifier
     public static func cell(
@@ -414,7 +420,9 @@ import UIKit
     ) -> T {
         let identifier = reuseIdentifier ?? NSStringFromClass(cellClass).appending("FWDynamicLayoutReuseIdentifier")
         if let cell = base.dequeueReusableCell(withIdentifier: identifier) as? T { return cell }
-        return cellClass.init(style: style, reuseIdentifier: identifier)
+        let cell = cellClass.init(style: style, reuseIdentifier: identifier)
+        UITableViewCell.fw.cellConfiguration?(cell, style, base.style)
+        return cell
     }
 
     /// 获取 Cell 需要的高度，可指定key使用缓存
