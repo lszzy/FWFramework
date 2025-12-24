@@ -211,7 +211,7 @@ public class PaletteTheme: @unchecked Sendable {
         "infoLight": UIColor.fw.color(hex: 0xf4f4f5),
         "whiteColor": UIColor.fw.color(hex: 0xffffff),
         "blackColor": UIColor.fw.color(hex: 0x000000),
-        "mainColor": UIColor.fw.color(hex: 0x111113),
+        "mainColor": UIColor.fw.color(hex: 0x303133),
         "contentColor": UIColor.fw.color(hex: 0x606266),
         "tipsColor": UIColor.fw.color(hex: 0x909399),
         "lightColor": UIColor.fw.color(hex: 0xc0c4cc),
