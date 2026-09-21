@@ -683,7 +683,7 @@ extension Wrapper where Base: UIBezierPath {
         timer.schedule(wallDeadline: .now(), repeating: 1.0, leeway: .seconds(0))
 
         let startTime = Date.fw.currentTime
-        var hasWindow = false
+        let hasWindow = SendableValue(false)
         let sendableTimer = SendableValue(timer)
         timer.setEventHandler { @Sendable [weak base] in
             DispatchQueue.main.async { [weak base] in
@@ -693,10 +693,10 @@ extension Wrapper where Base: UIBezierPath {
                 }
 
                 // 按钮从window移除时自动cancel倒计时
-                if !hasWindow && base?.window != nil {
-                    hasWindow = true
-                } else if hasWindow && base?.window == nil {
-                    hasWindow = false
+                if !hasWindow.value && base?.window != nil {
+                    hasWindow.value = true
+                } else if hasWindow.value && base?.window == nil {
+                    hasWindow.value = false
                     countDown = 0
                     sendableTimer.value.cancel()
                 }

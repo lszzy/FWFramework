@@ -192,7 +192,7 @@ extension Promise {
 
     /// 执行当前约定，成功时调用句柄处理结果或者返回下一个约定
     public func then<T>(_ block: @escaping @MainActor @Sendable (_ value: T) throws -> Sendable) -> Promise where T: Sendable {
-        Promise { completion in
+        Promise { @Sendable completion in
             self.done({ value in
                 do {
                     let result = try block(value)
@@ -214,7 +214,7 @@ extension Promise {
 
     /// 执行当前约定，失败时调用句柄恢复结果或者返回下一个约定
     public func recover(_ block: @escaping @MainActor @Sendable (_ error: Error) throws -> Sendable) -> Promise {
-        Promise { completion in
+        Promise { @Sendable completion in
             self.done({ value in
                 completion(value)
             }, catch: { error in

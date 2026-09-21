@@ -1912,7 +1912,7 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
         }
 
         let totalCount = imagesAssetArray.count
-        var finishCount = 0
+        let finishCount = SendableValue(0)
         let completionHandler: @Sendable (Asset, Any?, [AnyHashable: Any]?) -> Void = { asset, object, info in
             let sendableObject = SendableValue(object)
             let sendableInfo = SendableValue(info)
@@ -1920,8 +1920,8 @@ open class ImagePickerController: UIViewController, UICollectionViewDataSource, 
                 asset.requestObject = sendableObject.value
                 asset.requestInfo = sendableInfo.value
 
-                finishCount += 1
-                if finishCount == totalCount {
+                finishCount.value += 1
+                if finishCount.value == totalCount {
                     completion?()
                 }
             }
