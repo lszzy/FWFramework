@@ -42,6 +42,10 @@
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>NSCalendarsUsageDescription</key>
@@ -52,6 +56,8 @@
 	<string>请点击“好”以允许访问。</string>
 	<key>NSContactsUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>请点击“允许”以允许访问。</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>请点击“允许”以允许访问。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -59,6 +65,8 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>请点击“允许”以允许访问。</string>
 	<key>NSMicrophoneUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSMotionUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
@@ -68,17 +76,9 @@
 	<string>请点击“好”以允许访问。</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>请点击“好”以允许访问。</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>请点击“允许”以允许访问。</string>
-	<key>NSMotionUsageDescription</key>
-	<string>请点击“好”以允许访问。</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>请点击“好”以允许访问。</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>请点击“好”以允许访问。</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>请点击“好”以允许访问。</string>
+	<key>NSUserTrackingUsageDescription</key>
 	<string>请点击“好”以允许访问。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

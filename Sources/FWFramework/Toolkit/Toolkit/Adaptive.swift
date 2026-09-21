@@ -1005,7 +1005,7 @@ extension UINavigationController {
             })
             let toolBarView = toolBarContainer?.fw.recursiveSubview(block: {
                 String(describing: type(of: $0)).contains(viewClass)
-                    && $0.frame.minY == 0 && $0.frame.height > 0
+                    && $0.frame.minY == 0 && $0.frame.height > 0 && $0.frame.height < 200
             })
             return toolBarView
         } else {

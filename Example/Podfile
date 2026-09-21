@@ -1,5 +1,5 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '13.0'
+platform :ios, '15.0'
 use_frameworks!
 
 target "FWFramework_Example" do
@@ -18,7 +18,7 @@ post_install do |installer|
       end
       
       # 处理target编译最低版本问题
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
       
       # 处理FWPlugin/Macros跨模块调用问题
       config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
