@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'FWFramework'
-  s.version               = '9.4.1'
+  s.version               = '10.0.0'
   s.summary               = 'ios develop framework'
   s.homepage              = 'http://fwframework.wuchenxi.vip'
   s.license               = 'MIT'

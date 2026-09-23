@@ -678,8 +678,8 @@ extension ImagePickerPlugin {
         }
 
         let totalCount = results.count
-        var finishCount = 0
-        picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
+        let finishCount = SendableValue(0)
+        picker.fw.exportProgressBlock?(picker, finishCount.value, totalCount)
 
         let sendableObjectDict = SendableValue<[Int: (Any, PHPickerResult)]>([:])
         let checkLivePhoto = filterType.contains(.livePhoto) || filterType.rawValue < 1
@@ -703,9 +703,9 @@ extension ImagePickerPlugin {
                             sendableObjectDict.value[index] = (livePhoto, sendableResult.value)
                         }
 
-                        finishCount += 1
-                        picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
-                        if finishCount == totalCount {
+                        finishCount.value += 1
+                        picker.fw.exportProgressBlock?(picker, finishCount.value, totalCount)
+                        if finishCount.value == totalCount {
                             let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                             let sortedObjects = objectList.map(\.value.0)
                             let sortedResults = objectList.map(\.value.1)
@@ -737,9 +737,9 @@ extension ImagePickerPlugin {
                         sendableObjectDict.value[index] = (resultURL, sendableResult.value)
                     }
 
-                    finishCount += 1
-                    picker.fw.exportProgressBlock?(picker, finishCount, totalCount)
-                    if finishCount == totalCount {
+                    finishCount.value += 1
+                    picker.fw.exportProgressBlock?(picker, finishCount.value, totalCount)
+                    if finishCount.value == totalCount {
                         let objectList = sendableObjectDict.value.sorted { $0.key < $1.key }
                         let sortedObjects = objectList.map(\.value.0)
                         let sortedResults = objectList.map(\.value.1)

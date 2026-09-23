@@ -513,19 +513,19 @@ extension Wrapper where Base: UIApplication {
         name: String? = nil,
         expirationHandler: (@MainActor @Sendable () -> Void)? = nil
     ) {
-        var bgTask: UIBackgroundTaskIdentifier = .invalid
-        bgTask = UIApplication.shared.beginBackgroundTask(withName: name, expirationHandler: {
+        let bgTask = SendableValue(UIBackgroundTaskIdentifier.invalid)
+        bgTask.value = UIApplication.shared.beginBackgroundTask(withName: name, expirationHandler: {
             DispatchQueue.fw.mainAsync {
                 expirationHandler?()
-                UIApplication.shared.endBackgroundTask(bgTask)
-                bgTask = .invalid
+                UIApplication.shared.endBackgroundTask(bgTask.value)
+                bgTask.value = .invalid
             }
         })
 
         task { @Sendable in
             DispatchQueue.fw.mainAsync {
-                UIApplication.shared.endBackgroundTask(bgTask)
-                bgTask = .invalid
+                UIApplication.shared.endBackgroundTask(bgTask.value)
+                bgTask.value = .invalid
             }
         }
     }

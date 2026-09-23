@@ -260,7 +260,7 @@ public class PaletteTheme: @unchecked Sendable {
         "dividerColor": UIColor.fw.color(hex: 0x3a4251),
         "maskColor": UIColor.fw.color(hex: 0x000000, alpha: 0.6),
         "shadowColor": UIColor.fw.color(hex: 0x000000, alpha: 0.3),
-        "bgColor": UIColor.fw.color(hex: 0x191919),
+        "bgColor": UIColor.fw.color(hex: 0x111113),
         "bgTableColor": UIColor.fw.color(hex: 0x000000),
         "bgCellColor": UIColor.fw.color(hex: 0x1c1c1e),
         "bgWhite": UIColor.fw.color(hex: 0x000000),
